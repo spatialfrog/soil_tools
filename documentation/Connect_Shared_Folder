@@ -1,0 +1,18 @@
+Shared Folders between Host & Virtual Machine:
+
+-please refer to Desktop/README/Documentation/Virtual_Machine_Related/Installing_Virtual_Machine_and_Shared_Folder.pdf (section 4) to setup a shared folder.
+-shared folder on windows host machine must be named "vboxshare".
+
+
+*** --------------
+
+-IMPORTANT --- each login will require a reconnection between the host & virtual machine shared folders. MUST ENTER COMMAND BELOW to reconnect folders.
+
+-open terminal & type: 
+sudo mount -t vboxsf -o uid=1000,gid=1000 vboxshare /media/sf_vboxshare
+
+*** --------------
+
+-on linux host the shared folder will be located at: /media/sf_vboxshare
+
+
