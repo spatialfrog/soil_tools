@@ -1411,7 +1411,7 @@ DT=`r.info -t $IN_GDAL_RASTER | awk -F"=" '{ print $2 }'`
 r.out.gdal input=$IN_GDAL_RASTER format=SAGA type=$TYPE output=$OUTDIR/tmp/$OUT_GDAL_RASTER.sdat nodata=-9999
 
 ##calculate downslope index. output:0 refers to "distance" output grid
-saga_cmd libta_morphometry 9 -DEM:$OUTDIR/tmp/$OUT_GDAL_RASTER.sgrd -GRADIENT:$OUTDIR/tmp/$OUT_SAGA_RASTER -DISTANCE:$DISTANCE -OUTPUT:0
+saga_cmd ta_morphometry 9 -DEM:$OUTDIR/tmp/$OUT_GDAL_RASTER.sgrd -GRADIENT:$OUTDIR/tmp/$OUT_SAGA_RASTER -DISTANCE:$DISTANCE -OUTPUT:0
 
 ##import SAGA raster into GRASS
 r.in.gdal -o input=$OUTDIR/tmp/$OUT_SAGA_RASTER.sdat output=${OUT_SAGA_RASTER/\.*} --overwrite
