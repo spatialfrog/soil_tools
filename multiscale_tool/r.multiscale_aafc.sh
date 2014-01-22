@@ -1610,16 +1610,30 @@ haralickTexture() {
 ## assuming input raster is elevation
 
 
-## TODO: rescale input raster to grey scale 0-255. use r.rescale
-
+## rescale input raster to grey scale 0-255. use r.rescale.
+r.rescale input=$2 output=elevation_rescaled.255 to=0,255
 
 
 ## TODO: implement single texture (ASM) until meeting with client
-r.texture input=$2 prefix=$GIS_OPT_HARALICK_PREFIX size=$GIS_OPT_HARALICK_SLIDING_WINDOW_SIZE distance=$GIS_OPT_HARALICK_DISTANCE_BETWEEN_TWO_SAMPLES -$GIS_OPT_HARALICK_TEXTURE_SELECTION
+r.texture input=elevation_rescaled.255 prefix=$GIS_OPT_HARALICK_PREFIX size=$GIS_OPT_HARALICK_SLIDING_WINDOW_SIZE distance=$GIS_OPT_HARALICK_DISTANCE_BETWEEN_TWO_SAMPLES -$GIS_OPT_HARALICK_TEXTURE_SELECTION
 
+## table linking texture flags to full names output via grass
+## ie -a --> ASM
+if [ "$GIS_OPT_HARALICK_TEXTURE_SELECTION" = "a" ]; then
+    OUT_TEXTURE_TYPE="ASM"
+fi
 
-##ensure raster mask applied if appicable to outputs
-r.mapcalc "Pennock_$1=Pennock_$1"
+## four files prodcued. each with separate angle.
+OUTPUT_RASTER_NAME_0=${GIS_OPT_HARALICK_PREFIX}_${OUT_TEXTURE_TYPE}_0_${1}
+OUTPUT_RASTER_NAME_45=${GIS_OPT_HARALICK_PREFIX}_${OUT_TEXTURE_TYPE}_45_${1}
+OUTPUT_RASTER_NAME_90=${GIS_OPT_HARALICK_PREFIX}_${OUT_TEXTURE_TYPE}_90_${1}
+OUTPUT_RASTER_NAME_135=${GIS_OPT_HARALICK_PREFIX}_${OUT_TEXTURE_TYPE}_135_${1}
+
+## ensure raster mask applied if appicable to outputs
+r.mapcalc "OUTPUT_RASTER_NAME_0=OUTPUT_RASTER_NAME_0"
+r.mapcalc "OUTPUT_RASTER_NAME_45=OUTPUT_RASTER_NAME_45"
+r.mapcalc "OUTPUT_RASTER_NAME_90=OUTPUT_RASTER_NAME_90"
+r.mapcalc "OUTPUT_RASTER_NAME_135=OUTPUT_RASTER_NAME_135"
 
 }
 
