@@ -182,7 +182,7 @@
 #% required: no
 #% multiple: no
 #% description: Initial slope threshold 
-#% options:0.0 - 100.0
+#% options: 0.0-100.0
 #% answer: 16.0
 #% guisection: MRVBF
 #%End
@@ -193,7 +193,7 @@
 #% required: no
 #% multiple: no
 #% description: Threshold for elevation percentile (lowness) 
-#% options:0.0 - 1.0
+#% options: 0.0-1.0
 #% answer: 0.4
 #% guisection: MRVBF
 #%End
@@ -204,7 +204,7 @@
 #% required: no
 #% multiple: no
 #% description: Threshold for elevation percentile (upness) 
-#% options:0.0 - 1.0
+#% options:0.0-1.0
 #% answer: 0.35
 #% guisection: MRVBF
 #%End
@@ -215,7 +215,7 @@
 #% required: no
 #% multiple: no
 #% description: Threshold for elevation percentile (upness) 
-#% options:0.0 - 100.0
+#% options: 0.0-100.0
 #% answer: 4.0
 #% guisection: MRVBF
 #%End
@@ -226,7 +226,7 @@
 #% required: no
 #% multiple: no
 #% description: Threshold for shape parameter for elevation percentile 
-#% options:0.0 - 100.0
+#% options: 0.0-100.0
 #% answer: 3.0
 #% guisection: MRVBF
 #%End
@@ -237,7 +237,7 @@
 #% required: no
 #% multiple: no
 #% description: Threshold for shape parameter for elevation percentile 
-#% options:0.0 - 100.0
+#% options: 0.0-100.0
 #% answer: 100.0
 #% guisection: MRVBF
 #%End
