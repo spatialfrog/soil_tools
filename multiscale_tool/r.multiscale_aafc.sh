@@ -1604,6 +1604,19 @@ r.mapcalc "mrrtf_index_$2=mrrtf_index_$2"
 }
 
 
+haralickTexture() {
+## calculates haralick texture using options provided in r.texture
+
+r.texture elevation=$2 slope=slope_pennock pcurv=pcurv_pennock tcurv=tcurv_pennock min_slp_allowed=$GIS_OPT_MIN_SLP_ALLOWED --overwrite
+
+levelParm=$GIS_OPT_PENNOCK_SLOPE_GRADIENT
+
+##ensure raster mask applied if appicable to outputs
+r.mapcalc "Pennock_$1=Pennock_$1"
+
+}
+
+
 ##/////////////////////////////////////////////////////////////////////////////
 ##/////////////////////////////////////////////////////////////////////////////
 ##/////////////////////////////////////////////////////////////////////////////
