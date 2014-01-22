@@ -2162,9 +2162,10 @@ do
 		
 		## MRVBF index
 		## created in SAGA
+	if [ $GIS_FLAG_SA = 1]; then
 		mrvbf_index $i Elevation_$i
+	fi
 		
-
 		##Elevation Relief Ratio
 		##mathmatical similar to hypsometric curve. examines elevation complexity.
 		elevation_relief_ratio $i Elevation_$i
