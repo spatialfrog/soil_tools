@@ -1504,7 +1504,7 @@ r.mapcalc "Downslope_index_$2=Downslope_index_$2"
 }
 
 
-mrvbf_index() {
+mrvbfIndex() {
 ##integration code b/w GRASS & SAGA to allow calculation of MRVBF index in SAGA.
 ## regional based dervivate
 
@@ -2046,6 +2046,17 @@ i=$1
 
 	echo "calculating downslope index"
 	downslopeIndex Elevation_$i $i $GIS_OPT_V_DISTANCE
+}
+
+##===
+
+mrvbf_index() {
+echo "inside mrvbf_index function"
+
+i=$1
+
+	echo "calculating mrvbf index"
+	mrvbfIndex Elevation_$i $i $GIS_OPT_MRVBF_INITIAL_THRESOLD_SLOPE $GIS_OPT_MRVBF_THRESHOLD_ELEVATION_PERCENTILE_LOWNESS $GIS_OPT_MRVBF_THRESHOLD_ELEVATION_PERCENTILE_UPNESS $GIS_OPT_MRVBF_SHAPE_PARAMETER_SLOPE $GIS_OPT_MRVBF_SHAPE_PARAMETER_ELEVATION_PERCENTILE $GIS_OPT_MRVBF_MAXIMUM_RESOLUTION
 }
 
 
