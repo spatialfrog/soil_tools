@@ -1598,8 +1598,8 @@ r.in.gdal -o input=$OUTDIR/tmp/$OUT_SAGA_MRVBF_RASTER.sdat output=${OUT_SAGA_MRV
 r.in.gdal -o input=$OUTDIR/tmp/$OUT_SAGA_MRRTF_RASTER.sdat output=${OUT_SAGA_MRRTF_RASTER/\.*} --overwrite
 
 ##ensure raster mask applied if appicable to outputs
-r.mapcalc "mrvbf_index_$2=mrvbf_index_$2"
-r.mapcalc "mrrtf_index_$2=mrrtf_index_$2"
+r.mapcalc "Mrvbf_index_$2=Mrvbf_index_$2"
+r.mapcalc "Mrrtf_index_$2=Mrrtf_index_$2"
 
 }
 
