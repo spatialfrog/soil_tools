@@ -169,12 +169,13 @@
 ## new tab for saga multiresolution valley flatness index.
 ## may be temp, depending on clients thoughts
 
+## TODO:does client want mrvbf optional?
 
-#%Flag
-#% key: sa
-#% description: Calculate
-#% guisection: MRVBF
-#%End
+## #%Flag
+## #% key: sa
+## #% description: Calculate
+## #% guisection: MRVBF
+## #%End
 
 #%Option
 #% key: mrvbf_initial_thresold_slope
@@ -2162,9 +2163,9 @@ do
 		
 		## MRVBF index
 		## created in SAGA
-	if [ $GIS_FLAG_SA = 1 ]; then
+	## if [ $GIS_FLAG_SA = 1 ]; then
 		mrvbf_index $i Elevation_$i
-	fi
+	## fi
 		
 		##Elevation Relief Ratio
 		##mathmatical similar to hypsometric curve. examines elevation complexity.
