@@ -109,7 +109,7 @@
 #% type: integer
 #% required: no
 #% multiple: no
-#% description: Surface Roughness: Grid size in meters to calculate r.roughness.
+#% description: R.roughness. Grid size in integer meters.
 #% answer: 400
 #% guisection: Textures
 #%End
@@ -146,7 +146,7 @@
 
 #%Flag
 #% key: v
-#% description: Surface Roughness (planar/real). (Very Time intensive).
+#% description: R.roughness: Planar/Real surface area. (Very Time intensive).
 #% guisection: Textures
 #%End
 
