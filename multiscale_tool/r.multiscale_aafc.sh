@@ -2260,12 +2260,17 @@ do
 		
 		## MRVBF index
 		## created in SAGA
+		## TODO: remove section if client does not want this process optional
 	## if [ $GIS_FLAG_SA = 1 ]; then
 		mrvbf_index $i Elevation_$i
 	## fi
 		
-		##Elevation Relief Ratio
-		##mathmatical similar to hypsometric curve. examines elevation complexity.
+		## Haralick texture
+		## calculated with r.texture
+		haralick_texture $i Elevation_$i
+		
+		## Elevation Relief Ratio
+		## mathmatical similar to hypsometric curve. examines elevation complexity.
 		elevation_relief_ratio $i Elevation_$i
 
 	## TWI -- regular
