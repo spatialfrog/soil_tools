@@ -2162,7 +2162,7 @@ do
 		
 		## MRVBF index
 		## created in SAGA
-	if [ $GIS_FLAG_SA = 1]; then
+	if [ $GIS_FLAG_SA = 1 ]; then
 		mrvbf_index $i Elevation_$i
 	fi
 		
