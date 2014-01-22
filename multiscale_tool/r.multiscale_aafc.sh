@@ -269,9 +269,9 @@
 #% type: string
 #% required: no
 #% multiple: no
-#% description: Haralick: Texture to calculate. Acronyms from grass gis manual for r.texture.  
-#% options: ASM,IDM,CON,COR,MOC,MCC
-#% answer: ASM
+#% description: Haralick: Texture to calculate. Values from grass gis manual for r.texture.  
+#% options: a
+#% answer: a
 #% guisection: Textures
 #%End
 
@@ -1607,9 +1607,16 @@ r.mapcalc "Mrrtf_index_$2=Mrrtf_index_$2"
 haralickTexture() {
 ## calculates haralick texture using options provided in r.texture
 
-r.texture elevation=$2 slope=slope_pennock pcurv=pcurv_pennock tcurv=tcurv_pennock min_slp_allowed=$GIS_OPT_MIN_SLP_ALLOWED --overwrite
+## assuming input raster is elevation
 
-levelParm=$GIS_OPT_PENNOCK_SLOPE_GRADIENT
+
+## TODO: rescale input raster to grey scale 0-255. use r.rescale
+
+
+
+## TODO: implement single texture (ASM) until meeting with client
+r.texture input=$2 prefix=$GIS_OPT_HARALICK_PREFIX size=$GIS_OPT_HARALICK_SLIDING_WINDOW_SIZE distance=$GIS_OPT_HARALICK_DISTANCE_BETWEEN_TWO_SAMPLES -$GIS_OPT_HARALICK_TEXTURE_SELECTION
+
 
 ##ensure raster mask applied if appicable to outputs
 r.mapcalc "Pennock_$1=Pennock_$1"
