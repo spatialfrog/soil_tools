@@ -111,7 +111,7 @@
 #% multiple: no
 #% description: Surface Roughness: Grid size in meters to calculate r.roughness.
 #% answer: 400
-#% guisection: Derivatives
+#% guisection: Textures
 #%End
 
 #%Option
@@ -147,7 +147,7 @@
 #%Flag
 #% key: v
 #% description: Surface Roughness (planar/real). (Very Time intensive).
-#% guisection: Derivatives
+#% guisection: Textures
 #%End
 
 #%Flag
@@ -250,7 +250,7 @@
 
 ## #%Flag
 ## #% key: ??
-## #% description: Calculate
+## #% description: Calculate Haralick textures using grass r.texture.
 ## #% guisection: Derivatives
 ## #%End
 
@@ -259,9 +259,9 @@
 #% type: string
 #% required: no
 #% multiple: no
-#% description: Prefix for outputs. First letter must be capital. 
+#% description: Haralick: Prefix for outputs. First letter must be capital. 
 #% answer: Texture
-#% guisection: Derivatives
+#% guisection: Textures
 #%End
 
 #%Option
@@ -269,10 +269,10 @@
 #% type: string
 #% required: no
 #% multiple: no
-#% description: Texture to calculate. Acronyms from grass gis manual for r.texture.  
+#% description: Haralick: Texture to calculate. Acronyms from grass gis manual for r.texture.  
 #% options: ASM,IDM,CON,COR,MOC,MCC
 #% answer: ASM
-#% guisection: Derivatives
+#% guisection: Textures
 #%End
 
 #%Option
@@ -280,9 +280,9 @@
 #% type: integer
 #% required: no
 #% multiple: no
-#% description: Size of sliding window. Must be odd numbered.   
+#% description: Haralick: Size of sliding window. Must be odd numbered.   
 #% answer: 3
-#% guisection: Derivatives
+#% guisection: Textures
 #%End
 
 #%Option
@@ -290,9 +290,9 @@
 #% type: integer
 #% required: no
 #% multiple: no
-#% description: Distance between two samples. 
+#% description: Haralick: Distance between two samples. 
 #% answer: 1
-#% guisection: Derivatives
+#% guisection: Textures
 #%End
 
 
