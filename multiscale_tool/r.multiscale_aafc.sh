@@ -1505,17 +1505,19 @@ r.mapcalc "Downslope_index_$2=Downslope_index_$2"
 
 
 mrvbf_index() {
-##integration code b/w GRASS & SAGA to allow calculation of MRVBF index  in SAGA.
+##integration code b/w GRASS & SAGA to allow calculation of MRVBF index in SAGA.
 ## regional based dervivate
 
 IN_GDAL_RASTER=$1
 OUT_GDAL_RASTER=$IN_GDAL_RASTER
-OUT_SAGA_RASTER=mrvbf_index_$2
-DISTANCE=$3
-
-
-
-
+OUT_SAGA_MRVBF_RASTER=mrvbf_index_$2
+OUT_SAGA_MRRTF_RASTER=mrrtf_index_$2
+MRVBF_INITIAL_THRESOLD_SLOPE=$3
+MRVBF_THRESHOLD_ELEVATION_PERCENTILE_LOWNESS=$4
+MRVBF_THRESHOLD_ELEVATION_PERCENTILE_UPNESS=$5
+MRVBF_SHAPE_PARAMETER_SLOPE=$6
+MRVBF_SHAPE_PARAMETER_ELEVATION_PERCENTILE=$7
+MRVBF_MAXIMUM_RESOLUTION=$8
 
 ##export grass dem to saga native format
 ##check export data type
@@ -1528,16 +1530,23 @@ DT=`r.info -t $IN_GDAL_RASTER | awk -F"=" '{ print $2 }'`
 		TYPE=Float32
 	fi
 
+## export grass elevation raster to saga sdat format
 r.out.gdal input=$IN_GDAL_RASTER format=SAGA type=$TYPE output=$OUTDIR/tmp/$OUT_GDAL_RASTER.sdat nodata=-9999
 
-##calculate mrvbf index. output:0 refers to "distance" output grid
-saga_cmd ta_morphometry 8 -DEM:$OUTDIR/tmp/$OUT_GDAL_RASTER.sgrd -GRADIENT:$OUTDIR/tmp/$OUT_SAGA_RASTER -DISTANCE:$DISTANCE -OUTPUT:0
+## calculate mrvbf index 
+## output:0 refers to "distance" output grid
+## saga_cmd ta_morphometry 8 -DEM <str> [-MRVBF <str>] [-MRRTF <str>] [-T_SLOPE <str>] [-T_PCTL_V <str>] [-T_PCTL_R <str>] [-P_SLOPE <str>] [-P_PCTL <str>] [-MAX_RES <str>]
+saga_cmd ta_morphometry 8 -DEM:$OUTDIR/tmp/$OUT_GDAL_RASTER.sgrd -MRVBF:$OUTDIR/tmp/$OUT_SAGA_MRVBF_RASTER -MRRTF:$OUTDIR/tmp/$OUT_SAGA_MRRTF_RASTER -T_SLOPE:$MRVBF_INITIAL_THRESOLD_SLOPE -T_PCTL_V:$MRVBF_THRESHOLD_ELEVATION_PERCENTILE_LOWNESS -T_PCTL_R:$MRVBF_THRESHOLD_ELEVATION_PERCENTILE_UPNESS -P_SLOPE:$MRVBF_SHAPE_PARAMETER_SLOPE -P_PCTL:$MRVBF_SHAPE_PARAMETER_ELEVATION_PERCENTILE -MAX_RES:$MRVBF_MAXIMUM_RESOLUTION
 
-##import SAGA raster into GRASS
-r.in.gdal -o input=$OUTDIR/tmp/$OUT_SAGA_RASTER.sdat output=${OUT_SAGA_RASTER/\.*} --overwrite
+
+## import calculated SAGA sdat raster into GRASS
+## mrvbf creates 2 rasters. read both in.
+r.in.gdal -o input=$OUTDIR/tmp/$OUT_SAGA_MRVBF_RASTER.sdat output=${OUT_SAGA_MRVBF_RASTER/\.*} --overwrite
+r.in.gdal -o input=$OUTDIR/tmp/$OUT_SAGA_MRRTF_RASTER.sdat output=${OUT_SAGA_MRRTF_RASTER/\.*} --overwrite
 
 ##ensure raster mask applied if appicable to outputs
 r.mapcalc "mrvbf_index_$2=mrvbf_index_$2"
+r.mapcalc "mrrtf_index_$2=mrrtf_index_$2"
 
 }
 
