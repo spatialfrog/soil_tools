@@ -259,8 +259,8 @@
 #% type: string
 #% required: no
 #% multiple: no
-#% description: Haralick: Prefix for outputs. First letter must be capital. 
-#% answer: Texture
+#% description: Haralick: Prefix for outputs. Must be lowercase. 
+#% answer: haralick
 #% guisection: Textures
 #%End
 
@@ -1611,29 +1611,40 @@ haralickTexture() {
 
 
 ## rescale input raster to grey scale 0-255. use r.rescale.
-r.rescale input=$2 output=elevation_rescaled.255 to=0,255
+r.rescale input=$1 output=elevation_rescaled.255 to=0,255
 
 
 ## TODO: implement single texture (ASM) until meeting with client
 r.texture input=elevation_rescaled.255 prefix=$GIS_OPT_HARALICK_PREFIX size=$GIS_OPT_HARALICK_SLIDING_WINDOW_SIZE distance=$GIS_OPT_HARALICK_DISTANCE_BETWEEN_TWO_SAMPLES -$GIS_OPT_HARALICK_TEXTURE_SELECTION
 
-## table linking texture flags to full names output via grass
+## table linking texture flags to full names produced from grass via execution of r.texture
 ## ie -a --> ASM
 if [ "$GIS_OPT_HARALICK_TEXTURE_SELECTION" = "a" ]; then
     OUT_TEXTURE_TYPE="ASM"
 fi
 
-## four files prodcued. each with separate angle.
-OUTPUT_RASTER_NAME_0=${GIS_OPT_HARALICK_PREFIX}_${OUT_TEXTURE_TYPE}_0_${1}
-OUTPUT_RASTER_NAME_45=${GIS_OPT_HARALICK_PREFIX}_${OUT_TEXTURE_TYPE}_45_${1}
-OUTPUT_RASTER_NAME_90=${GIS_OPT_HARALICK_PREFIX}_${OUT_TEXTURE_TYPE}_90_${1}
-OUTPUT_RASTER_NAME_135=${GIS_OPT_HARALICK_PREFIX}_${OUT_TEXTURE_TYPE}_135_${1}
+## four files produed. each with separate angle.
+## --- r.texture output file name
+OUTPUT_RASTER_NAME_0="${GIS_OPT_HARALICK_PREFIX}_${OUT_TEXTURE_TYPE}_0"
+OUTPUT_RASTER_NAME_45="${GIS_OPT_HARALICK_PREFIX}_${OUT_TEXTURE_TYPE}_45"
+OUTPUT_RASTER_NAME_90="${GIS_OPT_HARALICK_PREFIX}_${OUT_TEXTURE_TYPE}_90"
+OUTPUT_RASTER_NAME_135="${GIS_OPT_HARALICK_PREFIX}_${OUT_TEXTURE_TYPE}_135"
 
-## ensure raster mask applied if appicable to outputs
-r.mapcalc "OUTPUT_RASTER_NAME_0=OUTPUT_RASTER_NAME_0"
-r.mapcalc "OUTPUT_RASTER_NAME_45=OUTPUT_RASTER_NAME_45"
-r.mapcalc "OUTPUT_RASTER_NAME_90=OUTPUT_RASTER_NAME_90"
-r.mapcalc "OUTPUT_RASTER_NAME_135=OUTPUT_RASTER_NAME_135"
+## covert prefix from lower to upper case.
+UPPER_CASE_PREFIX=$(echo $GIS_OPT_HARALICK_PREFIX | tr '[:lower:]' '[:upper:]')
+
+## --- adjusted name for final mapset. convert lower case prefix to upper.
+OUTPUT_RASTER_NAME_0_FINAL="${UPPER_CASE_PREFIX}_${OUT_TEXTURE_TYPE}_0_$2"
+OUTPUT_RASTER_NAME_45_FINAL="${UPPER_CASE_PREFIX}_${OUT_TEXTURE_TYPE}_45_$2"
+OUTPUT_RASTER_NAME_90_FINAL="${UPPER_CASE_PREFIX}_${OUT_TEXTURE_TYPE}_90_$2"
+OUTPUT_RASTER_NAME_135_FINAL="${UPPER_CASE_PREFIX}_${OUT_TEXTURE_TYPE}_135_$2"
+
+
+## ensure raster mask applied if appicable to outputs. reads in output and assigns correct name.
+r.mapcalc "$OUTPUT_RASTER_NAME_0_FINAL=$OUTPUT_RASTER_NAME_0"
+r.mapcalc "$OUTPUT_RASTER_NAME_45_FINAL=$OUTPUT_RASTER_NAME_45"
+r.mapcalc "$OUTPUT_RASTER_NAME_90_FINAL=$OUTPUT_RASTER_NAME_90"
+r.mapcalc "$OUTPUT_RASTER_NAME_135_FINAL=$OUTPUT_RASTER_NAME_135"
 
 }
 
@@ -2143,7 +2154,7 @@ echo "inside mrvbf_index function"
 i=$1
 
 	echo "calculating mrvbf index"
-	haralickTexture Elevation_$i $i $GIS_OPT_MRVBF_INITIAL_THRESOLD_SLOPE $GIS_OPT_MRVBF_THRESHOLD_ELEVATION_PERCENTILE_LOWNESS $GIS_OPT_MRVBF_THRESHOLD_ELEVATION_PERCENTILE_UPNESS $GIS_OPT_MRVBF_SHAPE_PARAMETER_SLOPE $GIS_OPT_MRVBF_SHAPE_PARAMETER_ELEVATION_PERCENTILE $GIS_OPT_MRVBF_MAXIMUM_RESOLUTION
+	mrvbfIndex Elevation_$i $i $GIS_OPT_MRVBF_INITIAL_THRESOLD_SLOPE $GIS_OPT_MRVBF_THRESHOLD_ELEVATION_PERCENTILE_LOWNESS $GIS_OPT_MRVBF_THRESHOLD_ELEVATION_PERCENTILE_UPNESS $GIS_OPT_MRVBF_SHAPE_PARAMETER_SLOPE $GIS_OPT_MRVBF_SHAPE_PARAMETER_ELEVATION_PERCENTILE $GIS_OPT_MRVBF_MAXIMUM_RESOLUTION
 }
 
 
