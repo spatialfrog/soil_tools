@@ -1504,6 +1504,44 @@ r.mapcalc "Downslope_index_$2=Downslope_index_$2"
 }
 
 
+mrvbf_index() {
+##integration code b/w GRASS & SAGA to allow calculation of MRVBF index  in SAGA.
+## regional based dervivate
+
+IN_GDAL_RASTER=$1
+OUT_GDAL_RASTER=$IN_GDAL_RASTER
+OUT_SAGA_RASTER=mrvbf_index_$2
+DISTANCE=$3
+
+
+
+
+
+##export grass dem to saga native format
+##check export data type
+DT=`r.info -t $IN_GDAL_RASTER | awk -F"=" '{ print $2 }'`
+	echo "export data type for $IN_GDAL_RASTER is $DT"	
+
+	if [ "$DT" = "CELL" ]; then
+		TYPE=Int16
+	else
+		TYPE=Float32
+	fi
+
+r.out.gdal input=$IN_GDAL_RASTER format=SAGA type=$TYPE output=$OUTDIR/tmp/$OUT_GDAL_RASTER.sdat nodata=-9999
+
+##calculate mrvbf index. output:0 refers to "distance" output grid
+saga_cmd ta_morphometry 8 -DEM:$OUTDIR/tmp/$OUT_GDAL_RASTER.sgrd -GRADIENT:$OUTDIR/tmp/$OUT_SAGA_RASTER -DISTANCE:$DISTANCE -OUTPUT:0
+
+##import SAGA raster into GRASS
+r.in.gdal -o input=$OUTDIR/tmp/$OUT_SAGA_RASTER.sdat output=${OUT_SAGA_RASTER/\.*} --overwrite
+
+##ensure raster mask applied if appicable to outputs
+r.mapcalc "mrvbf_index_$2=mrvbf_index_$2"
+
+}
+
+
 ##/////////////////////////////////////////////////////////////////////////////
 ##/////////////////////////////////////////////////////////////////////////////
 ##/////////////////////////////////////////////////////////////////////////////
