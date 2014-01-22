@@ -244,6 +244,58 @@
 #%End
 
 
+#### haralick texture --------------------------------------------------------------
+
+## TODO:how to deal with size of sliding window and distance between two samples?
+
+## #%Flag
+## #% key: ??
+## #% description: Calculate
+## #% guisection: Derivatives
+## #%End
+
+#%Option
+#% key: haralick_prefix
+#% type: string
+#% required: no
+#% multiple: no
+#% description: Prefix for outputs. First letter must be capital. 
+#% answer: Texture
+#% guisection: Derivatives
+#%End
+
+#%Option
+#% key: haralick_texture_selection
+#% type: string
+#% required: no
+#% multiple: no
+#% description: Texture to calculate. Acronyms from grass gis manual for r.texture.  
+#% options: ASM,IDM,CON,COR,MOC,MCC
+#% answer: ASM
+#% guisection: Derivatives
+#%End
+
+#%Option
+#% key: haralick_sliding_window_size
+#% type: integer
+#% required: no
+#% multiple: no
+#% description: Size of sliding window. Must be odd numbered.   
+#% answer: 3
+#% guisection: Derivatives
+#%End
+
+#%Option
+#% key: haralick_distance_between_two_samples
+#% type: integer
+#% required: no
+#% multiple: no
+#% description: Distance between two samples. 
+#% answer: 1
+#% guisection: Derivatives
+#%End
+
+
 #### segmentations --------------------------------------------------------------
 
 
