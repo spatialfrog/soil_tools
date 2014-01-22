@@ -162,7 +162,89 @@
 #% guisection: Derivatives
 #%End
 
+
+#### mvrbf --------------------------------------------------------------
+
+## TODO:remove comments when client signs off
+## new tab for saga multiresolution valley flatness index.
+## may be temp, depending on clients thoughts
+
+
+#%Flag
+#% key: sa
+#% description: Calculate
+#% guisection: MRVBF
+#%End
+
+#%Option
+#% key: mrvbf_initial_thresold_slope
+#% type: double
+#% required: no
+#% multiple: no
+#% description: Initial slope threshold 
+#% options:0.0 - 100.0
+#% answer: 16.0
+#% guisection: MRVBF
+#%End
+
+#%Option
+#% key: mrvbf_threshold_elevation_percentile_lowness
+#% type: double
+#% required: no
+#% multiple: no
+#% description: Threshold for elevation percentile (lowness) 
+#% options:0.0 - 1.0
+#% answer: 0.4
+#% guisection: MRVBF
+#%End
+
+#%Option
+#% key: mrvbf_threshold_elevation_percentile_upness
+#% type: double
+#% required: no
+#% multiple: no
+#% description: Threshold for elevation percentile (upness) 
+#% options:0.0 - 1.0
+#% answer: 0.35
+#% guisection: MRVBF
+#%End
+
+#%Option
+#% key: mrvbf_shape_parameter_slope
+#% type: double
+#% required: no
+#% multiple: no
+#% description: Threshold for elevation percentile (upness) 
+#% options:0.0 - 100.0
+#% answer: 4.0
+#% guisection: MRVBF
+#%End
+
+#%Option
+#% key: mrvbf_shape_parameter_elevation_percentile
+#% type: double
+#% required: no
+#% multiple: no
+#% description: Threshold for shape parameter for elevation percentile 
+#% options:0.0 - 100.0
+#% answer: 3.0
+#% guisection: MRVBF
+#%End
+
+#%Option
+#% key: mrvbf_maximum_resolution
+#% type: double
+#% required: no
+#% multiple: no
+#% description: Threshold for shape parameter for elevation percentile 
+#% options:0.0 - 100.0
+#% answer: 100.0
+#% guisection: MRVBF
+#%End
+
+
 #### segmentations --------------------------------------------------------------
+
 
 ## ==== Iwahashi/Pike
 
