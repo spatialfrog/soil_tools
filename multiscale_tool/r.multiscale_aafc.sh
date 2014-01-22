@@ -2159,6 +2159,11 @@ do
 		##Downslope Index
 		## created in SAGA
 		downslope_index $i Elevation_$i
+		
+		## MRVBF index
+		## created in SAGA
+		mrvbf_index $i Elevation_$i
+		
 
 		##Elevation Relief Ratio
 		##mathmatical similar to hypsometric curve. examines elevation complexity.
