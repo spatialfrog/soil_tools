@@ -318,7 +318,7 @@
 #% guisection: Segmentation_IP
 #%End
 
-## ==== Cluster with R using Clara & randomForest
+## ==== unsupervised clustering with randomForest. uses R + clara.
 
 #%Flag
 #% key: a
