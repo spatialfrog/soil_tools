@@ -610,14 +610,14 @@ g.mremove -f rast=*
 #create output directory to store report/exported data
 mkdir -p ${OUTDIR}/graphics/landscape_elevation_shades
 mkdir -p ${OUTDIR}/graphics/density_plots
-mkdir -p ${OUTDIR}/graphics/derivatives_segmentations_variability_maps
+mkdir -p ${OUTDIR}/graphics/derivatives_segmentations_maps
 mkdir -p ${OUTDIR}/geotiffs
 mkdir -p ${OUTDIR}/descrip
 mkdir -p ${OUTDIR}/input_txt_files
 mkdir -p ${OUTDIR}/tmp
 
 ##directory vars
-OUTDIR_PNGS=${OUTDIR}/graphics/derivatives_segmentations_variability_maps
+OUTDIR_PNGS=${OUTDIR}/graphics/derivatives_segmentations_maps
 OUTDIR_DENSITY_PLOTS=${OUTDIR}/graphics/density_plots
 
 #output text reports
