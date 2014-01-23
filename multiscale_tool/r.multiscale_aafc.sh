@@ -1632,7 +1632,7 @@ OUTPUT_RASTER_NAME_135="${GIS_OPT_HARALICK_PREFIX}_${OUT_TEXTURE_TYPE}_135"
 
 ## covert prefix from lower to title case. input = haralick; output = Haralick
 firstLetter=`echo $GIS_OPT_HARALICK_PREFIX | cut -c1 | tr [:lower:] [:upper:]`
-remainLetters=`echo $GIS_OPT_HARALICK_PREFIX | cut -c2-`
+remainingLetters=`echo $GIS_OPT_HARALICK_PREFIX | cut -c2-`
 ## title case prefix
 TITLE_CASE_PREFIX=$firstLetter$remainingLetters
 
