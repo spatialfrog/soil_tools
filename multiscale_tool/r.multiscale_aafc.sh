@@ -323,73 +323,73 @@
 #%Flag
 #% key: a
 #% description: Calculate     ----- Select inputs from checkbox below for model inputs.
-#% guisection: Segmentation_Clara_randomForest
+#% guisection: Unsupervised RF
 #%End
 
 #%Flag
 #% key: k
 #% description: elevation
-#% guisection: Segmentation_Clara_randomForest
+#% guisection: Unsupervised RF
 #%End
 
 #%Flag
 #% key: b
 #% description: slope
-#% guisection: Segmentation_Clara_randomForest
+#% guisection: Unsupervised RF
 #%End
 
 #%Flag
 #% key: c
 #% description: aspect_azimuth
-#% guisection: Segmentation_Clara_randomForest
+#% guisection: Unsupervised RF
 #%End
 
 #%Flag
 #% key: d
 #% description: pcurv
-#% guisection: Segmentation_Clara_randomForest
+#% guisection: Unsupervised RF
 #%End
 
 #%Flag
 #% key: g
 #% description: tcurv
-#% guisection: Segmentation_Clara_randomForest
+#% guisection: Unsupervised RF
 #%End
 
 #%Flag
 #% key: h
 #% description: rhpca
-#% guisection: Segmentation_Clara_randomForest
+#% guisection: Unsupervised RF
 #%End
 
 #%Flag
 #% key: j
 #% description: downslope_index
-#% guisection: Segmentation_Clara_randomForest
+#% guisection: Unsupervised RF
 #%End
 
 #%Flag
 #% key: l
 #% description: elevation_relief_ratio
-#% guisection: Segmentation_Clara_randomForest
+#% guisection: Unsupervised RF
 #%End
 
 #%Flag
 #% key: r
 #% description: pennock
-#% guisection: Segmentation_Clara_randomForest
+#% guisection: Unsupervised RF
 #%End
 
 #%Flag
 #% key: m
 #% description: morphological_features   --- Must select to be calculated in 'Derviative tab'
-#% guisection: Segmentation_Clara_randomForest
+#% guisection: Unsupervised RF
 #%End
 
 #%Flag
 #% key: n
 #% description: surface_roughness   --- Must select to be calculated in 'Derviative tab'
-#% guisection: Segmentation_Clara_randomForest
+#% guisection: Unsupervised RF
 #%End
 
 #%Option
@@ -397,7 +397,7 @@
 #% gisprompt: string
 #% type: string
 #% description: Raster #1 to be reclassified. Spell exact as shown for check-box.
-#% guisection: Segmentation_Clara_randomForest
+#% guisection: Unsupervised RF
 #%End
 
 #%Option
@@ -405,7 +405,7 @@
 #% gisprompt: old_file,file,input
 #% type: string
 #% description: Input Text Files for Raster #1 reclassification.
-#% guisection: Segmentation_Clara_randomForest
+#% guisection: Unsupervised RF
 #%End
 
 #%Option
@@ -413,7 +413,7 @@
 #% gisprompt: string
 #% type: string
 #% description: Raster #2 to be reclassified. Spell exact as shown for check-box.
-#% guisection: Segmentation_Clara_randomForest
+#% guisection: Unsupervised RF
 #%End
 
 #%Option
@@ -421,7 +421,7 @@
 #% gisprompt: old_file,file,input
 #% type: string
 #% description: Input Text Files for Raster #2 reclassification.
-#% guisection: Segmentation_Clara_randomForest
+#% guisection: Unsupervised RF
 #%End
 
 #%Option
@@ -429,7 +429,7 @@
 #% gisprompt: string
 #% type: string
 #% description: Raster #3 to be reclassified. Spell exact as shown for check-box.
-#% guisection: Segmentation_Clara_randomForest
+#% guisection: Unsupervised RF
 #%End
 
 #%Option
@@ -437,7 +437,7 @@
 #% gisprompt: old_file,file,input
 #% type: string
 #% description: Input Text Files for Raster #3 reclassification.
-#% guisection: Segmentation_Clara_randomForest
+#% guisection: Unsupervised RF
 #%End
 
 #%Option
@@ -445,7 +445,7 @@
 #% gisprompt: string
 #% type: string
 #% description: Raster #4 to be reclassified. Spell exact as shown for check-box.
-#% guisection: Segmentation_Clara_randomForest
+#% guisection: Unsupervised RF
 #%End
 
 #%Option
@@ -453,14 +453,14 @@
 #% gisprompt: old_file,file,input
 #% type: string
 #% description: Input Text Files for Raster #4 reclassification.
-#% guisection: Segmentation_Clara_randomForest
+#% guisection: Unsupervised RF
 #%End
 #%Option
 #% key: cluster_sample_points
 #% type: integer
 #% description: Number of random sample points to classify.
 #% answer: 500
-#% guisection: Segmentation_Clara_randomForest
+#% guisection: Unsupervised RF
 #%End
 
 #%Option
@@ -468,7 +468,7 @@
 #% type: integer
 #% description: Number of cluster classes.
 #% answer: 5
-#% guisection: Segmentation_Clara_randomForest
+#% guisection: Unsupervised RF
 #%End
 
 #%Option
@@ -476,7 +476,7 @@
 #% type: integer
 #% description: Number of randomForest trees to generate.
 #% answer: 200
-#% guisection: Segmentation_Clara_randomForest
+#% guisection: Unsupervised RF
 #%End
 
 #%Option
@@ -484,7 +484,7 @@
 #% type: integer
 #% description: Size of window to apply "mode" neighborhood to final product. Odd integer.
 #% answer: 5
-#% guisection: Segmentation_Clara_randomForest
+#% guisection: Unsupervised RF
 #%End
 
 
