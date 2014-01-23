@@ -488,29 +488,6 @@
 #%End
 
 
-## ==== supervised clustering with randomForest. uses R + clara.
-## user provides training data.
-
-## TODO: stub for moment
-
-#%Flag
-#% key: z
-#% description: Calculate. --- STUB function. To be wired up.
-#% guisection: Supervised RF
-#%End
-
-#%Option
-#% key: supervised_rf_cluster_number_classes
-#% type: integer
-#% description: to be added.
-#% answer: 5
-#% guisection: Supervised RF
-#%End
-
-
-
-
-
 ## Optional ----------------------------------------------------------------------
 
 ##%Flag
