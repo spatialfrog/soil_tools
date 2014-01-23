@@ -1630,14 +1630,17 @@ OUTPUT_RASTER_NAME_45="${GIS_OPT_HARALICK_PREFIX}_${OUT_TEXTURE_TYPE}_45"
 OUTPUT_RASTER_NAME_90="${GIS_OPT_HARALICK_PREFIX}_${OUT_TEXTURE_TYPE}_90"
 OUTPUT_RASTER_NAME_135="${GIS_OPT_HARALICK_PREFIX}_${OUT_TEXTURE_TYPE}_135"
 
-## covert prefix from lower to upper case.
-UPPER_CASE_PREFIX=$(echo $GIS_OPT_HARALICK_PREFIX | tr '[:lower:]' '[:upper:]')
+## covert prefix from lower to title case. input = haralick; output = Haralick
+firstLetter=`echo $GIS_OPT_HARALICK_PREFIX | cut -c1 | tr [:lower:] [:upper:]`
+remainLetters=`echo $GIS_OPT_HARALICK_PREFIX | cut -c2-`
+## title case prefix
+TITLE_CASE_PREFIX=$firstLetter$remainingLetters
 
 ## --- adjusted name for final mapset. convert lower case prefix to upper.
-OUTPUT_RASTER_NAME_0_FINAL="${UPPER_CASE_PREFIX}_${OUT_TEXTURE_TYPE}_0_$2"
-OUTPUT_RASTER_NAME_45_FINAL="${UPPER_CASE_PREFIX}_${OUT_TEXTURE_TYPE}_45_$2"
-OUTPUT_RASTER_NAME_90_FINAL="${UPPER_CASE_PREFIX}_${OUT_TEXTURE_TYPE}_90_$2"
-OUTPUT_RASTER_NAME_135_FINAL="${UPPER_CASE_PREFIX}_${OUT_TEXTURE_TYPE}_135_$2"
+OUTPUT_RASTER_NAME_0_FINAL="${TITLE_CASE_PREFIX}_${OUT_TEXTURE_TYPE}_0_$2"
+OUTPUT_RASTER_NAME_45_FINAL="${TITLE_CASE_PREFIX}_${OUT_TEXTURE_TYPE}_45_$2"
+OUTPUT_RASTER_NAME_90_FINAL="${TITLE_CASE_PREFIX}_${OUT_TEXTURE_TYPE}_90_$2"
+OUTPUT_RASTER_NAME_135_FINAL="${TITLE_CASE_PREFIX}_${OUT_TEXTURE_TYPE}_135_$2"
 
 
 ## ensure raster mask applied if appicable to outputs. reads in output and assigns correct name.
