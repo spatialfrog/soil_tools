@@ -215,7 +215,7 @@
 #% type: double
 #% required: no
 #% multiple: no
-#% description: Threshold for elevation percentile (upness) 
+#% description: Shape parameter for slope 
 #% options: 0.0-100.0
 #% answer: 4.0
 #% guisection: MRVBF
@@ -237,7 +237,7 @@
 #% type: double
 #% required: no
 #% multiple: no
-#% description: Threshold for shape parameter for elevation percentile 
+#% description: Maximum Resolution (percentage) 
 #% options: 0.0-100.0
 #% answer: 100.0
 #% guisection: MRVBF
