@@ -1690,7 +1690,7 @@ done
 
 ##/////////////////////////////////////////////////////////////////////////////
 ##/////////////////////////////////////////////////////////////////////////////
-### stats/meta-data/variability maps/density plots
+### stats/meta-data/density plots
 
 derivativeStats() {
 
@@ -1740,25 +1740,6 @@ done
 
 }
 
-##/////////////////////////////////////////////////////////////////////////////
-
-variabilityMaps() {
-#variability maps using r.series. output cell values are a function of the input raster values
-#calc mean/range/std. grouped by final out prefixes i.e Aspect_/Slope_ AND must be more than 1 occurance of prefix type
-
-echo "calculating variability maps for std/range/mean"
-
-VARIABILITY_LIST=`g.mlist type=rast mapset=$MAPSET exclude=^[a-z]* | sed -e 's/_[0-9]*$//g' | uniq -d`
-
-for i in $VARIABILITY_LIST
-do
-	
-	#echo $i
-	#echo `g.mlist type=rast mapset=ip pattern=$i* separator=,`
-	r.series -n input=`g.mlist type=rast mapset=$MAPSET pattern=$i* separator=,` output=Variability_$i.std,Variability_$i.range,Variability_$i.avg method=stddev,range,average --overwrite
-done
-
-}
 
 ##/////////////////////////////////////////////////////////////////////////////
 
@@ -2359,13 +2340,6 @@ derviativeMetaData
 ### output pdf plot of kernel density plots from local derviatives -- slope/tcurv/pcurv
 
 densityPlots
-
-###/////////////////////////////////////////////////////////////////////////////
-
-### create variability maps. uses r.series to calc mean/std/range of final rasters. 
-##must be more than 1 occurance in series ie Aspect/Slope/IP
-
-variabilityMaps
 
 ###/////////////////////////////////////////////////////////////////////////////
 
