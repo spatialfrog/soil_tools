@@ -507,20 +507,6 @@
 ##% guisection: Optional_Outputs
 #%End
 
-#%Flag
-#% key: z
-#% description: Generate Profile Plots of Input Raster in N/S and E/W orientations.
-##% guisection: Optional_Outputs
-#%End
-
-#%Option
-#% key: profile_distance
-#% type: integer
-#% required: no
-#% multiple: no
-#% answer: 200
-#% description: Spacing Interval to Generate Profile Plots of Input Raster in N/S and E/W orientations. (Integer only).
-#% End
 
 ## ============================================================================
 ## ============================================================================
@@ -624,7 +610,6 @@ g.mremove -f rast=*
 #create output directory to store report/exported data
 mkdir -p ${OUTDIR}/graphics/landscape_elevation_shades
 mkdir -p ${OUTDIR}/graphics/density_plots
-mkdir -p ${OUTDIR}/graphics/profile_plots
 mkdir -p ${OUTDIR}/graphics/derivatives_segmentations_variability_maps
 mkdir -p ${OUTDIR}/geotiffs
 mkdir -p ${OUTDIR}/descrip
@@ -634,7 +619,6 @@ mkdir -p ${OUTDIR}/tmp
 ##directory vars
 OUTDIR_PNGS=${OUTDIR}/graphics/derivatives_segmentations_variability_maps
 OUTDIR_DENSITY_PLOTS=${OUTDIR}/graphics/density_plots
-OUTDIR_PROFILE_PLOTS=${OUTDIR}/graphics/profile_plots
 
 #output text reports
 CSV_DERV_STATS=${OUTDIR}/descrip/final_deriv_stats.csv
@@ -2382,161 +2366,6 @@ densityPlots
 ##must be more than 1 occurance in series ie Aspect/Slope/IP
 
 variabilityMaps
-
-###/////////////////////////////////////////////////////////////////////////////
-
-### profile plots of input raster. calculated for n/s & e/w orientation. outputs 2 elevation maps with profile line & labels
-### uses region bbox for start pts. profile lines spaced according to user input.
-### r.profile generates output txts, these are merged by 10 files per new txt. merged files read into R for plots.
-
-### =====================
-
-if [ $GIS_FLAG_Z = 1 ]; then
-	##functions
-
-	mergeFiles(){
-	##groups output profile txt files into 10 files per new output file for processing in R
-
-	echo "********* inside function $1 $2"
-
-	##http://www.unix.com/shell-programming-scripting/38473-how-merge-files.html  posted 06-06-2007 by user "Shell_Life"
-	typeset -i mCnt=0
-	typeset -i mSeq=1
-	mOutFile="${2}1.txt"
-	for mFName in `ls -tr $OUTDIR_PROFILE_PLOTS/tmp/$1*`
-	do
-	  cat $mFName >> $OUTDIR_PROFILE_PLOTS/tmp/$mOutFile
-	  mCnt=$mCnt+1
-	  if [ ${mCnt} -eq 10 ]; then
-		#calc R plots
-		str1='pdf("'"$OUTDIR_PROFILE_PLOTS/Profile_Plots_$2-$mSeq"'.pdf")\ndataset <-read.table("'"$OUTDIR_PROFILE_PLOTS/tmp/$mOutFile"'",na.strings=c("*"))\nplot(dataset$V3,dataset$V4,type="S",main="Profile Plots '"$2-$mSeq"'.txt",xlab="Profile Distance",ylab="Elevation")'  
-	
-		echo -e $str1 | R -q --vanilla
-
-	    mSeq=$mSeq+1
-	    mOutFile=${2}$mSeq".txt"
-	    mCnt=0
-	  fi
-	done
-
-	}
-
-	## ============================================================================
-	mkdir $OUTDIR_PROFILE_PLOTS/tmp
-
-	#create hs z=2
-	r.shaded.relief map=$RASTER shadedmap=InputRaster_hs_z2 zmult=2 --overwrite
-
-	## ============================================================================
-
-	##create d.graph input file for east-west plots
-	EW_P_FILE=profile_ref_map_input_ew.txt
-	echo -e "size 1" > $OUTDIR_PROFILE_PLOTS/tmp/$EW_P_FILE
-
-	##create d.graph input file for north-south plots
-	NS_P_FILE=profile_ref_map_input_ns.txt
-	echo -e "size 1" > $OUTDIR_PROFILE_PLOTS/tmp/$NS_P_FILE
-
-	## ============================================================================
-
-	#extract grass region boundaries into array
-	bb=`g.region -t`
-	arr=(${bb//// })
-
-	#extents of e/w & n/s --> to determine even # of profiles to construct
-	e_ew=$(( ${arr[1]/\.*} - ${arr[0]/\.*} ))
-	e_ns=$(( ${arr[3]/\.*} - ${arr[2]/\.*} ))
-
-	#e/w & n/s # profiles from user specificed dist b/w profiles --> not aligned with grid extents
-	in=$GIS_OPT_PROFILE_DISTANCE
-	p_ew_d=$(( $e_ew / $in ))
-	p_ns_d=$(( $e_ns / $in ))
-
-	### construct e/w profiles ====================================================
-	i=1
-	cumulative=0
-
-	while [ $i -le $p_ns_d ]
-	do
-		echo "start cumulative is: $cumulative"
-		echo "bb start: ${arr[0]/\.*},$(( ${arr[2]/\.*} + $cumulative ))"
-		echo "bb end: ${arr[1]/\.*},$(( ${arr[2]/\.*} + $cumulative ))"
-	
-		##start at southern limit & increment from southern limit by user supplied distance
-		r.profile -g input=$RASTER output=$OUTDIR_PROFILE_PLOTS/tmp/profile_ew_$i.txt profile=${arr[0]/\.*},$(( ${arr[2]/\.*} + $cumulative )),${arr[1]/\.*},$(( ${arr[2]/\.*} + $cumulative ))
-	
-		##append d.graph input file for map showing labeled profiles for ref.
-		echo -e "polyline\n${arr[0]/\.*} $(( ${arr[2]/\.*} + $cumulative ))\n${arr[1]/\.*} $(( ${arr[2]/\.*} + $cumulative ))" >> $OUTDIR_PROFILE_PLOTS/tmp/$EW_P_FILE
-		#OFF_SET=$(($RANDOM + ($RANDOM % 2) * 32768))
-		OFF_SET=$(( $RANDOM / 1000 ))	
-		#echo $OFF_SET	
-		echo -e "move $(( ${arr[0]/\.*} +  $OFF_SET / 100 )) $(( ${arr[2]/\.*} + $cumulative + 7 ))" >> $OUTDIR_PROFILE_PLOTS/tmp/$EW_P_FILE
-		echo -e "text $i" >>$OUTDIR_PROFILE_PLOTS/tmp/$EW_P_FILE
-
-
-		##increment cumulative distance
-		cumulative=$(( $cumulative + $in ))
-
-		##increment counter
-		i=$(( $i + 1 ))
-		 
-	done
-
-	##merge files into groups of 10. created files used for R
-	a="profile_ew"
-	mergeFiles $a "EW_Profile"
-
-	export GRASS_PNGFILE="$OUTDIR_PROFILE_PLOTS/Profile_Reference_Map_EW.png"
-	d.mon start=PNG
-	d.his h=$RASTER i=InputRaster_hs_z2
-	d.legend $RASTER at=5,8,10,25
-	d.graph -m < $OUTDIR_PROFILE_PLOTS/tmp/profile_ref_map_input_ew.txt
-	d.mon stop=PNG
-
-	#### construct n/s profiles ====================================================
-	i=1
-	cumulative=0
-
-	while [ $i -le $p_ew_d ]
-	do
-		#echo "start cumulative is: $cumulative"
-		#echo "bb start: $(( ${arr[0]/\.*} + $cumulative )),${arr[2]/\.*}"
-		#echo "bb end: $(( ${arr[0]/\.*} + $cumulative )),${arr[3]/\.*}"
-	
-		##start at southern limit & increment from southern limit by user supplied distance
-		r.profile -g input=$RASTER output=$OUTDIR_PROFILE_PLOTS/tmp/profile_ns_$i.txt profile=$(( ${arr[0]/\.*} + $cumulative )),${arr[2]/\.*},$(( ${arr[0]/\.*} + $cumulative )),${arr[3]/\.*}
-	
-
-		##append d.graph input file for map showing labeled profiles for ref.
-		echo -e "polyline\n$(( ${arr[0]/\.*} + $cumulative )) ${arr[2]/\.*}\n$(( ${arr[0]/\.*} + $cumulative )) ${arr[3]/\.*}" >> $OUTDIR_PROFILE_PLOTS/tmp/$NS_P_FILE
-		#OFF_SET=$(($RANDOM + ($RANDOM % 2) * 32768))
-		OFF_SET=$(( $RANDOM / 1000 ))	
-		#echo $OFF_SET	
-		echo -e "move $(( ${arr[0]/\.*} + $cumulative + 4 )) $(( ${arr[2]/\.*} + $OFF_SET ))" >> $OUTDIR_PROFILE_PLOTS/tmp/$NS_P_FILE
-		echo -e "text $i" >> $OUTDIR_PROFILE_PLOTS/tmp/$NS_P_FILE
-
-
-		##increment ns_cumulative distance
-		cumulative=$(( $cumulative + $in ))
-
-		##increment counter
-		i=$(( $i + 1 ))
-	
-	done
-
-	##merge files into groups of 10. created files used for R
-	#merge files into groups of 10. created files used for R
-	a="profile_ns"
-	mergeFiles $a "NS_Profile"
-
-
-	export GRASS_PNGFILE="$OUTDIR_PROFILE_PLOTS/Profile_Reference_Map_NS.png"
-	d.mon start=PNG
-	d.his h=$RASTER i=InputRaster_hs_z2
-	d.legend $RASTER at=15,18,10,25
-	d.graph -m < $OUTDIR_PROFILE_PLOTS/tmp/profile_ref_map_input_ns.txt
-	d.mon stop=PNG
-fi
 
 ###/////////////////////////////////////////////////////////////////////////////
 
