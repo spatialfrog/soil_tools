@@ -246,32 +246,25 @@
 
 #### haralick texture --------------------------------------------------------------
 
-## TODO:how to deal with size of sliding window and distance between two samples?
-
-## #%Flag
-## #% key: ??
-## #% description: Calculate Haralick textures using grass r.texture.
-## #% guisection: Derivatives
-## #%End
-
 #%Option
 #% key: haralick_prefix
 #% type: string
 #% required: no
 #% multiple: no
-#% description: Haralick: Prefix for outputs. Must be lowercase. 
+#% description: Haralick: Prefix for outputs. Must be lower case. 
 #% answer: haralick
 #% guisection: Textures
 #%End
 
 #%Option
 #% key: haralick_texture_selection
+#% key_desc: Texture type to be applied to Elevation raster.
 #% type: string
 #% required: no
 #% multiple: no
-#% description: Haralick: Texture to calculate. Values from grass gis manual for r.texture.  
-#% options: a
-#% answer: a
+#% description: Haralick: Texture acronyms from grass gis for r.texture.  
+#% options: ASM,IDM,CON,ALL_TEXTURES
+#% answer: ASM
 #% guisection: Textures
 #%End
 
@@ -1609,22 +1602,25 @@ r.mapcalc "Mrrtf_index_$2=Mrrtf_index_$2"
 
 
 haralickTexture() {
+## function definition
+
 ## calculates haralick texture using options provided in r.texture
-
-## assuming input raster is elevation
-
+## * assuming input raster is elevation
 
 ## rescale input raster to grey scale 0-255. use r.rescale.
 r.rescale input=$1 output=elevation_rescaled.255 to=0,255
 
-
-## TODO: implement single texture (ASM) until meeting with client
-r.texture input=elevation_rescaled.255 prefix=$GIS_OPT_HARALICK_PREFIX size=$GIS_OPT_HARALICK_SLIDING_WINDOW_SIZE distance=$GIS_OPT_HARALICK_DISTANCE_BETWEEN_TWO_SAMPLES -$GIS_OPT_HARALICK_TEXTURE_SELECTION
+## ASM texture
+r.texture input=elevation_rescaled.255 prefix=$GIS_OPT_HARALICK_PREFIX size=$GIS_OPT_HARALICK_SLIDING_WINDOW_SIZE distance=$GIS_OPT_HARALICK_DISTANCE_BETWEEN_TWO_SAMPLES $HARALICK_TEXTURE_FLAG
 
 ## table linking texture flags to full names produced from grass via execution of r.texture
 ## ie -a --> ASM
-if [ "$GIS_OPT_HARALICK_TEXTURE_SELECTION" = "a" ]; then
+if [ "$HARALICK_TEXTURE_FLAG" = "-a" ]; then
     OUT_TEXTURE_TYPE="ASM"
+elif [ "$HARALICK_TEXTURE_FLAG" = "-i" ]; then
+    OUT_TEXTURE_TYPE="IDM"
+elif [ "$HARALICK_TEXTURE_FLAG" = "-c" ]; then
+    OUT_TEXTURE_TYPE="Contr"
 fi
 
 ## four files produed. each with separate angle.
@@ -2150,12 +2146,38 @@ i=$1
 ##===
 
 haralick_texture() {
+## call defined function for each iteration of spatial filter size
+
 echo "inside haralick_texture function"
 
 i=$1
 
 	echo "calculating haralick texture"
-	haralickTexture Elevation_$i $i $GIS_OPT_HARALICK_PREFIX $GIS_OPT_HARALICK_SLIDING_WINDOW_SIZE $GIS_OPT_HARALICK_DISTANCE_BETWEEN_TWO_SAMPLES $GIS_OPT_HARALICK_TEXTURE_SELECTION
+	##TODO: remove commented code
+	## haralickTexture Elevation_$i $i $GIS_OPT_HARALICK_PREFIX $GIS_OPT_HARALICK_SLIDING_WINDOW_SIZE $GIS_OPT_HARALICK_DISTANCE_BETWEEN_TWO_SAMPLES $GIS_OPT_HARALICK_TEXTURE_SELECTION
+
+## texture type to calculate. default is ASM in GRASS GUI
+## translate user text to appropiate grass flag --> user selects ASM --> a (grass flag for r.texture).
+if [ "$GIS_OPT_HARALICK_TEXTURE_SELECTION" = "ASM" ]; then
+	HARALICK_TEXTURE_FLAG="-a"
+	haralickTexture Elevation_$i $i $GIS_OPT_HARALICK_PREFIX $GIS_OPT_HARALICK_SLIDING_WINDOW_SIZE $GIS_OPT_HARALICK_DISTANCE_BETWEEN_TWO_SAMPLES $HARALICK_TEXTURE_FLAG
+elif [ "$GIS_OPT_HARALICK_TEXTURE_SELECTION" = "IDM" ]; then
+	HARALICK_TEXTURE_FLAG="-i"
+	haralickTexture Elevation_$i $i $GIS_OPT_HARALICK_PREFIX $GIS_OPT_HARALICK_SLIDING_WINDOW_SIZE $GIS_OPT_HARALICK_DISTANCE_BETWEEN_TWO_SAMPLES $HARALICK_TEXTURE_FLAG
+elif [ "$GIS_OPT_HARALICK_TEXTURE_SELECTION" = "CON" ]; then
+	HARALICK_TEXTURE_FLAG="-c"
+	haralickTexture Elevation_$i $i $GIS_OPT_HARALICK_PREFIX $GIS_OPT_HARALICK_SLIDING_WINDOW_SIZE $GIS_OPT_HARALICK_DISTANCE_BETWEEN_TWO_SAMPLES $HARALICK_TEXTURE_FLAG
+elif [ "$GIS_OPT_HARALICK_TEXTURE_SELECTION" = "ALL_TEXTURES" ]; then
+    ## calculate all textures
+	HARALICK_TEXTURE_FLAG="-a"
+	haralickTexture Elevation_$i $i $GIS_OPT_HARALICK_PREFIX $GIS_OPT_HARALICK_SLIDING_WINDOW_SIZE $GIS_OPT_HARALICK_DISTANCE_BETWEEN_TWO_SAMPLES $HARALICK_TEXTURE_FLAG
+	HARALICK_TEXTURE_FLAG="-i"
+	haralickTexture Elevation_$i $i $GIS_OPT_HARALICK_PREFIX $GIS_OPT_HARALICK_SLIDING_WINDOW_SIZE $GIS_OPT_HARALICK_DISTANCE_BETWEEN_TWO_SAMPLES $HARALICK_TEXTURE_FLAG
+	HARALICK_TEXTURE_FLAG="-c"
+	haralickTexture Elevation_$i $i $GIS_OPT_HARALICK_PREFIX $GIS_OPT_HARALICK_SLIDING_WINDOW_SIZE $GIS_OPT_HARALICK_DISTANCE_BETWEEN_TWO_SAMPLES $HARALICK_TEXTURE_FLAG
+fi
+
+
 }
 
 ##===
