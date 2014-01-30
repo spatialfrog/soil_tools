@@ -2368,6 +2368,11 @@ do
 		#r.param.scale input=Elevation_$i output=Morphometric_features_$i param=feature --overwrite
 		morphological_features $i Elevation_$i
 	fi
+	
+	## Slope length
+	if [ $GIS_FLAG_O = 1 ]; then
+		slope_length $i Elevation_$i
+	fi
 
 	## Surface "Roughness" measures
 	if [ $GIS_FLAG_V = 1 ]; then
