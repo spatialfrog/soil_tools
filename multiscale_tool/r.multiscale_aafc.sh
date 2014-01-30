@@ -628,8 +628,11 @@ mkdir -p ${OUTDIR}/geotiffs
 mkdir -p ${OUTDIR}/descrip
 mkdir -p ${OUTDIR}/input_txt_files
 mkdir -p ${OUTDIR}/tmp
+mkdir -p ${OUTDIR}/analytical_outputs/slope_length
 
-##directory vars
+## directory vars
+OUTDIR_ANALYTICAL_OUTS=${OUTDIR}/analytical_outputs
+OUTDIR_SLOPE_LENGTH=${OUTDIR}/analytical_outputs/slope_length
 OUTDIR_PNGS=${OUTDIR}/graphics/derivatives_segmentations_maps
 OUTDIR_DENSITY_PLOTS=${OUTDIR}/graphics/density_plots
 
