@@ -162,6 +162,12 @@
 #% guisection: Derivatives
 #%End
 
+#%Flag
+#% key: o
+#% description: Slope Length. May be time intensive.
+#% guisection: Derivatives
+#%End
+
 
 #### mvrbf --------------------------------------------------------------
 
@@ -2182,6 +2188,55 @@ fi
 
 
 }
+
+
+##===
+
+slope_length() {
+echo "inside slope length function"
+
+i=$1
+
+    ## calculate specific features
+	r.param.scale input=Elevation_$i output=Morphometric_features_$i param=feature --overwrite
+
+	## ensure raster mask applied if appicable to outputs
+	r.mapcalc "Morphometric_features_$i=Morphometric_features_$i"
+
+	## category labels
+	echo -e "0:\n1:Planar\n2:Pit\n3:Channel\n4:Pass (saddle)\n5:Ridge\n6:Peak" > ${OUTDIR}/input_txt_files/legend_morphometric_features.txt
+	r.category map=Morphometric_features_$i rules=${OUTDIR}/input_txt_files/legend_morphometric_features.txt
+	
+	## extract pit/peak/channel/ridge as own tmp rasters
+	r.mapcalc "pit=Morphometric_features_$i==2"
+	r.mapcalc "channel=Morphometric_features_$i==3"
+	r.mapcalc "ridge=Morphometric_features_$i==5"
+	r.mapcalc "peak=Morphometric_features_$i==6"
+	
+	## set 0 to null. needed to ensure raster to vector only creates points for valid areas.
+	r.null map=pit setnull=0
+	r.null map=channel setnull=0
+	r.null map=ridge setnull=0
+	r.null map=peak setnull=0
+	
+	## convert grass raster to grass vector
+	r.to.vect input=pit output=pit feature=point
+	r.to.vect input=channel output=channel feature=point
+	r.to.vect input=ridge output=ridge feature=point
+	r.to.vect input=peak output=peak feature=point
+	
+	## convert grass vector to esri point shapefile. append filter size. dump to /analytical_outputs/slope_length
+	v.out.ogr -s input=pit type=point dsn=$OUTDIR_SLOPE_LENGTH olayer=pit_pts_$i format=ESRI_Shapefile
+	v.out.ogr -s input=channel type=point dsn=$OUTDIR_SLOPE_LENGTH olayer=channel_pts_$i format=ESRI_Shapefile
+	v.out.ogr -s input=ridge type=point dsn=$OUTDIR_SLOPE_LENGTH olayer=ridge_pts_$i format=ESRI_Shapefile
+	v.out.ogr -s input=peak type=point dsn=$OUTDIR_SLOPE_LENGTH olayer=peak_pts_$i format=ESRI_Shapefile
+	
+	## convert elevation to vector & export shapefile
+	r.to.vect input=Elevation_$i output=elevation feature=point
+	v.out.ogr -s input=elevation type=point dsn=$OUTDIR_SLOPE_LENGTH olayer=dem_pts_$i format=ESRI_Shapefile
+	
+}
+
 
 ##===
 
