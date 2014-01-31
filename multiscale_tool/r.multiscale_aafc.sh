@@ -641,6 +641,7 @@ OUTDIR_ANALYTICAL_OUTPUTS=${OUTDIR}/analytical_outputs
 OUTDIR_SLOPE_LENGTH=${OUTDIR}/analytical_outputs/slope_length
 OUTDIR_PNGS=${OUTDIR}/graphics/derivatives_segmentations_maps
 OUTDIR_DENSITY_PLOTS=${OUTDIR}/graphics/density_plots
+OUT_TMP=${OUTDIR}/tmp
 
 #output text reports
 CSV_DERV_STATS=${OUTDIR}/descrip/final_deriv_stats.csv
@@ -2225,16 +2226,32 @@ i=$1
 	r.to.vect input=ridge output=ridge feature=point
 	r.to.vect input=peak output=peak feature=point
 	
-	## convert grass vector to esri point shapefile. append filter size. dump to /analytical_outputs/slope_length
-	v.out.ogr -s input=pit type=point dsn=$OUTDIR_SLOPE_LENGTH olayer=pit_pts_$i format=ESRI_Shapefile
-	v.out.ogr -s input=channel type=point dsn=$OUTDIR_SLOPE_LENGTH olayer=channel_pts_$i format=ESRI_Shapefile
-	v.out.ogr -s input=ridge type=point dsn=$OUTDIR_SLOPE_LENGTH olayer=ridge_pts_$i format=ESRI_Shapefile
-	v.out.ogr -s input=peak type=point dsn=$OUTDIR_SLOPE_LENGTH olayer=peak_pts_$i format=ESRI_Shapefile
+	echo -e "\nConverting grass ascii to ESRI point Shapefiles. Will take some time for large datasets.\n"
 	
-	## convert elevation to vector & export shapefile
-	r.to.vect input=Elevation_$i output=elevation feature=point
-	v.out.ogr -s input=elevation type=point dsn=$OUTDIR_SLOPE_LENGTH olayer=dem_pts_$i format=ESRI_Shapefile
+	## convert grass vector to grass ascii text file. v.out.ogr is too! slow! dump to tool_run/tmp
+	v.out.ascii input=pit output=$OUT_TMP/pit.txt format=point fs=,
+	v.out.ascii input=channel output=$OUT_TMP/channel.txt format=point fs=,
+	v.out.ascii input=ridge output=$OUT_TMP/ridge.txt format=point fs=,
+	v.out.ascii input=peak output=$OUT_TMP/peak.txt format=point fs=,
 	
+	## convert grass ascii txt file into point shapefiles. python script located /xgeng/Gis/scripts/grass_ascii_to_shp_points.
+	## output shapefiles to tool_run/analytical_outputs/slope_length
+	echo -e "\nexporting pit to shapefile\n"
+	python /home/xgeng/Gis/scripts/grass_ascii_to_shp_point.py --input_ascii $OUT_TMP/pit.txt --iteration $i --out_dir $OUTDIR_SLOPE_LENGTH
+	echo -e "\nexporting channel to shapefile\n"
+	python /home/xgeng/Gis/scripts/grass_ascii_to_shp_point.py --input_ascii $OUT_TMP/channel.txt --iteration $i --out_dir $OUTDIR_SLOPE_LENGTH
+	echo -e "\nexporting ridge to shapefile\n"
+	python /home/xgeng/Gis/scripts/grass_ascii_to_shp_point.py --input_ascii $OUT_TMP/ridge.txt --iteration $i --out_dir $OUTDIR_SLOPE_LENGTH
+	echo -e "\nexporting peak to shapefile\n"
+	python /home/xgeng/Gis/scripts/grass_ascii_to_shp_point.py --input_ascii $OUT_TMP/peak.txt --iteration $i --out_dir $OUTDIR_SLOPE_LENGTH
+	
+	## export dem only once for this. positional points don't change. export orginial dem; given filter size of 0.
+	if [ $i = 0 ]; then	
+		r.to.vect input=Elevation_$i output=dem feature=point
+		v.out.ascii input=dem output=$OUT_TMP/dem.txt format=point fs=,
+		echo -e "\nexporting dem to shapefile\n"
+		python /home/xgeng/Gis/scripts/grass_ascii_to_shp_point.py --input_ascii $OUT_TMP/dem.txt --iteration $i --out_dir $OUTDIR_SLOPE_LENGTH
+	fi
 }
 
 
