@@ -139,4 +139,19 @@ class Utils:
         """
 
         return tempfile.gettempdir()
+    
+    def convertDbResults2SimpleList(self,data):
+        """
+        convert db query data from list of tuples into simple list
+        
+        returns list
+        """
+        
+        results = []
+        for i in data:
+            results.append(i[0])
+        
+        return results
+
+
 
