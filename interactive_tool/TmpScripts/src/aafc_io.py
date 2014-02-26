@@ -45,7 +45,7 @@ class Io:
             create initial spatialite db
             """
 
-            # TODO error checking and reporting
+            # TODO: error checking and reporting -- loading cmp dbf
 
             # loads as qgis vector layer, but do not display on canvas
             # tableName will be table name in spatialite
@@ -63,7 +63,7 @@ class Io:
             convert to csv and then import.
             """
 
-            # TODO error checking
+            # TODO: error checking -- loading additional tables
 
             # temp path for conversion
             tmpPathToWriteCsv = os.path.join(self.tmpDirectory, tableName)
