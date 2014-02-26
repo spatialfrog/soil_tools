@@ -136,14 +136,13 @@ class Db:
 #        snf32.g_group3 from cmp32 join snf32 on cmp32.soilkey = snf32.soilkey where cmp32.soilkey
 #        like "ABBUFgl###N" and cmp32.sl = 242021"""
 
-        self.curs.execute(sql)
-        results = self.curs.fetchall()
+        results = self.executeSql(sql,fieldNames=True)
 
         # get column headers for pretty print
-        headers = list(map(lambda x: x[0], self.curs.description))
+        headers = list(map(lambda x: x[0], results[0]))
 
         print headers
-        print results
+        print results[1]
 
 
     def joinAllCmpRows(self):
