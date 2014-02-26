@@ -239,7 +239,7 @@ class Db:
         print "-"*20
     
     
-    def demoSimpleJoinBetweenCmpSnfTables(self,cmpTableName,snfTableName,soilKey,slcId):
+    def demoSimpleJoinBetweenCmpSnfTables(self, cmpTableName="cmp32", snfTableName="snf32", soilKey="ABBUFgl###N", slcId=242021):
         """
         simple join between cmp and snf table via single soilkey.
 
