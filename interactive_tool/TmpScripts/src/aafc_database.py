@@ -31,7 +31,7 @@ class Db:
         """
         calculate sql statement.
         
-        returns 2 objects, fieldnames and results. if fieldname not selected; returns None.
+        returns 2 objects, list of fieldnames and list of tuple results. if fieldname not selected; returns None.
         """
         
         # execute sql
@@ -203,14 +203,14 @@ class Db:
 
         print "\n" + "="*20 + " numeric calculation for sl %s" %(sl)
         sql = """select %s,percent from %s where sl = %s""" %(column,tableName,sl)
-        results = self.executeSql(sql)
+        headers, results = self.executeSql(sql)
         print "Rows for %s, percent columns prior to calculation" %(column)
         print results
         print "-"*20
         # - output of calculation
         print "-"*10 +"results"
         sql = """select distinct(sl) as sl, sum(%s * (percent/100.0)) as final from %s where sl = %s group by sl""" %(column,tableName,sl)
-        results = self.executeSql(sql)
+        headers, results = self.executeSql(sql)
         print "Calculated weighted sum for %s field. sum(%s row * percentage) for each row within single sl id." %(column,column)
         # don't show sl; only the calculated value
         print results
@@ -226,13 +226,13 @@ class Db:
         # textual: calculate dominate/sub-dominate
         print "="*20 + " categorical calculation for sl %s" %(sl)
         sql = """select %s,percent from %s where sl = %s""" %(column,tableName,sl)
-        results = self.executeSql(sql)
+        headers, results = self.executeSql(sql)
         print "Rows for %s, percent column prior to calculation" %(column)
         print results
         print "-"*20
         print "-"*10 + "results"
         sql = """select distinct(%s),count(%s) as count, sum(percent) as dominance from %s where sl = %s group by %s order by count(%s) desc""" %(column,column,tableName,sl,column,column)
-        results = self.executeSql(sql)
+        headers, results = self.executeSql(sql)
         print "Calculated dominate/sub-dominate raw results for %s.\nCategory -- Count -- Percentage" %(column)
         print results
         print "-"*20
@@ -247,10 +247,10 @@ class Db:
         
         # query
         sql = """select distinct(%s),count(%s) as count, sum(percent) as dominance from %s where sl = %s group by %s order by count(%s) desc""" %(column,column,tableName,sl,column,column)
-        results = self.executeSql(sql,fieldNames=True)
+        headers, results = self.executeSql(sql,fieldNames=True)
         
         # return headers + results
-        return results
+        return headers, results
         
     
     
@@ -271,13 +271,10 @@ class Db:
         
         print sql
         
-        results = self.executeSql(sql,fieldNames=True)
-
-        # get column headers for pretty print
-        headers = list(map(lambda x: x[0], results[0]))
+        headers, results = self.executeSql(sql,fieldNames=True)
 
         print headers
-        print results[1]
+        print results
 
 
 
