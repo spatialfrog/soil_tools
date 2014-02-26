@@ -240,7 +240,7 @@ class Db:
         results = self.executeSql(sql)
         print "Calculated weighted sum for %s field. sum(%s row * percentage) for each row within single sl id." %(column,column)
         # don't show sl; only the calculated value
-        print results[0][1]
+        print results
 
 
     def demoCalcCategorical(self,sl=254001,tableName="cmp32",column="slope"):
