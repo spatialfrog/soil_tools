@@ -10,8 +10,6 @@ import os
 import sqlite3
 
 
-# TODO: refactor. executeSql method only one to interact with db via sql
-
 class Db:
     """
     handles all db activities.
