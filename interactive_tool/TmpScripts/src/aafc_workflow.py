@@ -49,11 +49,41 @@ then add additional dbf's as new tables.
 sqliteDbName = "soilDb"
 sqliteDbPath = "/Users/drownedfrog/Projects/Contracts/AAFC/dec2013_mar2014_tool_dev/data/test/"
 
+
+# =========== configuration options.
+"""
+options user can set and then use run to run.
+ie. overwrite files, primary key of tables, default name of csv etc
+"""
+# == use existing db
+useExistingDb = False
+
+
+# == delete csv's in directory
+# TODO: config -- implement user option to delete all csv's in output directory
+
+
+# == db fields
+"""
+field names used for linking; primary/foreign key names
+"""
+# what is field name in cmp table to define slc id
+dbSlcIdKey = "sl"
+
+# what field defines soilkey
+dbSoilKey = "soilkey"
+
+# what field reflects percent in cmp
+dbPercentKey = "percent"
+
+
+
 # == output directory for csv
 """
 could be different than where db is placed
 """
 outDirectory = "/Users/drownedfrog/Projects/Contracts/AAFC/dec2013_mar2014_tool_dev/data/test/"
+
 
 # == name for csv file to be created
 """
@@ -61,13 +91,6 @@ default will be calculation.csv
 one field calculated per tool run; hence only 1 csv output @ moment.
 """
 csvFileName = "testing_calculations.csv"
-
-
-# == use existing db
-"""
-use existing spatialite db or create new db
-"""
-useExistingDb = False
 
 
 # ========= set high level variables
@@ -126,7 +149,7 @@ else:
     io.writeCsvFile(headers, results, outDirectory, fileName="calculation.csv")
     
     # write categorical column calc to csv
-    headers, results = db.calculateCategoricalField()
+    headers, results = db.calculateCategoricalField([254001,242025],dbSlcKey=dbSlcIdKey, tableName="cmp32", column="slope", dbPercentKey=dbPercentKey)
     io.writeCsvFile(headers, results, outDirectory, fileName="categorical.csv")
     
 
