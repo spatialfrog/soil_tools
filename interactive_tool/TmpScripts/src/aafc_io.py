@@ -183,9 +183,22 @@ class Io:
 
     # ===========
 
-    def writeCsvFile(self, headers, data,path):
+    def writeCsvFile(self, headers, data, path, fileName):
         """
-        TODO: write db processing results to csv
+        write sql results to new csv file.
         """
+        
+        # TODO: check csv extension exists; add if missing
+        
+        with open(os.path.join(path,fileName),"wb") as csvfile:
+            f_writer = csv.writer(csvfile,delimiter=",")
+            # write headers
+            f_writer.writerow(headers)
+            # write data
+            f_writer.writerows(data)
+        
 
-        pass
+        
+        
+
+        
