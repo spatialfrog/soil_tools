@@ -253,7 +253,9 @@ class Db:
 #        sql = """select cmp32.soilkey as cmp32_soilkey,cmp32.slope,snf32.soilkey as snf32_soilkey,snf32.'order',
 #        snf32.g_group3 from cmp32 join snf32 on cmp32.soilkey = snf32.soilkey where cmp32.soilkey
 #        like "ABBUFgl###N" and cmp32.sl = 242021"""
-
+        
+        print sql
+        
         results = self.executeSql(sql,fieldNames=True)
 
         # get column headers for pretty print
