@@ -112,7 +112,7 @@ class Utils:
 
     def validateUserInput(self, *params):
         """
-        #TODO: validate all user inputs. if any path incorrect, return error message
+        validate all user path inputs. if any path incorrect, return error message
         of first incorrect path
         """
 
