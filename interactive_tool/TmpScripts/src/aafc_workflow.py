@@ -70,7 +70,7 @@ utils = utilities.Utils(iface)
 tempSystemDirectoryPath = utils.determineSystemTempDirectory()
 
 # class instance of io
-io = inout.Io(os.path.join(sqliteDbPath, sqliteDbName), tempSystemDirectoryPath)
+io = inout.Io(inSoilDbPath, tempSystemDirectoryPath)
 
 # check user preference for using existing db or create new one
 if useExistingDb:
@@ -87,8 +87,8 @@ else:
     # remove all layers in qgis
     utils.removeAllQgisLayers()
 
-    # create new db
-    io.createNewDb(cmpDbfPath)
+    # create db and load with passed dbf paths
+    io.createNewDb(cmpDbfPath,snfDbfPath,slfDbfPath)
 
     # create database class instance
     # db must exist before sqlite connection can exit
@@ -102,6 +102,12 @@ else:
     # get listing of tables
     results = db.executeSql("select name from sqlite_master where type='table'")
     print results
+    
+    # demo outputs
+    db.demoCalcCategorical()
+    db.demoCalcNumeric()
+    #db.demoSimpleJoinBetweenCmpSnfTables()
+    
 
 
 print "========= done ========"
