@@ -28,8 +28,6 @@ import aafc_gui as gui
 
 
 
-#TODO: pass iface refernce to all qgis functions that require
-
 # ========= inputs to be set via pyqt4 gui
 """
 will be passed via pyqt4 gui
