@@ -75,7 +75,7 @@ class Io:
             QgsVectorFileWriter.writeAsVectorFormat(dbfLayer,tmpPathToWriteCsv,"CP1250",None,"CSV",False,None)
 
             # load csv into db.
-            io.convert(tmpPathToWriteCsv, self.sqliteDbPath,tableName)
+            self.convert(tmpPathToWriteCsv, self.sqliteDbPath,tableName)
 
 
         # process cmp dbf first
@@ -94,14 +94,14 @@ class Io:
     # Placed in the Public Domain\
     """
 
-    def convert(filepath_or_fileobj, dbpath, table='data'):
+    def convert(self, filepath_or_fileobj, dbpath, table='data'):
         if isinstance(filepath_or_fileobj, basestring):
             fo = open(filepath_or_fileobj)
         else:
             fo = filepath_or_fileobj
         reader = csv.reader(fo)
 
-        types = _guess_types(fo)
+        types = self._guess_types(fo)
         fo.seek(0)
         headers = reader.next()
 
@@ -125,7 +125,7 @@ class Io:
         conn.commit()
         c.close()
 
-    def _guess_types(fileobj, max_sample_size=100):
+    def _guess_types(self, fileobj, max_sample_size=100):
         '''Guess column types (as for SQLite) of CSV.
 
         :param fileobj: read-only file object for a CSV file.
@@ -173,7 +173,7 @@ class Io:
 
     # ===========
 
-    def writeCsvFile(headers, data,path):
+    def writeCsvFile(self, headers, data,path):
         """
         TODO write db processing results to csv
         """
