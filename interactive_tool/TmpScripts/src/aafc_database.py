@@ -165,7 +165,7 @@ class Db:
     entire table of unique sl id's
     """
 
-    def calculateCategoricalField(self):
+    def calculateCategoricalField(self, sl=254001, tableName="cmp32", column="slope"):
         """
         TODO: implement calculate categorical field method
         - only show sub-dominate if dominate % < 60
@@ -177,7 +177,27 @@ class Db:
         returns sl ids,rows
         """
 
-        pass
+        #TODO: categorical calc -- process arbitary number of sl id's
+        
+        # summarize single sl id. determine count of categories present. rank by high-low.
+        # dominate has highest count, sub-dominate is second highest.
+        sql = """select distinct(%s),count(%s) as count, sum(percent) as dominance from %s where sl = %s group by %s order by count(%s) desc""" %(column,column,tableName,sl,column,column)
+        headers, rows = self.executeSql(sql,fieldNames=True)
+        
+        #TODO: categorical calc -- only show sub-dominate if dominate < 60%
+        
+        # select dominate/sub-dominate
+        results = []
+        
+        # dominate
+        results.append(rows[0])
+        # sub-dominate
+        results.append(rows[1])
+        
+        #TODO: categorical calc -- return any number of results. only 1 header instance of data.
+        
+        # return headers + results
+        return headers, results
 
 
     def calculateNumericField(self):
