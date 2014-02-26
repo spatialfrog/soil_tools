@@ -125,6 +125,10 @@ else:
     headers, results = db.demoCategoricalColumnToCsv()
     io.writeCsvFile(headers, results, outDirectory, fileName="calculation.csv")
     
+    # write categorical column calc to csv
+    headers, results = db.calculateCategoricalField()
+    io.writeCsvFile(headers, results, outDirectory, fileName="categorical.csv")
+    
 
 
 print "========= done ========"
