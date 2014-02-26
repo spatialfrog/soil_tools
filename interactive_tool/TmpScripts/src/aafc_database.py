@@ -239,9 +239,9 @@ class Db:
         print "-"*20
     
     
-    def demoDbTestQuriesTableCmpSnf(self,cmpTableName,snfTableName,soilKey,slcId):
+    def demoSimpleJoinBetweenCmpSnfTables(self,cmpTableName,snfTableName,soilKey,slcId):
         """
-        test queries against join between cmp and snf table via single soilkey.
+        simple join between cmp and snf table via single soilkey.
 
         return columns hardcoded @ moment.
         """
