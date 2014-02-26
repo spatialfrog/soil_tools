@@ -165,10 +165,11 @@ class Db:
     entire table of unique sl id's
     """
 
-    def calculateCategoricalField(self, slcIds, tableName="cmp32", column="slope"):
+    def calculateCategoricalField(self, slcIds, dbSlcKey="sl", tableName="cmp32", column="slope"):
         """
         TODO: categorical calc -- update doc string
         
+        dbSlcKey is column for slc id's.
         slcIds is any iterable object. 
         
         - only show sub-dominate if dominate % < 60
@@ -188,7 +189,7 @@ class Db:
         
             # summarize single sl id. determine count of categories present. rank by high-low.
             # dominate has highest count, sub-dominate is second highest.
-            sql = """select distinct(%s),count(%s) as count, sum(percent) as dominance from %s where sl = %s group by %s order by count(%s) desc""" %(column,column,tableName,slcId,column,column)
+            sql = """select distinct(%s),count(%s) as count, sum(percent) as dominance from %s where %s = %s group by %s order by count(%s) desc""" %(column,column,tableName,dbSlcKey,slcId,column,column)
             headers, rows = self.executeSql(sql,fieldNames=True)
             
             #TODO: categorical calc -- check return sql values for "" and replace with nulls
