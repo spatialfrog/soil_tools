@@ -149,7 +149,7 @@ class Utils:
         
         results = []
         for i in data:
-            results.append(i[0])
+            results.append(i)
         
         return results
     
