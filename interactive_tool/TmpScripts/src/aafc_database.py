@@ -184,7 +184,7 @@ class Db:
 
     def joinAllCmpRows(self):
         """
-        TODO: implement
+        TODO: implement join all cmp table rows
 
         link all soilkeys for single SLC id from cmp table to snf table - with user defined snf landuse of either N/A.
         if A not present, default to A.
@@ -232,7 +232,7 @@ class Db:
 
     def calculateCategoricalField(self):
         """
-        TODO: implement
+        TODO: implement calculate categorical field method
         - only show sub-dominate if dominate % < 60
         - % has no wieght on sub-dominate. take first one.
         - * check if result class = ""; replace with "NULL"
@@ -247,7 +247,7 @@ class Db:
 
     def calculateNumericField(self):
         """
-        TODO implement
+        TODO: implement numeric calculation method
 
         calculates weighted summed average of single numeric db field.
 
