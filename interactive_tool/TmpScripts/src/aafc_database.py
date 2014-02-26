@@ -120,37 +120,6 @@ class Db:
     slf layer_no appears to be layer number.
     """
 
-    def tmpDbTestQuriesSingleTable(self,tableName="cmp32"):
-        """
-        test queries against single table.
-        """
-
-        # get listing of all tables
-        self.executeSql("select name from sqlite_master where type='table'")
-        print self.curs.fetchall()
-
-        # get column names
-        sql = "select * from %s limit 1" % (tableName)
-        self.curs.execute(sql)
-
-        # clean up
-        headers = list(map(lambda x:x[0], self.curs.description))
-        print headers
-
-        # get first 10 rows
-        sql = "select * from % limit 10" % (tableName)
-        self.curs.execute(sql)
-        rows = self.curs.fetchall()
-        print rows
-
-        # get first 10 distinct sl id's
-        sql = "select distinct(sl) from %s" % (tableName)
-
-        results = self.executeSql(sql)
-        print "\nDistinct SL id's. Only showing 10 results from several thousand."
-        print results[:10]
-
-
 
     def tmpDbTestQuriesTableCmpSnf(self,cmpTableName,snfTableName,soilKey,slcId):
         """
