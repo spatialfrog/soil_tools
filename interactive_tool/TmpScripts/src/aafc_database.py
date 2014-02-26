@@ -118,31 +118,6 @@ class Db:
     slf layer_no appears to be layer number.
     """
 
-
-    def tmpDbTestQuriesTableCmpSnf(self,cmpTableName,snfTableName,soilKey,slcId):
-        """
-        test queries against join between cmp and snf table via single soilkey.
-
-        return columns hardcoded @ moment.
-        """
-
-        sql = """select %s.soilkey as %s_soilkey,%s.slope,%s.soilkey as %s_soilkey,%s.'order',
-        %s.g_group3 from %s join %s on %s.soilkey = %s.soilkey where %s.soilkey
-        like %s and %s.sl = %s""" % (cmpTableName,cmpTableName,cmpTableName,snfTableName,snfTableName,snfTableName,snfTableName,cmpTableName,snfTableName,cmpTableName,snfTableName,cmpTableName,soilKey,cmpTableName,slcId)
-
-#        sql = """select cmp32.soilkey as cmp32_soilkey,cmp32.slope,snf32.soilkey as snf32_soilkey,snf32.'order',
-#        snf32.g_group3 from cmp32 join snf32 on cmp32.soilkey = snf32.soilkey where cmp32.soilkey
-#        like "ABBUFgl###N" and cmp32.sl = 242021"""
-
-        results = self.executeSql(sql,fieldNames=True)
-
-        # get column headers for pretty print
-        headers = list(map(lambda x: x[0], results[0]))
-
-        print headers
-        print results[1]
-
-
     def joinAllCmpRows(self):
         """
         TODO: implement join all cmp table rows
@@ -217,7 +192,8 @@ class Db:
 
         pass
 
-    # ========== categorical/numeric demos
+
+    # ========== demos
 
     def demoCalcNumeric(self,sl=254001,tableName="cmp32",column="cfrag1_v"):
         """
@@ -261,4 +237,30 @@ class Db:
         print "Calculated dominate/sub-dominate raw results for %s.\nCategory -- Count -- Percentage" %(column)
         print results
         print "-"*20
+    
+    
+    def demoDbTestQuriesTableCmpSnf(self,cmpTableName,snfTableName,soilKey,slcId):
+        """
+        test queries against join between cmp and snf table via single soilkey.
+
+        return columns hardcoded @ moment.
+        """
+
+        sql = """select %s.soilkey as %s_soilkey,%s.slope,%s.soilkey as %s_soilkey,%s.'order',
+        %s.g_group3 from %s join %s on %s.soilkey = %s.soilkey where %s.soilkey
+        like %s and %s.sl = %s""" % (cmpTableName,cmpTableName,cmpTableName,snfTableName,snfTableName,snfTableName,snfTableName,cmpTableName,snfTableName,cmpTableName,snfTableName,cmpTableName,soilKey,cmpTableName,slcId)
+
+#        sql = """select cmp32.soilkey as cmp32_soilkey,cmp32.slope,snf32.soilkey as snf32_soilkey,snf32.'order',
+#        snf32.g_group3 from cmp32 join snf32 on cmp32.soilkey = snf32.soilkey where cmp32.soilkey
+#        like "ABBUFgl###N" and cmp32.sl = 242021"""
+
+        results = self.executeSql(sql,fieldNames=True)
+
+        # get column headers for pretty print
+        headers = list(map(lambda x: x[0], results[0]))
+
+        print headers
+        print results[1]
+
+
 
