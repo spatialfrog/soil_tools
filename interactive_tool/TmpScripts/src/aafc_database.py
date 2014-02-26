@@ -239,6 +239,19 @@ class Db:
         print "-"*20
     
     
+    def demoCategoricalColumnToCsv(self, sl=254001, tableName="cmp32", column="slope"):
+        """
+        demo to return categorical calculation.
+        
+        returns headers and row data to write to csv.
+        """
+        
+        sql = """select distinct(%s),count(%s) as count, sum(percent) as dominance from %s where sl = %s group by %s order by count(%s) desc""" %(column,column,tableName,sl,column,column)
+        results = self.executeSql(sql,fieldNames=True)
+        
+        return results
+    
+    
     def demoSimpleJoinBetweenCmpSnfTables(self, cmpTableName="cmp32", snfTableName="snf32", soilKey="ABBUFgl###N", slcId=242021):
         """
         simple join between cmp and snf table via single soilkey.
