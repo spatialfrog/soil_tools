@@ -19,7 +19,7 @@ from qgis.gui import *
 from qgis.utils import *
 
 # TODO: remove from final implementation. not an issue as qgis put .qgis/python/plugins onto sys path
-sys.path.append(r"/Users/drownedfrog/Documents/workspace/git/aafc_qgis_soil_tool/TmpScripts/")
+sys.path.append(r"/Users/drownedfrog/Documents/workspace/git/aafc-grip-tool-dev-dec2013-mar2014/interactive_tool/TmpScripts/src/")
 
 import aafc_io as inout
 import aafc_utilities as utilities
