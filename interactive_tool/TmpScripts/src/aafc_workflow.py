@@ -55,6 +55,13 @@ could be different than where db is placed
 """
 outDirectory = "/Users/drownedfrog/Projects/Contracts/AAFC/dec2013_mar2014_tool_dev/data/test/"
 
+# == name for csv file to be created
+"""
+default will be calculation.csv
+one field calculated per tool run; hence only 1 csv output @ moment.
+"""
+csvFileName = "testing_calculations.csv"
+
 
 # == use existing db
 """
@@ -116,7 +123,7 @@ else:
     
     # write categorical demo to csv
     headers, results = db.demoCategoricalColumnToCsv()
-    io.writeCsvFile(headers, results, path)
+    io.writeCsvFile(headers, results, outDirectory, fileName="calculation.csv")
     
 
 
