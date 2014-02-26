@@ -236,14 +236,14 @@ class Db:
 
         print "\n" + "="*20 + " numeric calculation for sl %s" %(sl)
         sql = """select %s,percent from %s where sl = %s""" %(column,tableName,sl)
-        headers, results = self.executeSql(sql)
+        results = self.executeSql(sql)
         print "Rows for %s, percent columns prior to calculation" %(column)
         print results
         print "-"*20
         # - output of calculation
         print "-"*10 +"results"
         sql = """select distinct(sl) as sl, sum(%s * (percent/100.0)) as final from %s where sl = %s group by sl""" %(column,tableName,sl)
-        headers, results = self.executeSql(sql)
+        results = self.executeSql(sql)
         print "Calculated weighted sum for %s field. sum(%s row * percentage) for each row within single sl id." %(column,column)
         # don't show sl; only the calculated value
         print results
