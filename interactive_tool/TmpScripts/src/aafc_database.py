@@ -17,7 +17,7 @@ class Db:
     handles all db activities.
     """
 
-    def __init__(self,sqliteDbPath,tmpSystemDirectory):
+    def __init__(self, sqliteDbPath, tmpSystemDirectory):
         # db path
         self.sqliteDbPath = sqliteDbPath
 
@@ -125,7 +125,7 @@ class Db:
     slf layer_no appears to be layer number.
     """
 
-    def tmpDbTestQuriesSingleTable(self,tableName):
+    def tmpDbTestQuriesSingleTable(self,tableName="cmp32"):
         """
         test queries against single table.
         """
@@ -151,7 +151,7 @@ class Db:
         # get first 10 distinct sl id's
         sql = "select distinct(sl) from %s" % (tableName)
 
-        results = executeSql(sql)
+        results = self.executeSql(sql)
         print "\nDistinct SL id's. Only showing 10 results from several thousand."
         print results[:10]
 
@@ -161,7 +161,7 @@ class Db:
         """
         test queries against join between cmp and snf table via single soilkey.
 
-        return columns harcoded @ moment.
+        return columns hardcoded @ moment.
         """
 
         sql = """select %s.soilkey as %s_soilkey,%s.slope,%s.soilkey as %s_soilkey,%s.'order',
@@ -267,14 +267,14 @@ class Db:
 
         print "\n" + "="*20 + " numeric calculation for sl %s" %(sl)
         sql = """select %s,percent from %s where sl = %s""" %(column,tableName,sl)
-        results = executeSql(sql)
+        results = self.executeSql(sql)
         print "Rows for %s, percent columns prior to calculation" %(column)
         print results
         print "-"*20
         # - output of calculation
         print "-"*10 +"results"
         sql = """select distinct(sl) as sl, sum(%s * (percent/100.0)) as final from %s where sl = %s group by sl""" %(column,tableName,sl)
-        results = executeSql(sql)
+        results = self.executeSql(sql)
         print "Calculated weighted sum for %s field. sum(%s row * percentage) for each row within single sl id." %(column,column)
         # don't show sl; only the calculated value
         print results[0][1]
@@ -290,13 +290,13 @@ class Db:
         # textual: calculate dominate/sub-dominate
         print "="*20 + " categorical calculation for sl %s" %(sl)
         sql = """select %s,percent from %s where sl = %s""" %(column,tableName,sl)
-        results = executeSql(sql)
+        results = self.executeSql(sql)
         print "Rows for %s, percent column prior to calculation" %(column)
         print results
         print "-"*20
         print "-"*10 + "results"
         sql = """select distinct(%s),count(%s) as count, sum(percent) as dominance from %s where sl = %s group by %s order by count(%s) desc""" %(column,column,tableName,sl,column,column)
-        results = executeSql(sql)
+        results = self.executeSql(sql)
         print "Calculated dominate/sub-dominate raw results for %s.\nCategory -- Count -- Percentage" %(column)
         print results
         print "-"*20
