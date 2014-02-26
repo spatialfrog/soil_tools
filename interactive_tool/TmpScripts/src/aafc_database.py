@@ -43,8 +43,8 @@ class Db:
             
             return names, self.curs.fetchall()
         else:
-            # return all rows
-            return None, self.curs.fetchall()
+            # only return data
+            return self.curs.fetchall()
 
 
     def updateDbTableName(self,tableName):
