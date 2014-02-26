@@ -27,6 +27,27 @@ class Db:
 
         # temp system directory
         self.tmpDirectory = tmpSystemDirectory
+        
+    
+    def executeSql(self,sqlString, fieldNames=False):
+        """
+        calculate sql statement.
+
+        return list of tuples of all rows from query. 
+        optional to return field names from query. will be tuple of (field names, query results).
+        """
+        
+        # execute sql
+        self.curs.execute(sqlString)
+        
+        if fieldNames:
+            # extract first item from tuple
+            names = list(map(lambda x: x[0], self.curs.description))
+            
+            return (names, self.curs.fetchall())
+        else:
+            # return all rows
+            return self.curs.fetchall()
 
 
     def updateDbTableName(self,tableName):
@@ -84,32 +105,6 @@ class Db:
         return itemDataType
 
 
-    def executeSql(self,sqlString):
-        """
-        calculate sql statement.
-
-        return all rows from query. (list of tuples).
-        """
-
-        self.curs.execute(sqlString)
-
-        # return all rows
-        return self.curs.fetchall()
-
-
-    def getFieldNames(self,sqlString):
-        """
-        return listing of query field names.
-        """
-
-        self.curs.execute(sqlString)
-
-        # extract first item from tuple
-        fieldNames = list(map(lambda x: x[0], self.curs.description))
-
-        return fieldNames
-
-
     # ========== soil queries between tables
     """
     cmp32 is base table for all quieries. must go in order of cmp32 -- snf32 -- slf32.
@@ -131,7 +126,7 @@ class Db:
         """
 
         # get listing of all tables
-        self.curs.execute("select name from sqlite_master where type='table'")
+        self.executeSql("select name from sqlite_master where type='table'")
         print self.curs.fetchall()
 
         # get column names
