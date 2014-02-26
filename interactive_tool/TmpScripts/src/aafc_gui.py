@@ -6,7 +6,7 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
 
-def getFilePathDialog(self,searchDirectory,filter="dBASE (*.dbf)"):
+def getFilePathDialog(self, searchDirectory, filter="dBASE (*.dbf)"):
         """
         present standard qt file dialog. user selects single file.
 

@@ -15,7 +15,7 @@ class Io:
     handles all io
     """
 
-    def __init__(self,sqliteDbPath,tmpSystemDirectory):
+    def __init__(self, sqliteDbPath, tmpSystemDirectory):
         # db path
         self.sqliteDbPath = sqliteDbPath
 
@@ -23,7 +23,7 @@ class Io:
         self.tmpDirectory = tmpSystemDirectory
 
 
-    def createNewDb(self,cmpDbfPath,*params):
+    def createNewDb(self, cmpDbfPath, *params):
         """
         create initial spatialite db using cmp db; this table is always used.
 
@@ -40,7 +40,7 @@ class Io:
             return os.path.splitext(os.path.basename(dbfPath))[0]
 
 
-        def createInitialDb(cmpDbfPath,tableName):
+        def createInitialDb(cmpDbfPath, tableName):
             """
             create initial spatialite db
             """
@@ -56,7 +56,7 @@ class Io:
             QgsVectorFileWriter.writeAsVectorFormat(dbfLayer,self.sqliteDbPath,"CP1250",None,"SQLite",False,None,["SPATIALITE=yes"])
 
 
-        def addOtherDbfsToDb(dbfPath,tableName):
+        def addOtherDbfsToDb(dbfPath, tableName):
             """
             add snl/snf or other dfb's to spatialite db.
 
@@ -66,16 +66,16 @@ class Io:
             # TODO error checking
 
             # temp path for conversion
-            tmpPathToWriteCsv = os.path.join(self.tmpDirectory,tableName)
+            tmpPathToWriteCsv = os.path.join(self.tmpDirectory, tableName)
 
             # create qgis vector layer
-            dbfLayer = QgsVectorLayer(dbfPath,tableName,"ogr")
+            dbfLayer = QgsVectorLayer(dbfPath, tableName,"ogr")
 
             # convert to csv using qgis ogr provider
             QgsVectorFileWriter.writeAsVectorFormat(dbfLayer,tmpPathToWriteCsv,"CP1250",None,"CSV",False,None)
 
             # load csv into db.
-            io.convert(tmpPathToWriteCsv,self.sqliteDbPath,tableName)
+            io.convert(tmpPathToWriteCsv, self.sqliteDbPath,tableName)
 
 
         # process cmp dbf first
@@ -83,7 +83,7 @@ class Io:
         # create initial table
         createInitialDb(cmpDbfPath,tableName)
 
-        # TODO parse additional *params and load dbf's into db
+        #TODO: parse additional *params and load dbf's into db
 
 
     # ========== read csv file into existing sqlite db
@@ -173,7 +173,7 @@ class Io:
 
     # ===========
 
-    def writeCsvFile(headers,data,path):
+    def writeCsvFile(headers, data,path):
         """
         TODO write db processing results to csv
         """

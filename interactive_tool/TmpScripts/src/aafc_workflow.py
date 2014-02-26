@@ -29,7 +29,7 @@ import aafc_gui as gui
 
 
 
-# TODO: pass iface refernce to all qgis functions that require
+#TODO: pass iface refernce to all qgis functions that require
 
 # ========= inputs to be set via pyqt4 gui
 """
@@ -45,7 +45,8 @@ slfDbfPath = r"/Users/drownedfrog/Projects/Contracts/AAFC/dec2013_mar2014_tool_d
 
 # == output main db name & path
 """
-single spatialite db from cmp dbf; this table is primary table. then add additional dbf's as new tables.
+single spatialite db from cmp dbf; this table is primary table.
+then add additional dbf's as new tables.
 """
 # output spatialite db. ogr will add extension.
 sqliteDbName = "soilDb"
@@ -72,7 +73,7 @@ utils = utilities.Utils(iface)
 tempSystemDirectoryPath = utils.determineSystemTempDirectory()
 
 # class instance of io
-io = inout.Io(os.path.join(sqliteDbPath,sqliteDbName),tempSystemDirectoryPath)
+io = inout.Io(os.path.join(sqliteDbPath, sqliteDbName), tempSystemDirectoryPath)
 
 # check user preference for using existing db or create new one
 if useExistingDb:
@@ -84,7 +85,7 @@ else:
     utils.validateUserInput(cmpDbfPath)
 
     # remove existing db if user provides same name
-    utils.deleteFile(os.path.join(sqliteDbPath,sqliteDbName))
+    utils.deleteFile(os.path.join(sqliteDbPath, sqliteDbName))
 
     # remove all layers in qgis
     utils.removeAllQgisLayers()
@@ -94,7 +95,7 @@ else:
 
     # create database class instance
     # db must exist before sqlite connection can exit
-    db = database.Db(inSoilDbPath,tempSystemDirectoryPath)
+    db = database.Db(inSoilDbPath, tempSystemDirectoryPath)
 
     # change initial loaded table to correct table name
     # created db table has name of db. change this to name of dbf

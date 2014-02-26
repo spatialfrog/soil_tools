@@ -26,7 +26,7 @@ class Utils:
         self.iface = iface
 
 
-    def loadDbTableAsLayerIntoQgis(self,filePath,tableName,provider="spatialite"):
+    def loadDbTableAsLayerIntoQgis(self, filePath, tableName, provider="spatialite"):
         """
         load single db layer from spatialite into qgis toc as vector layer.
         connection string created to load.
@@ -40,7 +40,7 @@ class Utils:
         ##self.iface.addVectorLayer(filename,file_name,provider)
 
         # parameterize connection string
-        connectionUrl = 'dbname=%s table=%s, %s, %s' %(filePath,tableName,tableName,provider)
+        connectionUrl = 'dbname=%s table=%s, %s, %s' %(filePath, tableName, tableName, provider)
 
         # create qgis vector layer. connection url to single db table
         ### QgsVectorLayer('dbname="/Users/drownedfrog/Projects/Contracts/AAFC/dec2013_mar2014_tool_dev/data/test/cmp32.sqlite" table="cmp32"', 'cmp32_db', 'spatialite')
@@ -54,7 +54,7 @@ class Utils:
             return "Issue loading db layer. Check connection url ", connectionUrl
 
 
-    def communicateWithUserInQgis(self,message,level="INFO",messageExistanceDuration=5):
+    def communicateWithUserInQgis(self, message,level="INFO", messageExistanceDuration=5):
         """
         provides standardized way to communicate with user. qgis message bar
         system is used.
@@ -78,10 +78,10 @@ class Utils:
             displayLevel = messageBar.INFO
 
         # output message to qgis
-        messageBar.pushMessage(message,displayLevel,messageExistanceDuration)
+        messageBar.pushMessage(message, displayLevel, messageExistanceDuration)
 
 
-    def cleanUp(self,dbConnection):
+    def cleanUp(self, dbConnection):
         """
         house cleaning prior to script ending.
         """
@@ -89,7 +89,7 @@ class Utils:
         dbConnection.close()
 
 
-    def checkFileExits(self,path):
+    def checkFileExits(self, path):
         """
         check path exists for full given path. return True/False.
         """
@@ -100,7 +100,7 @@ class Utils:
             return False
 
 
-    def deleteFile(self,path):
+    def deleteFile(self, path):
         """
         checks path exists, then deletes.
         """
@@ -110,9 +110,9 @@ class Utils:
             os.remove(path)
 
 
-    def validateUserInput(self,*params):
+    def validateUserInput(self, *params):
         """
-        TODO validate all user inputs. if any path incorrect, return error message
+        #TODO: validate all user inputs. if any path incorrect, return error message
         of first incorrect path
         """
 
