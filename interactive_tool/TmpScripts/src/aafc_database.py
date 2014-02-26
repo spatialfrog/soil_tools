@@ -167,7 +167,8 @@ class Db:
 
     def calculateCategoricalField(self, sl=254001, tableName="cmp32", column="slope"):
         """
-        TODO: implement calculate categorical field method
+        TODO: categorical calc -- update doc string
+        
         - only show sub-dominate if dominate % < 60
         - % has no wieght on sub-dominate. take first one.
         - * check if result class = ""; replace with "NULL"
@@ -183,6 +184,8 @@ class Db:
         # dominate has highest count, sub-dominate is second highest.
         sql = """select distinct(%s),count(%s) as count, sum(percent) as dominance from %s where sl = %s group by %s order by count(%s) desc""" %(column,column,tableName,sl,column,column)
         headers, rows = self.executeSql(sql,fieldNames=True)
+        
+        #TODO: categorical calc -- check return sql values for "" and replace with nulls
         
         #TODO: categorical calc -- only show sub-dominate if dominate < 60%
         
