@@ -165,9 +165,11 @@ class Db:
     entire table of unique sl id's
     """
 
-    def calculateCategoricalField(self, sl=254001, tableName="cmp32", column="slope"):
+    def calculateCategoricalField(self, slcIds, tableName="cmp32", column="slope"):
         """
         TODO: categorical calc -- update doc string
+        
+        slcIds is any iterable object. 
         
         - only show sub-dominate if dominate % < 60
         - % has no wieght on sub-dominate. take first one.
@@ -175,31 +177,30 @@ class Db:
 
         calculates dominate/sub-dominate results for single string db field
 
-        returns sl ids,rows
+        returns columns headers plus results.
         """
-
-        #TODO: categorical calc -- process arbitary number of sl id's
         
-        # summarize single sl id. determine count of categories present. rank by high-low.
-        # dominate has highest count, sub-dominate is second highest.
-        sql = """select distinct(%s),count(%s) as count, sum(percent) as dominance from %s where sl = %s group by %s order by count(%s) desc""" %(column,column,tableName,sl,column,column)
-        headers, rows = self.executeSql(sql,fieldNames=True)
-        
-        #TODO: categorical calc -- check return sql values for "" and replace with nulls
-        
-        #TODO: categorical calc -- only show sub-dominate if dominate < 60%
-        
-        # select dominate/sub-dominate
+        # hold select dominate/sub-dominate data
         results = []
         
-        # dominate
-        results.append(rows[0])
-        # sub-dominate
-        results.append(rows[1])
+        for slcId in slcIds:
+            # process each sl id separatly
         
-        #TODO: categorical calc -- return any number of results. only 1 header instance of data.
+            # summarize single sl id. determine count of categories present. rank by high-low.
+            # dominate has highest count, sub-dominate is second highest.
+            sql = """select distinct(%s),count(%s) as count, sum(percent) as dominance from %s where sl = %s group by %s order by count(%s) desc""" %(column,column,tableName,slcId,column,column)
+            headers, rows = self.executeSql(sql,fieldNames=True)
+            
+            #TODO: categorical calc -- check return sql values for "" and replace with nulls
         
-        # return headers + results
+            #TODO: categorical calc -- only show sub-dominate if dominate < 60%
+        
+            # dominate
+            results.append(rows[0])
+            # sub-dominate
+            results.append(rows[1])
+            
+        # return headers and results. headers will be last iteration.
         return headers, results
 
 
