@@ -198,19 +198,19 @@ class Db:
             (select distinct(%s) as dominate_category, %s, sum(%s) as dominate_weight 
             from %s where %s = %s group by %s order by count(%s) desc limit 1) as t """ %(column,dbSlcKey,dbPercentKey, tableName, dbSlcKey, slcId,column,column)
             
-            headers, rows = self.executeSql(sql,fieldNames=True)
+            header, row = self.executeSql(sql,fieldNames=True)
+            
+            # only single row returned per slc. remove outer list to ensure we return a list of tuples.
+            results.append(row[0])
+                
             
             #TODO: categorical calc -- check return sql values for "" and replace with nulls
         
             #TODO: categorical calc -- only show sub-dominate if dominate < 60%
         
-            # dominate
-            results.append(rows)
-            # sub-dominate
-            ##results.append(rows[1])
             
         # return headers and results. headers will be last iteration.
-        return headers, results
+        return header, results
 
 
     def calculateNumericField(self):
