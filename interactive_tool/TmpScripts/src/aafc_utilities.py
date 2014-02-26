@@ -11,7 +11,6 @@ from qgis.utils import *
 import os
 import tempfile
 
-import aafc_io as io
 
 class Utils:
     """
@@ -140,6 +139,7 @@ class Utils:
 
         return tempfile.gettempdir()
     
+    
     def convertDbResults2SimpleList(self,data):
         """
         convert db query data from list of tuples into simple list
@@ -152,6 +152,8 @@ class Utils:
             results.append(i[0])
         
         return results
+    
+
 
 
 
