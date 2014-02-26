@@ -60,7 +60,8 @@ class Io:
             """
             add snl/snf or other dfb's to spatialite db.
 
-            convert to csv and then import.
+            convert dbf to csv, write to tmp system directory. import csv in to existing db.
+            table names reflect csv name.
             """
 
             # TODO: error checking -- loading additional tables
@@ -75,7 +76,7 @@ class Io:
             QgsVectorFileWriter.writeAsVectorFormat(dbfLayer,tmpPathToWriteCsv,"CP1250",None,"CSV",False,None)
 
             # load csv into db.
-            self.convert(tmpPathToWriteCsv, self.sqliteDbPath,tableName)
+            self.convert(tmpPathToWriteCsv + ".csv", self.sqliteDbPath,tableName)
 
 
         # process cmp dbf first
@@ -84,6 +85,15 @@ class Io:
         createInitialDb(cmpDbfPath,tableName)
 
         #TODO: parse additional *params and load dbf's into db
+        # check if additional dbf paths passed
+        if params:
+            # process each path
+            for i in params:
+                # get table name
+                tableName = determineDbfName(i)
+                # convert to csv & load
+                addOtherDbfsToDb(i, tableName)
+        
 
 
     # ========== read csv file into existing sqlite db
