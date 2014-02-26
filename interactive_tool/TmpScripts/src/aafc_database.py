@@ -10,7 +10,7 @@ import os
 import sqlite3
 
 
-# TODO refactor. executeSql method only one to interact with db via sql
+# TODO: refactor. executeSql method only one to interact with db via sql
 
 class Db:
     """
@@ -214,7 +214,7 @@ class Db:
 
     def createJoinResultsTable(self,slcId):
         """
-        TODO method to create tmp table populated with all joined rows for single slc from cmp table to snf
+        TODO: method to create tmp table populated with all joined rows for single slc from cmp table to snf
 
         create single tmp table to hold row results from single sl cmp join to snf table.
 

@@ -75,7 +75,7 @@ io = inout.Io(os.path.join(sqliteDbPath, sqliteDbName), tempSystemDirectoryPath)
 # check user preference for using existing db or create new one
 if useExistingDb:
     # TODO validate user input
-    # TODO implement using existing db
+    # TODO: user wants to use existing db
     pass
 else:
     # validate user input
@@ -96,7 +96,7 @@ else:
 
     # change initial loaded table to correct table name
     # created db table has name of db. change this to name of dbf
-    # TODO parameterize name from dbf -- might need to be generic in utilities. io.createDb has similar
+    # TODO: parameterize name from dbf -- might need to be generic in utilities. io.createDb has similar
     db.updateDbTableName("cmp32")
 
     # get listing of tables

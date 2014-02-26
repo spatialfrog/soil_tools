@@ -9,7 +9,6 @@ import sys
 import sqlite3
 
 # cmp db table values
-# TODO: feed in from qui
 # sl id
 slId = [242025,254001,]
 # fields to calculate on. mix of numeric/text
@@ -41,7 +40,6 @@ dbfLayer = QgsVectorLayer(dbfPath,"tmpTable","ogr")
 QgsVectorFileWriter.writeAsVectorFormat(dbfLayer,outSqliteDbPath,"CP1250",None,"SQLite",False,None,["SPATIALITE=yes"])
 
 # ==== load sqlite db into qgis
-# TODO: parameterize connection string
 # load db layer
 dbLayer = QgsVectorLayer('dbname="/Users/drownedfrog/Projects/Contracts/AAFC/dec2013_mar2014_tool_dev/data/test/cmp32.sqlite" table="cmp32"', 'cmp32_db', 'spatialite')
 QgsMapLayerRegistry.instance().addMapLayer(dbLayer)
@@ -52,7 +50,6 @@ QgsMapLayerRegistry.instance().addMapLayer(dbLayer)
 #
 # ==== interaction with sqlite db
 
-# TODO: check spaitilite db exists before connection. report error via qgis message bar
 # create connection
 conn = sqlite3.connect(inFilePath)
 curs = conn.cursor()
