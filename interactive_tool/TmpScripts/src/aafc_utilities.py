@@ -149,7 +149,8 @@ class Utils:
         
         results = []
         for i in data:
-            results.append(i)
+            # extract single value from tuple
+            results.append((i[0]))
         
         return results
     
