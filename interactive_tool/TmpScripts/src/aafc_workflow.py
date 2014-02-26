@@ -138,7 +138,7 @@ else:
 
     # get listing of tables
     results = db.executeSql("select name from sqlite_master where type='table'")
-    print results
+    #print results
     
     # demo outputs
     db.demoCalcCategorical()
@@ -150,8 +150,20 @@ else:
     
     # write categorical column calc to csv
     headers, results = db.calculateCategoricalField([254001,242025],dbSlcKey=dbSlcIdKey, tableName="cmp32", column="slope", dbPercentKey=dbPercentKey)
-    io.writeCsvFile(headers, results, outDirectory, fileName="categorical.csv")
+    print "\nlive query to cmp table to write csv"
+    print headers
+    print results
+    io.writeCsvFile(headers, results, outDirectory, fileName="slope_categorical_subset.csv")
     
+    # write all sl's for single column to csv
+    # get all distinct id's from cmp table
+    ids = db.executeSql("select distinct(sl) from cmp32")
+    print "\n 10 distinct slc ids from cmp32"
+    print ids[:10]
+    # convert sl ids list of tuples to simple list
+    ids_cleaned = utils.convertDbResults2SimpleList(ids)
+    headers, results = db.calculateCategoricalField(ids_cleaned, dbSlcKey=dbSlcIdKey, tableName="cmp32", column="slope", dbPercentKey=dbPercentKey)
+    io.writeCsvFile(headers, results, outDirectory, fileName="slope_categorical_all.csv")
 
 
 print "========= done ========"
