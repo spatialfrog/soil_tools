@@ -84,7 +84,6 @@ class Io:
         # create initial table
         createInitialDb(cmpDbfPath,tableName)
 
-        #TODO: parse additional *params and load dbf's into db
         # check if additional dbf paths passed
         if params:
             # process each path
