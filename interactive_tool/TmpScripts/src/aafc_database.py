@@ -30,9 +30,8 @@ class Db:
     def executeSql(self,sqlString, fieldNames=False):
         """
         calculate sql statement.
-
-        return list of tuples of all rows from query. 
-        optional to return field names from query. will be tuple of (field names, query results).
+        
+        returns 2 objects, fieldnames and results. if fieldname not selected; returns None.
         """
         
         # execute sql
@@ -42,10 +41,10 @@ class Db:
             # extract first item from tuple
             names = list(map(lambda x: x[0], self.curs.description))
             
-            return (names, self.curs.fetchall())
+            return names, self.curs.fetchall()
         else:
             # return all rows
-            return self.curs.fetchall()
+            return None, self.curs.fetchall()
 
 
     def updateDbTableName(self,tableName):
@@ -246,10 +245,13 @@ class Db:
         returns headers and row data to write to csv.
         """
         
+        # query
         sql = """select distinct(%s),count(%s) as count, sum(percent) as dominance from %s where sl = %s group by %s order by count(%s) desc""" %(column,column,tableName,sl,column,column)
         results = self.executeSql(sql,fieldNames=True)
         
+        # return headers + results
         return results
+        
     
     
     def demoSimpleJoinBetweenCmpSnfTables(self, cmpTableName="cmp32", snfTableName="snf32", soilKey="ABBUFgl###N", slcId=242021):
