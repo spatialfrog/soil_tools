@@ -259,13 +259,13 @@ class Db:
         # textual: calculate dominate/sub-dominate
         print "="*20 + " categorical calculation for sl %s" %(sl)
         sql = """select %s,percent from %s where sl = %s""" %(column,tableName,sl)
-        headers, results = self.executeSql(sql)
+        results = self.executeSql(sql)
         print "Rows for %s, percent column prior to calculation" %(column)
         print results
         print "-"*20
         print "-"*10 + "results"
         sql = """select distinct(%s),count(%s) as count, sum(percent) as dominance from %s where sl = %s group by %s order by count(%s) desc""" %(column,column,tableName,sl,column,column)
-        headers, results = self.executeSql(sql)
+        results = self.executeSql(sql)
         print "Calculated dominate/sub-dominate raw results for %s.\nCategory -- Count -- Percentage" %(column)
         print results
         print "-"*20
