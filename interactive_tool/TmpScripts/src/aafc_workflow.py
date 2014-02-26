@@ -49,6 +49,13 @@ then add additional dbf's as new tables.
 sqliteDbName = "soilDb"
 sqliteDbPath = "/Users/drownedfrog/Projects/Contracts/AAFC/dec2013_mar2014_tool_dev/data/test/"
 
+# == output directory for csv
+"""
+could be different than where db is placed
+"""
+outDirectory = "/Users/drownedfrog/Projects/Contracts/AAFC/dec2013_mar2014_tool_dev/data/test/"
+
+
 # == use existing db
 """
 use existing spatialite db or create new db
@@ -106,7 +113,10 @@ else:
     # demo outputs
     db.demoCalcCategorical()
     db.demoCalcNumeric()
-    #db.demoSimpleJoinBetweenCmpSnfTables()
+    
+    # write categorical demo to csv
+    headers, results = db.demoCategoricalColumnToCsv()
+    io.writeCsvFile(headers, results, path)
     
 
 
