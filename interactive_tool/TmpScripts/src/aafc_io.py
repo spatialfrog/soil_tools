@@ -194,7 +194,10 @@ class Io:
             # write headers
             f_writer.writerow(headers)
             # write data
-            f_writer.writerows(data)
+            for e in data:
+                # data contains 1:n list/tuples
+                f_writer.writerow(e)
+    
         
 
         
