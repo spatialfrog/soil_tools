@@ -18,8 +18,7 @@ from qgis.core import *
 from qgis.gui import *
 from qgis.utils import *
 
-# TODO: has to be better method for this? -- shouldn't be an issue as qgis put .qgis/python/plugins onto sys path
-# add script dir to system path to ensure submodules imported
+# TODO: remove from final implementation. not an issue as qgis put .qgis/python/plugins onto sys path
 sys.path.append(r"/Users/drownedfrog/Documents/workspace/git/aafc_qgis_soil_tool/TmpScripts/")
 
 import aafc_io as inout
