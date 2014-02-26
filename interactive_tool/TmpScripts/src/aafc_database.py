@@ -165,7 +165,7 @@ class Db:
     entire table of unique sl id's
     """
 
-    def calculateCategoricalField(self, slcIds, dbSlcKey="sl", tableName="cmp32", column="slope"):
+    def calculateCategoricalField(self, slcIds, dbSlcKey="sl", tableName="cmp32", column="slope", dbPercentKey="percent"):
         """
         TODO: categorical calc -- update doc string
         
@@ -189,7 +189,15 @@ class Db:
         
             # summarize single sl id. determine count of categories present. rank by high-low.
             # dominate has highest count, sub-dominate is second highest.
-            sql = """select distinct(%s),count(%s) as count, sum(percent) as dominance from %s where %s = %s group by %s order by count(%s) desc""" %(column,column,tableName,dbSlcKey,slcId,column,column)
+            
+            ## = examples
+            ## select sl, dominate_category, dominate_weight from (select distinct(slope) as dominate_category,sl,sum(percent) as dominate_weight from cmp32 where sl = 254001 group by slope order by count(slope) desc limit 1) as  t
+            ##sql = """select distinct(%s),count(%s) as count, sum(percent) as dominance from %s where %s = %s group by %s order by count(%s) desc""" %(dbSlcKey,column,column,tableName,dbSlcKey,slcId,column,column)
+            
+            sql = """select sl,dominate_category, dominate_weight from
+            (select distinct(%s) as dominate_category, %s, sum(%s) as dominate_weight 
+            from %s where %s = %s group by %s order by count(%s) desc limit 1) as t """ %(column,dbSlcKey,dbPercentKey, tableName, dbSlcKey, slcId,column,column)
+            
             headers, rows = self.executeSql(sql,fieldNames=True)
             
             #TODO: categorical calc -- check return sql values for "" and replace with nulls
@@ -197,9 +205,9 @@ class Db:
             #TODO: categorical calc -- only show sub-dominate if dominate < 60%
         
             # dominate
-            results.append(rows[0])
+            results.append(rows)
             # sub-dominate
-            results.append(rows[1])
+            ##results.append(rows[1])
             
         # return headers and results. headers will be last iteration.
         return headers, results
