@@ -238,14 +238,18 @@ class Db:
                 # process each sl id separatly
                 
                 ## = examples
+                ## select distinct(sl) as sl, sum(awhc_v * (percent/100.0)) as final from cmp32 where sl = 376002 group by sl
                 ## sql = """select distinct(sl) as sl, sum(%s * (percent/100.0)) as final from %s where sl = %s group by sl""" %(column,tableName,sl)
                 
-                sql ="""select distinct(%s) as %s, sum(%s * (%s/100.0)) as computed_value from %s where %s = %s group by %s""" % (dbSlcKey, dbSlcKey, column, dbPercentKey, tableName, dbSlcKey,  slcId, dbSlcKey)
-                
+                sql ="""select distinct(%s) as %s, sum(%s * (%s/100.0)) as %s from %s where %s = %s group by %s""" % (dbSlcKey, dbSlcKey, column, dbPercentKey, column + "_weighted_average", tableName, dbSlcKey,  slcId, dbSlcKey)
                 header, row = self.executeSql(sql,fieldNames=True)
                 
+                #== format numeric calc in db tuple before passing back
+                # format calculated value to 2 decimal places
+                formattedNumber = (row[0][0],"{:0.2f}".format(round(row[0][1],2)))
+                
                 # only single row returned per slc. remove outer list to ensure we return a list of tuples.
-                results.append(row[0])
+                results.append(formattedNumber)
                     
             
             # return headers and results. headers will be last iteration.
@@ -262,14 +266,14 @@ class Db:
         if columnDataTypeIs == "string":
             # categorical column calculation
             print "Processing categorical calculation"
-            headers, results = categoricalCalculation(slcIds, dbSlcKey="sl", tableName="cmp32", column="slope", dbPercentKey="percent")
+            headers, results = categoricalCalculation(slcIds, dbSlcKey, tableName, column, dbPercentKey)
             
             return headers, results
         
         elif columnDataTypeIs == "numeric":
             # numeric column calculation
             print "Processing numeric calculation"
-            headers, results = numericCalculation(slcIds, dbSlcKey="sl", tableName="cmp32", column="slope", dbPercentKey="percent")
+            headers, results = numericCalculation(slcIds, dbSlcKey, tableName, column, dbPercentKey)
             
             return headers, results
         
