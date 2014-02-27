@@ -153,7 +153,7 @@ else:
     #io.writeCsvFile(headers, results, outDirectory, fileName="calculation.csv")
     
     # write categorical column calc to csv
-    headers, results = db.calculateCategoricalField([254001,242025],dbSlcKey=dbSlcIdKey, tableName="cmp32", column="slope", dbPercentKey=dbPercentKey)
+    headers, results = db.calculateField([254001,242025], dbSlcKey=dbSlcIdKey, tableName="cmp32", column="slope", dbPercentKey=dbPercentKey)
     print "\nlive query to cmp table to write csv"
     print headers
     print results
@@ -170,7 +170,7 @@ else:
     print ids[:10]
     # convert sl ids list of tuples to simple list
     ids_cleaned = utils.convertDbResults2SimpleList(ids)
-    headers, results = db.calculateCategoricalField(ids_cleaned[:100], dbSlcKey=dbSlcIdKey, tableName="cmp32", column="slope", dbPercentKey=dbPercentKey)
+    headers, results = db.calculateField(ids_cleaned[:100], dbSlcKey=dbSlcIdKey, tableName="cmp32", column="slope", dbPercentKey=dbPercentKey)
     io.writeCsvFile("slope", headers, results, outDirectory, csvFilePrefixName=csvFilePrefix)
 
 
