@@ -149,6 +149,9 @@ else:
     db.demoCalcNumeric()
     
     
+    #======== calculations
+    #TODO: 1 critical --- parameterize all method arguments below
+    
     #===== process single column categorical
     # write all sl's for single column to csv
     # warn user process may take several minutes
