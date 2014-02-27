@@ -85,12 +85,12 @@ could be different than where db is placed
 outDirectory = "/Users/drownedfrog/Projects/Contracts/AAFC/dec2013_mar2014_tool_dev/data/test/"
 
 
-# == name for csv file to be created
+# == csv prefix name for file to be created
 """
-default will be calculation.csv
-one field calculated per tool run; hence only 1 csv output @ moment.
+default will be calculated
+csv name will be prefixed by user supplied name. remainder of name derived from column
 """
-csvFileName = "testing_calculations.csv"
+csvFilePrefix = "calculated"
 
 
 # ========= set high level variables
@@ -118,15 +118,19 @@ else:
     # validate user input
     utils.validateUserInput(cmpDbfPath)
 
+    # inform user that db creation is about to start
+    utils.communicateWithUserInQgis("Creating new db...",level="INFO", messageExistanceDuration=4)    
+    
     # remove existing db if user provides same name
     utils.deleteFile(os.path.join(sqliteDbPath, sqliteDbName))
 
     # remove all layers in qgis
     utils.removeAllQgisLayers()
 
-    # create db and load with passed dbf paths
+    #=== create db and load with passed dbf paths
+    # create new db
     io.createNewDb(cmpDbfPath,snfDbfPath,slfDbfPath)
-
+    
     # create database class instance
     # db must exist before sqlite connection can exit
     db = database.Db(inSoilDbPath, tempSystemDirectoryPath)
@@ -140,30 +144,34 @@ else:
     results = db.executeSql("select name from sqlite_master where type='table'")
     #print results
     
-    # demo outputs
+    #==== demo outputs
     db.demoCalcCategorical()
     db.demoCalcNumeric()
     
     # write categorical demo to csv
-    headers, results = db.demoCategoricalColumnToCsv()
-    io.writeCsvFile(headers, results, outDirectory, fileName="calculation.csv")
+    #headers, results = db.demoCategoricalColumnToCsv()
+    #io.writeCsvFile(headers, results, outDirectory, fileName="calculation.csv")
     
     # write categorical column calc to csv
     headers, results = db.calculateCategoricalField([254001,242025],dbSlcKey=dbSlcIdKey, tableName="cmp32", column="slope", dbPercentKey=dbPercentKey)
     print "\nlive query to cmp table to write csv"
     print headers
     print results
-    io.writeCsvFile(headers, results, outDirectory, fileName="slope_categorical_subset.csv")
+    io.writeCsvFile("slope", headers, results, outDirectory, csvFilePrefixName="demo")
     
+    #===== process single column 
     # write all sl's for single column to csv
+    # warn user process may take several minutes
+    message = "Calculating column %s may take several minutes" % ("slope")
+    utils.communicateWithUserInQgis(message,messageExistanceDuration=10)
     # get all distinct id's from cmp table
     ids = db.executeSql("select distinct(sl) from cmp32")
     print "\n 10 distinct slc ids from cmp32"
     print ids[:10]
     # convert sl ids list of tuples to simple list
     ids_cleaned = utils.convertDbResults2SimpleList(ids)
-    headers, results = db.calculateCategoricalField(ids_cleaned, dbSlcKey=dbSlcIdKey, tableName="cmp32", column="slope", dbPercentKey=dbPercentKey)
-    io.writeCsvFile(headers, results, outDirectory, fileName="slope_categorical_all.csv")
+    headers, results = db.calculateCategoricalField(ids_cleaned[:100], dbSlcKey=dbSlcIdKey, tableName="cmp32", column="slope", dbPercentKey=dbPercentKey)
+    io.writeCsvFile("slope", headers, results, outDirectory, csvFilePrefixName=csvFilePrefix)
 
 
 print "========= done ========"

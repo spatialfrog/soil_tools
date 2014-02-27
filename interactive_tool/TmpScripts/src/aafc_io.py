@@ -182,14 +182,17 @@ class Io:
 
     # ===========
 
-    def writeCsvFile(self, headers, data, path, fileName):
+    def writeCsvFile(self, column, headers, data, path, csvFilePrefixName):
         """
         write sql results to new csv file.
+        
+        base name of csv is column derived, with a user defined prefix. an underscore separates.
         """
         
-        # TODO: check csv extension exists; add if missing
+        # outfile name
+        writeCsvFilePath = os.path.join(path,csvFilePrefixName + "_" + column + ".csv")
         
-        with open(os.path.join(path,fileName),"wb") as csvfile:
+        with open(writeCsvFilePath,"wb") as csvfile:
             f_writer = csv.writer(csvfile,delimiter=",")
             # write headers
             f_writer.writerow(headers)
