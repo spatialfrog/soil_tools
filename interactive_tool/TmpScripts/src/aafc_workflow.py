@@ -1,4 +1,9 @@
 """
+version v1
+
+richard burcher
+richardburcher@gmail.com 
+
 main script to orchestate pre qgis gui work flows
 
 
