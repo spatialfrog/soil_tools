@@ -230,6 +230,7 @@ class Db:
     
             pass
         
+        #TODO: field calculation -- clean up. shouldn't need to cascade return values
         
         # dispatch to correct calculation method based on field data type
         if determineFieldDataType(tableName, column) == "string":
