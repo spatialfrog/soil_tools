@@ -254,15 +254,19 @@ class Db:
         
         #TODO: field calculation -- clean up. shouldn't need to cascade return values
         
+        
+        # determine column field data type
+        columnDataTypeIs = determineFieldDataType(tableName, column)
+        
         # dispatch to correct calculation method based on field data type
-        if determineFieldDataType(tableName, column) == "string":
+        if columnDataTypeIs == "string":
             # categorical column calculation
             print "Processing categorical calculation"
             headers, results = categoricalCalculation(slcIds, dbSlcKey="sl", tableName="cmp32", column="slope", dbPercentKey="percent")
             
             return headers, results
         
-        elif determineFieldDataType(tableName, column) == "numeric":
+        elif columnDataTypeIs == "numeric":
             # numeric column calculation
             print "Processing numeric calculation"
             headers, results = numericCalculation(slcIds, dbSlcKey="sl", tableName="cmp32", column="slope", dbPercentKey="percent")
