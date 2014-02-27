@@ -65,6 +65,9 @@ class Utils:
 
         # get reference to qgis message bar
         messageBar = iface.messageBar()
+        
+        # clear any previous message
+        messageBar.clearWidgets()
 
         # construct level to output
         if level == "WARNING":
