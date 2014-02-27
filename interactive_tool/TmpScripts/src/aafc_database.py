@@ -234,18 +234,24 @@ class Db:
         # dispatch to correct calculation method based on field data type
         if determineFieldDataType(tableName, column) == "string":
             # categorical column calculation
-            categoricalCalculation(slcIds, dbSlcKey="sl", tableName="cmp32", column="slope", dbPercentKey="percent")
+            print "Processing categorical calculation"
+            headers, results = categoricalCalculation(slcIds, dbSlcKey="sl", tableName="cmp32", column="slope", dbPercentKey="percent")
+            
+            return headers, results
+        
         elif determineFieldDataType(tableName, column) == "numeric":
             # numeric column calculation
-            numericCalculation(slcIds, dbSlcKey="sl", tableName="cmp32", column="slope", dbPercentKey="percent")
+            print "Processing numeric calculation"
+            headers, results = numericCalculation(slcIds, dbSlcKey="sl", tableName="cmp32", column="slope", dbPercentKey="percent")
+            
+            return headers, results
+        
         else:
             # error
             #TODO: calculation -- if issue determining column data type report error
             pass
             
-            
-
-
+    
     # ========== demos
 
     def demoCalcNumeric(self,sl=254001,tableName="cmp32",column="cfrag1_v"):
