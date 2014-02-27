@@ -144,34 +144,35 @@ else:
     results = db.executeSql("select name from sqlite_master where type='table'")
     #print results
     
-    #==== demo outputs
+    #===== demo to stdout
     db.demoCalcCategorical()
     db.demoCalcNumeric()
     
-    # write categorical demo to csv
-    #headers, results = db.demoCategoricalColumnToCsv()
-    #io.writeCsvFile(headers, results, outDirectory, fileName="calculation.csv")
     
-    # write categorical column calc to csv
-    headers, results = db.calculateField([254001,242025], dbSlcKey=dbSlcIdKey, tableName="cmp32", column="slope", dbPercentKey=dbPercentKey)
-    print "\nlive query to cmp table to write csv"
-    print headers
-    print results
-    io.writeCsvFile("slope", headers, results, outDirectory, csvFilePrefixName="demo")
-    
-    #===== process single column 
+    #===== process single column categorical
     # write all sl's for single column to csv
     # warn user process may take several minutes
     message = "Calculating column %s may take several minutes" % ("slope")
     utils.communicateWithUserInQgis(message,messageExistanceDuration=10)
     # get all distinct id's from cmp table
     ids = db.executeSql("select distinct(sl) from cmp32")
-    print "\n 10 distinct slc ids from cmp32"
-    print ids[:10]
     # convert sl ids list of tuples to simple list
     ids_cleaned = utils.convertDbResults2SimpleList(ids)
     headers, results = db.calculateField(ids_cleaned[:100], dbSlcKey=dbSlcIdKey, tableName="cmp32", column="slope", dbPercentKey=dbPercentKey)
     io.writeCsvFile("slope", headers, results, outDirectory, csvFilePrefixName=csvFilePrefix)
+
+
+    #===== process single column numeric
+    # write all sl's for single column to csv
+    # warn user process may take several minutes
+    message = "Calculating column %s may take several minutes" % ("awhc_v")
+    utils.communicateWithUserInQgis(message,messageExistanceDuration=10)
+    # get all distinct id's from cmp table
+    ids = db.executeSql("select distinct(sl) from cmp32")
+    # convert sl ids list of tuples to simple list
+    ids_cleaned = utils.convertDbResults2SimpleList(ids)
+    headers, results = db.calculateField(ids_cleaned[:100], dbSlcKey=dbSlcIdKey, tableName="cmp32", column="awhc_v", dbPercentKey=dbPercentKey)
+    io.writeCsvFile("awhc_v", headers, results, outDirectory, csvFilePrefixName=csvFilePrefix)
 
 
 print "========= done ========"

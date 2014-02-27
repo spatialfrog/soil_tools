@@ -171,8 +171,11 @@ class Db:
                 # text
                 columnDataType = "string"
                 
+                print "found string"
+                
                 return columnDataType
             else:
+                print "numeric"
                 return columnDataType
 
                 
