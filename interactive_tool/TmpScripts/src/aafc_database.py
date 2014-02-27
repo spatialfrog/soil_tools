@@ -65,22 +65,6 @@ class Db:
         results = self.executeSql(sql)
 
 
-    def cleanDbQueryResults(self,data):
-        """
-        transform data returned from sqlite database.
-
-        return single list of values.
-        """
-
-        extractedData = []
-
-        for item in data:
-            # extract first item from tuple
-            extractedData.append(item[0])
-
-        return extractedData
-
-
     def determineFieldDataType(self,data):
         """
         determine field data type from user passed list.
