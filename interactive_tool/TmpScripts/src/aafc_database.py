@@ -65,27 +65,6 @@ class Db:
         results = self.executeSql(sql)
 
 
-    def determineFieldDataType(self,data):
-        """
-        determine field data type from user passed list.
-
-        cavet: assumes that list is same data type; comes from sql database.
-
-        return single value of "string" or "numeric"
-        """
-
-        # get single item to test
-        item = data[0]
-        itemDataType = "string"
-        try:
-            item.isalpha()
-        except:
-            # not string
-            itemDataType = "numeric"
-
-        return itemDataType
-
-
     # ========== soil queries between tables
     """
     cmp32 is base table for all quieries. must go in order of cmp32 -- snf32 -- slf32.
@@ -149,64 +128,112 @@ class Db:
     entire table of unique sl id's
     """
 
-    def calculateCategoricalField(self, slcIds, dbSlcKey="sl", tableName="cmp32", column="slope", dbPercentKey="percent"):
+    def calculateField(self, slcIds, dbSlcKey="sl", tableName="cmp32", column="slope", dbPercentKey="percent"):
         """
         TODO: categorical calc -- update doc string
         
         dbSlcKey is column for slc id's.
         slcIds is any iterable object. 
         
-        - only show sub-dominate if dominate % < 60
-        - % has no wieght on sub-dominate. take first one.
-        - * check if result class = ""; replace with "NULL"
-
-        calculates dominate/sub-dominate results for single string db field
-
-        returns columns headers plus results.
         """
         
-        # hold select dominate/sub-dominate data
-        results = []
-        
-        for slcId in slcIds:
-            # process each sl id separatly
-        
-            # summarize single sl id. determine count of categories present. rank by high-low.
-            # dominate has highest count, sub-dominate is second highest.
+        # determine column data type
+        # used to dispatch appriopate method to calculate
+        def determineFieldDataType(tableName, column):
+            """
+            determine sqlite column data type. this ensures that characters such as #, _, - or "" not interpretted wrongly.
+            in several cases first row that starts with them is a numeric field.
             
-            ## = examples
-            ## select sl, dominate_category, dominate_weight from (select distinct(slope) as dominate_category,sl,sum(percent) as dominate_weight from cmp32 where sl = 254001 group by slope order by count(slope) desc limit 1) as  t
-            ##sql = """select distinct(%s),count(%s) as count, sum(percent) as dominance from %s where %s = %s group by %s order by count(%s) desc""" %(dbSlcKey,column,column,tableName,dbSlcKey,slcId,column,column)
+            uses sqlite pragma table_info to get sqlite column datatype assumptions. check user passed column against this table.
+    
+            return single value of "string" or "numeric"
+            """
             
-            sql = """select sl,dominate_category, dominate_weight from
-            (select distinct(%s) as dominate_category, %s, sum(%s) as dominate_weight 
-            from %s where %s = %s group by %s order by count(%s) desc limit 1) as t """ %(column,dbSlcKey,dbPercentKey, tableName, dbSlcKey, slcId,column,column)
+            # query sqlite pragma table_info
+            sql = "pragma table_info(%s)" % (tableName)
+            data = self.executeSql(sql)
+    
+            # match user column to sqlite field data returned from pragma
+            # process tuples of this format (0, u'OGC_FID', u'INTEGER', 0, None, 1)
+            fieldDataType = ""
+            for row in data:
+                if row[1] == column:
+                    # match found. get sqlite field type
+                    fieldDataType = row[2]
+                    break
             
-            header, row = self.executeSql(sql,fieldNames=True)
+            # assume numeric field
+            columnDataType = "numeric" 
             
-            # only single row returned per slc. remove outer list to ensure we return a list of tuples.
-            results.append(row[0])
+            # check fieldType
+            # sqlite provides either VARCHAR(2) or INTEGER/REAL
+            if fieldDataType.startswith("VAR"):
+                # text
+                columnDataType = "string"
                 
-            
-            #TODO: categorical calc -- check return sql values for "" and replace with nulls
+                return columnDataType
+            else:
+                return columnDataType
+
+                
+        def categoricalCalculation():
+            """
+            - only show sub-dominate if dominate % < 60
+            - % has no wieght on sub-dominate. take first one.
+            - * check if result class = ""; replace with "NULL"
+    
+            calculates dominate/sub-dominate results for single string db field
+    
+            returns columns headers plus results.
+            """
         
-            #TODO: categorical calc -- only show sub-dominate if dominate < 60%
-        
+            # hold select dominate/sub-dominate data
+            results = []
             
-        # return headers and results. headers will be last iteration.
-        return header, results
+            for slcId in slcIds:
+                # process each sl id separatly
+            
+                # summarize single sl id. determine count of categories present. rank by high-low.
+                # dominate has highest count, sub-dominate is second highest.
+                
+                ## = examples
+                ## select sl, dominate_category, dominate_weight from (select distinct(slope) as dominate_category,sl,sum(percent) as dominate_weight from cmp32 where sl = 254001 group by slope order by count(slope) desc limit 1) as  t
+                ##sql = """select distinct(%s),count(%s) as count, sum(percent) as dominance from %s where %s = %s group by %s order by count(%s) desc""" %(dbSlcKey,column,column,tableName,dbSlcKey,slcId,column,column)
+                
+                sql = """select sl,dominate_category, dominate_weight from
+                (select distinct(%s) as dominate_category, %s, sum(%s) as dominate_weight 
+                from %s where %s = %s group by %s order by count(%s) desc limit 1) as t """ %(column,dbSlcKey,dbPercentKey, tableName, dbSlcKey, slcId,column,column)
+                
+                header, row = self.executeSql(sql,fieldNames=True)
+                
+                # only single row returned per slc. remove outer list to ensure we return a list of tuples.
+                results.append(row[0])
+                    
+                
+                #TODO: categorical calc -- check return sql values for "" and replace with nulls
+            
+                #TODO: categorical calc -- only show sub-dominate if dominate < 60%
+            
+                
+            # return headers and results. headers will be last iteration.
+            return header, results
 
 
-    def calculateNumericField(self):
-        """
-        TODO: implement numeric calculation method
-
-        calculates weighted summed average of single numeric db field.
-
-        returns sl ids,rows
-        """
-
-        pass
+        def numericCalculation(self):
+            """
+            TODO: implement numeric calculation method
+    
+            calculates weighted summed average of single numeric db field.
+    
+            returns sl ids,rows
+            """
+    
+            pass
+        
+        # dispatch to correct calculation method based on field data type
+        if determineFieldDataType(tableName, column) == "string":
+            # categorical column
+            
 
 
     # ========== demos
