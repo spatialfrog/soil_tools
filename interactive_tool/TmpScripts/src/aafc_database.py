@@ -176,7 +176,7 @@ class Db:
                 return columnDataType
 
                 
-        def categoricalCalculation():
+        def categoricalCalculation(slcIds, dbSlcKey="sl", tableName="cmp32", column="slope", dbPercentKey="percent"):
             """
             - only show sub-dominate if dominate % < 60
             - % has no wieght on sub-dominate. take first one.
@@ -219,7 +219,7 @@ class Db:
             return header, results
 
 
-        def numericCalculation(self):
+        def numericCalculation(slcIds, dbSlcKey="sl", tableName="cmp32", column="slope", dbPercentKey="percent"):
             """
             TODO: implement numeric calculation method
     
@@ -230,9 +230,19 @@ class Db:
     
             pass
         
+        
         # dispatch to correct calculation method based on field data type
         if determineFieldDataType(tableName, column) == "string":
-            # categorical column
+            # categorical column calculation
+            categoricalCalculation(slcIds, dbSlcKey="sl", tableName="cmp32", column="slope", dbPercentKey="percent")
+        elif determineFieldDataType(tableName, column) == "numeric":
+            # numeric column calculation
+            numericCalculation(slcIds, dbSlcKey="sl", tableName="cmp32", column="slope", dbPercentKey="percent")
+        else:
+            # error
+            #TODO: calculation -- if issue determining column data type report error
+            pass
+            
             
 
 
