@@ -221,14 +221,33 @@ class Db:
 
         def numericCalculation(slcIds, dbSlcKey="sl", tableName="cmp32", column="slope", dbPercentKey="percent"):
             """
-            TODO: implement numeric calculation method
+            TODO: field calc -- add to numeric doc string
     
             calculates weighted summed average of single numeric db field.
     
             returns sl ids,rows
             """
-    
-            pass
+            
+            # hold calculated sum weighted value
+            results = []
+            
+            for slcId in slcIds:
+                # process each sl id separatly
+                
+                ## = examples
+                ## sql = """select distinct(sl) as sl, sum(%s * (percent/100.0)) as final from %s where sl = %s group by sl""" %(column,tableName,sl)
+                
+                sql ="""select distinct(%s) as %s, sum(%s * (%s/100.0)) as computed_value from %s where %s = %s group by %s""" % (dbSlcKey, dbSlcKey, column, dbPercentKey, tableName, dbSlcKey,  slcId, dbSlcKey)
+                
+                header, row = self.executeSql(sql,fieldNames=True)
+                
+                # only single row returned per slc. remove outer list to ensure we return a list of tuples.
+                results.append(row[0])
+                    
+            
+            # return headers and results. headers will be last iteration.
+            return header, results
+
         
         #TODO: field calculation -- clean up. shouldn't need to cascade return values
         
