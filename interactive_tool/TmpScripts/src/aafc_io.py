@@ -189,6 +189,8 @@ class Io:
         base name of csv is column derived, with a user defined prefix. an underscore separates.
         """
         
+        #TODO: csv writer -- ensure duplicate fields not overwritten
+        
         # outfile name
         writeCsvFilePath = os.path.join(path,csvFilePrefixName + "_" + column + ".csv")
         
