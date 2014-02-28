@@ -117,6 +117,8 @@ class Utils:
         validate all user path inputs. if any path incorrect, return error message
         of first incorrect path
         """
+        
+        #TODO: validate input -- check cmp table passed; check filename. if not warning and quite
 
         # simply check all paths correct
         for e in params:
@@ -156,6 +158,14 @@ class Utils:
             results.append((i[0]))
         
         return results
+    
+    
+    def parseFileName(self):
+        """
+        #TODO: parse file name. extract cmp/snf/snl from passed in dbf files. return dict of ie cmp:pathToFile
+        
+        pass
+    
     
 
 
