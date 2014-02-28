@@ -197,15 +197,15 @@ class Db:
                         # flaf that table has been created
                         resultsTableCreated = True
                 
-#                     #== insert data into table
-#                     print "inserting rows into results table"
-#                     # join cmp32 sl row to snf row with soilkey match. return all columns from both tables.
-#                     # cmp32 cmp id constrains to create unique row id for cmp32.
-#                     sql = "insert into %s select * from %s join %s on %s.%s like '%s' and %s.%s = %s and %s.%s = %s" %(resultsTableName, cmpTableName, snfTableName, snfTableName, dbSoilKey, snfSoilKeyToUse, cmpTableName, dbSlcKey, slcId, cmpTableName, dbCmpKey, cmpId)
-#                     self.executeSql(sql)
-#                     
-#                 # commit transaction
-#                 self.conn.commit()
+                    #== insert data into table
+                    print "inserting rows into results table"
+                    # join cmp32 sl row to snf row with soilkey match. return all columns from both tables.
+                    # cmp32 cmp id constrains to create unique row id for cmp32.
+                    sql = "insert into %s select * from %s join %s on %s.%s like '%s' and %s.%s = %s and %s.%s = %s" %(resultsTableName, cmpTableName, snfTableName, snfTableName, dbSoilKey, snfSoilKeyToUse, cmpTableName, dbSlcKey, slcId, cmpTableName, dbCmpKey, cmpId)
+                    self.executeSql(sql)
+                     
+                # commit transaction
+                self.conn.commit()
 
 
         # drop results table
