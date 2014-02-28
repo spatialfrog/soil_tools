@@ -97,6 +97,13 @@ csv name will be prefixed by user supplied name. remainder of name derived from 
 """
 csvFilePrefix = "calculated"
 
+# == snf landuse preference
+"""
+either N or A
+default if not A is N
+"""
+landusePreference = "A"
+
 
 # ========= set high level variables
 # full path to spatialite db
