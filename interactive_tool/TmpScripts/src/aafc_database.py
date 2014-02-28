@@ -80,21 +80,6 @@ class Db:
     slf layer_no appears to be layer number.
     """
 
-    def joinAllCmpRows(self):
-        """
-        TODO: implement join all cmp table rows
-
-        link all soilkeys for single SLC id from cmp table to snf table - with user defined snf landuse of either N/A.
-        if A not present, default to A.
-
-        each row from cmp will have corresponding row from snf.
-
-        soil key ABABC### provides both N and A option
-        """
-
-        pass
-
-
     def resultsTableJoiningCmpSnfBySoilkey(self,slcIds, dbSlcKey, dbCmpKey, dbSoilKey, cmpTableName, snfTableName, landuse):
         """
 
@@ -215,18 +200,6 @@ class Db:
         # create new results table with join results inserted for each slc id row
         processSlcRows(slcIds, dbSlcKey, dbCmpKey, dbSoilKey, cmpTableName, snfTableName, landuse, resultsTableName)
         
-
-    def createJoinResultsTable(self,slcId):
-        """
-        TODO: method to create tmp table populated with all joined rows for single slc from cmp table to snf
-
-        create single tmp table to hold row results from single sl cmp join to snf table.
-
-        slcId is int of slc to process.
-        """
-        
-        pass
-
     
     # ========== categorical and numeric calculation methods
     """
