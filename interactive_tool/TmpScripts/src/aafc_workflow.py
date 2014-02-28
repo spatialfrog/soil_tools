@@ -195,6 +195,17 @@ else:
     
     #===== join cmp to snf tables
     db.resultsTableJoiningCmpSnfBySoilkey([242025,376001,615009], dbSlcKey=dbSlcIdKey, dbCmpKey=dbCmpKey, dbSoilKey=dbSoilKey, cmpTableName="cmp32", snfTableName="snf32", landuse=landusePreference)
+    
+    # categorical calc on joined column g_group3; snf column
+    message = "Calculating column %s may take several minutes" % ("g_group3")
+    utils.communicateWithUserInQgis(message,messageExistanceDuration=10)
+    # get all distinct id's from cmp table
+    ids = db.executeSql("select distinct(sl) from results_joinedCmpSnf")
+    # convert sl ids list of tuples to simple list
+    ids_cleaned = utils.convertDbResults2SimpleList(ids)
+    headers, results = db.calculateField(ids_cleaned[:5], dbSlcKey=dbSlcIdKey, tableName="results_joinedCmpSnf", column="g_group3", dbPercentKey=dbPercentKey)
+    io.writeCsvFile("'g_group3:1'", headers, results, outDirectory, csvFilePrefixName=csvFilePrefix)
+    
 
 
 print "========= done ========"
