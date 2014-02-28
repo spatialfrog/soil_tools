@@ -163,6 +163,7 @@ class Utils:
     def parseFileName(self):
         """
         #TODO: parse file name. extract cmp/snf/snl from passed in dbf files. return dict of ie cmp:pathToFile
+        """
         
         pass
     
