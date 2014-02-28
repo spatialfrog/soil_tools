@@ -81,6 +81,9 @@ dbSoilKey = "soilkey"
 # what field reflects percent in cmp
 dbPercentKey = "percent"
 
+# what field in cmp table is cmp field. integer field listing unique id
+dbCmpKey = "cmp"
+
 
 
 # == output directory for csv
@@ -173,7 +176,7 @@ else:
     ids = db.executeSql("select distinct(sl) from cmp32")
     # convert sl ids list of tuples to simple list
     ids_cleaned = utils.convertDbResults2SimpleList(ids)
-    headers, results = db.calculateField(ids_cleaned[:100], dbSlcKey=dbSlcIdKey, tableName="cmp32", column="slope", dbPercentKey=dbPercentKey)
+    headers, results = db.calculateField(ids_cleaned[:5], dbSlcKey=dbSlcIdKey, tableName="cmp32", column="slope", dbPercentKey=dbPercentKey)
     io.writeCsvFile("slope", headers, results, outDirectory, csvFilePrefixName=csvFilePrefix)
 
 
@@ -186,8 +189,12 @@ else:
     ids = db.executeSql("select distinct(sl) from cmp32")
     # convert sl ids list of tuples to simple list
     ids_cleaned = utils.convertDbResults2SimpleList(ids)
-    headers, results = db.calculateField(ids_cleaned[:100], dbSlcKey=dbSlcIdKey, tableName="cmp32", column="awhc_v", dbPercentKey=dbPercentKey)
+    headers, results = db.calculateField(ids_cleaned[:5], dbSlcKey=dbSlcIdKey, tableName="cmp32", column="awhc_v", dbPercentKey=dbPercentKey)
     io.writeCsvFile("awhc_v", headers, results, outDirectory, csvFilePrefixName=csvFilePrefix)
+    
+    
+    #===== join cmp to snf tables
+    db.resultsTableJoiningCmpSnfBySoilkey([242025,376001,615009], dbSlcKey=dbSlcIdKey, dbCmpKey=dbCmpKey, dbSoilKey=dbSoilKey, cmpTableName="cmp32", snfTableName="snf32", landuse=landusePreference)
 
 
 print "========= done ========"
