@@ -225,8 +225,9 @@ class Db:
             columnDataType = "numeric" 
             
             # check fieldType
-            # sqlite provides either VARCHAR(2) or INTEGER/REAL
-            if fieldDataType.startswith("VAR"):
+            # sqlite provides either VARCHAR/TEXT or INTEGER/REAL
+            # convert fieldtype to lower to check
+            if fieldDataType.lower().startswith("var") or fieldDataType.lower().startswith("tex"):
                 # text
                 columnDataType = "string"
                 
