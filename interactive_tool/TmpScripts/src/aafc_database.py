@@ -93,26 +93,6 @@ class Db:
         """
         
         resultsTableName = "results_joinedCmpSnf"
-        
-        # sql examples
-#         -- get cmp32 soilkey by sl. need unique row id
-#         --select cmp,soilkey from cmp32 where sl=615009
-#         
-#         -- find soilkey options avaible in snf table. soilkey to find is cmp32 soilkey with landuse stripped off
-#         --select distinct(soilkey) from snf32 where soilkey like 'ABABC#####%'
-#         
-#         -- join cmp32 sl row to snf row with soilkey
-#         --select cmp32.*, snf32.* from cmp32 join snf32 on snf32.soilkey like 'ABABC#####N' and cmp32.sl = 615009 and cmp32.cmp = 1
-#         
-#         -- create flat tmp results table
-#         --drop table if exists tmp_results;
-#         --create table tmp_results as select cmp32.*, snf32.* from cmp32 join snf32 on snf32.soilkey like 'ABABC#####N' and cmp32.sl = 615009 and cmp32.cmp = 1;
-#         
-#         -- insert row into existing table
-#         --insert into tmp_results select cmp32.*, snf32.* from cmp32 join snf32 on snf32.soilkey like 'ABABC#####A' and cmp32.sl = 615009 and cmp32.cmp = 2;
-#         
-#         --select "soilkey:1" from tmp_results;
-
             
         def processSlcRows(slcIds, dbSlcKey, dbCmpKey, dbSoilKey, cmpTableName, snfTableName, landuse, resultsTableName):
             """
