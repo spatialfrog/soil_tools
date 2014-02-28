@@ -95,7 +95,7 @@ class Db:
         pass
 
 
-    def matchSoilkeyLanduse(self,key,table="snf32",landuse="N"):
+    def matchSoilkeyLanduse(self,slcIds, dbSlcKey="sl", dbSoilKey, cmpTableName="snf32", snfTableName="snf32", landuse="N"):
         """
 
         TODO: soil key ABABC### provides both N and A option
@@ -106,8 +106,52 @@ class Db:
         if landuse character present in table soilkey; return soilkey; else
         return avaibale soilkey.
         """
+        
+       
+        
+        # sql
+#         -- get cmp32 soilkey by sl. need unique row id
+#         --select cmp,soilkey from cmp32 where sl=615009
+#         
+#         -- find soilkey options avaible in snf table. soilkey to find is cmp32 soilkey with landuse stripped off
+#         --select distinct(soilkey) from snf32 where soilkey like 'ABABC#####%'
+#         
+#         -- join cmp32 sl row to snf row with soilkey
+#         --select cmp32.*, snf32.* from cmp32 join snf32 on snf32.soilkey like 'ABABC#####N' and cmp32.sl = 615009 and cmp32.cmp = 1
+#         
+#         -- create flat tmp results table
+#         --drop table if exists tmp_results;
+#         --create table tmp_results as select cmp32.*, snf32.* from cmp32 join snf32 on snf32.soilkey like 'ABABC#####N' and cmp32.sl = 615009 and cmp32.cmp = 1;
+#         
+#         select * from tmp_results;
 
-        pass
+        # process slc ids
+        for slcId in slcIds:
+            # process each row within given sl. 
+            # return cmp and soil key columns. cmp is unique integer, ensures unique column id when combined with sl id
+            sql = "select %s, %s from %s where %s = %s" %("cmp", dbSlcKey, cmpTableName, slcKeyId, slcId)
+            headers, results = self.executeSql(sql, fieldNames=True)
+            
+            # zip headers with results to create dict, headers are keys
+            cmpTableData = dict(zip(headers,results))
+            
+            # find soil key matches avaibale in snf table to user by stripping supplied soil key from cmp table row
+            # strip end landuse from provided key & append %. used for sql character matching
+            strippedCmpSoilTableKey = (cmpTableData[dbSoilKey])[:-1] + "%"
+            
+            # get distinct matches of sl cmp soil keys in snf table
+            sql = "select distinct(%) from %s where %s like %s" %(dbSoilKey, snfTableName, dbSoilKey, strippedCmpSoilTableKey)
+            results = self.executeSql(sql)
+            
+            # is user landuse preference availabe
+            # check end character of string; if matches user then select key else use default of N
+            
+            
+            
+        
+        
+        
+        
 
 
     def createJoinResultsTable(self,slcId):
