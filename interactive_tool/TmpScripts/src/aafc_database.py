@@ -107,6 +107,8 @@ class Db:
         return avaibale soilkey.
         """
         
+        resultsTableName = "joinedCmpSnf"
+        
         # sql examples
 #         -- get cmp32 soilkey by sl. need unique row id
 #         --select cmp,soilkey from cmp32 where sl=615009
@@ -126,24 +128,13 @@ class Db:
 #         
 #         --select "soilkey:1" from tmp_results;
 
-
-        def createResultsTable(resultsTableName):
-            """
-            drop existing results table. create table with first row
-            """
             
-            # drop table
-            sql = "drop table if exists %s" %(resultsTableName)
-            self.executeSql(sql)
-            
-            # create new table
-            
-            
-
-        def processSlcRows():
+        def processSlcRows(slcIds, dbSlcKey="sl", dbCmpKey, dbSoilKey, cmpTableName="snf32", snfTableName="snf32", landuse="N", resultsTableName):
             """
             process slc ids and insert data into flat results table
             """
+            
+            resultsTableCreated = False
             
             # process slc ids
             for slcId in slcIds:
@@ -178,11 +169,28 @@ class Db:
                         snfSoilKeyToUse = e
                 
                 
+                if not resultsTableCreated:
+                    # table does not exist
+                    # create table
+                    sql = "create table %s as select * from %s join %s on %s.%s like '%s' and %s.%s = %s and %s.%s = %s" %(resultsTableName, cmpTableName, snfTableName, snfTableName, dbSoilKey, snfSoilKeyToUse, cmpTableName, dbSlcKey, slcId, cmpTableName, dbCmpKey, cmpTableData[dbCmpKey])
+                    self.executeSql(sql)
+                    
+                    # flaf that table has been created
+                    resultsTableCreated = True
+            
+                #== insert data into table
                 # join cmp32 sl row to snf row with soilkey match. return all columns from both tables.
                 # cmp32 cmp id constrains to create unique row id for cmp32.
-                sql = "select * from %s join %s on %s.%s like '%s' and %s.%s = %s and %s.%s = %s" %(cmpTableName, snfTableName, snfTableName, dbSoilKey, snfSoilKeyToUse, cmpTableName, dbSlcKey, slcId, cmpTableName, dbCmpKey, cmpTableData[dbCmpKey])
+                sql = "insert into %s select * from %s join %s on %s.%s like '%s' and %s.%s = %s and %s.%s = %s" %(resultsTableName, cmpTableName, snfTableName, snfTableName, dbSoilKey, snfSoilKeyToUse, cmpTableName, dbSlcKey, slcId, cmpTableName, dbCmpKey, cmpTableData[dbCmpKey])
                 headers, results = self.executeSql(sql, fieldNames=True)
 
+
+        # drop results table
+        sql = "drop table if exists %s" %(resultsTableName)
+        self.executeSql(sql)
+        
+        # create new results table with join results inserted for each slc id row
+        processSlcRows(slcIds, dbSlcKey, dbCmpKey, dbSoilKey, cmpTableName, snfTableName, landuse, resultsTableName)
         
 
     def createJoinResultsTable(self,slcId):
