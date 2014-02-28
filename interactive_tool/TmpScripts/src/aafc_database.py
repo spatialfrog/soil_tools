@@ -136,6 +136,8 @@ class Db:
             
             resultsTableCreated = False
             
+            print "land us is ", landuse
+            
             # process slc ids
             for slcId in slcIds:
                 # process each row within given sl.
@@ -150,10 +152,9 @@ class Db:
                     
                     # return soil key column for cmp + sl
                     sql = "select %s from %s where %s = %s and %s = %s" %(dbSoilKey, cmpTableName, dbSlcKey, slcId, dbCmpKey, cmpId)
-                    print "soil key for sl %s and cmp %s is" % (slcId, cmpId)
                     result = self.executeSql(sql)
                     
-                    print "\nsoilkey from cmp table is\n", result
+                    print "\nsoilkey from cmp table is ", result
                     
                     # find soil key matches avaibale in snf table to user by stripping supplied soil key from cmp table row
                     # strip end landuse from provided key & append %. used for sql character matching
@@ -161,21 +162,21 @@ class Db:
                     
                     # get distinct matches of sl cmp soil keys in snf table
                     sql = "select distinct(%s) from %s where %s like '%s'" %(dbSoilKey, snfTableName, dbSoilKey, strippedCmpSoilTableKey)
-                    print "\ndistint sl cmp soil key is \n", sql
                     results = self.executeSql(sql)
                     
-                    print "\nresults of distinct keys\n", results
+                    print "\nresults of distinct keys ", results
                     
                     # is user landuse preference availabe
                     # check end character of string; if matches user then select key else use default of N
                     snfSoilKeyToUse = ""
+                    
                     for e in results:
                         # convert to lowercase for checking
-                        eToLowerCase = e[0].lower()
-                        
-                        if eToLowerCase.endswith(landuse):
-                            # user preference can be accomindated
+                        eToLowerCase = e[0].lower()    
+                        if eToLowerCase.endswith(landuse.lower()):
+                            # user land preference can be accomindated
                             snfSoilKeyToUse = e[0]
+                            break
                         else:
                             # only one soil key in snf. must use this.
                             snfSoilKeyToUse = e[0]
