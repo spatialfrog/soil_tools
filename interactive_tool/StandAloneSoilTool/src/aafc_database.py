@@ -101,9 +101,6 @@ class Db:
 
     def resultsTableJoiningCmpSnfBySoilkey(self,slcIds, dbSlcKey, dbCmpKey, dbSoilKey, cmpTableName, snfTableName, landuse):
         """
-
-        TODO: soil key ABABC### provides both N and A option
-
         provide cmp soilkey to match landuse on.
 
         strip soilkey of last character. search snf table for all matches.
