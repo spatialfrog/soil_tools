@@ -162,11 +162,31 @@ class Utils:
     
     def parseFileName(self):
         """
-        #TODO: parse file name. extract cmp/snf/snl from passed in dbf files. 
+        #TODO: 1 critical -- parse user supplied dbf file names. 
+        
+        extract cmp/snf/snl from passed in dbf files. 
         
         ?? update class instance variable that can be checked else where? 
         
         return dict of ie cmp:pathToFile
+        """
+        
+        pass
+    
+    
+    def determineUserTableNeeds(self):
+        """
+        what does uer want to do with tables? how to join them?
+        
+        #TODO: 1 critcal -- determine how user wants to use tables for join
+        
+        see notes from march 2/2014
+        - user could load all tables to create db to use for future use
+        - could load all tables but only want 1 table for calc
+        - * user needs to explicitly select join workflow ie
+           - cmp
+           - cmp - snf
+           - cmp - snf - slf
         """
         
         pass
