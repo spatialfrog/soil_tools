@@ -181,6 +181,19 @@ class Db:
         processSlcRows(slcIds, dbSlcKey, dbCmpKey, dbSoilKey, cmpTableName, snfTableName, landuse, resultsTableName)
         
     
+    def resultsTableJoiningCmpSnfSlfBySoilkey(self,slcIds, dbSlcKey, dbCmpKey, dbSoilKey, cmpTableName, snfTableName, landuse):
+        """
+        joins all 3 soil tables, cmp -- snf -- slf table together based on single distinct sl from cmp with common soilkey and single slf layer number.
+        """
+    
+        ##-- sql example -- join all three tables
+        ##-- join cmp & snf first to get soilkey to be used, join cmp row selected against slf table constrained by layer number
+        ##select cmp32.sl, cmp32.soilkey as cmp32_soilkey, snf32.drainage, slf32.* from cmp32 join snf32 on snf32.soilkey like 'ABBUFgl###N' and cmp32.sl = 242021 and cmp32.cmp = 1 join slf32 on cmp32.soilkey like slf32.soilkey and slf32.layer_no = 2
+        
+        pass
+    
+    
+    
     # ========== categorical and numeric calculation methods
     """
     ** these methods must be generic enough to process single sl or the
