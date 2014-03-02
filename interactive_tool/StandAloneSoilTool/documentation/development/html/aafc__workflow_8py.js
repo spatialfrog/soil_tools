@@ -1,0 +1,25 @@
+var aafc__workflow_8py =
+[
+    [ "cmpDbfPath", "aafc__workflow_8py.html#a5d5fec7976d2403b2b4268c0ad66a55f", null ],
+    [ "csvFilePrefix", "aafc__workflow_8py.html#a3da8cff8e4123250ca78e6a64747f4b7", null ],
+    [ "db", "aafc__workflow_8py.html#adc8f5b0605bcf05fed608d010d86b17a", null ],
+    [ "dbCmpKey", "aafc__workflow_8py.html#ab770fd3b0b3e44b1263df9a0714c6453", null ],
+    [ "dbPercentKey", "aafc__workflow_8py.html#a91ced1410ca6951a914e6dfc911207aa", null ],
+    [ "dbSlcIdKey", "aafc__workflow_8py.html#ac7d2f51e58d82d2f80380c1c815c720a", null ],
+    [ "dbSoilKey", "aafc__workflow_8py.html#a6c9a9694eff7738775be473877fee8b1", null ],
+    [ "ids", "aafc__workflow_8py.html#a26b7487f65dcf71518a0c7b37ed22ed9", null ],
+    [ "ids_cleaned", "aafc__workflow_8py.html#a0b05e79eb99f98d319d7a9404a98e5e6", null ],
+    [ "inSoilDbPath", "aafc__workflow_8py.html#a94e5738ed7dc72e8c728097589459622", null ],
+    [ "io", "aafc__workflow_8py.html#a1448a0d2677b8705ae1e60304c15dffd", null ],
+    [ "landusePreference", "aafc__workflow_8py.html#a842ff4021e23aa38b0255ee4cb016086", null ],
+    [ "message", "aafc__workflow_8py.html#ac17b7d2df59adfc03bc926f1f796bdce", null ],
+    [ "outDirectory", "aafc__workflow_8py.html#a25d69b99df467aefc7f48057f81a70b7", null ],
+    [ "results", "aafc__workflow_8py.html#a2a84e7679e03142464a5f6693d1b329f", null ],
+    [ "slfDbfPath", "aafc__workflow_8py.html#ad2ca4e3d28ec2fc47f761460aab878e0", null ],
+    [ "snfDbfPath", "aafc__workflow_8py.html#a3c38ee4374f7fe21e7c1f4f6ac30b940", null ],
+    [ "sqliteDbName", "aafc__workflow_8py.html#a8fb680d5f734d6f8c7e9532b592e171a", null ],
+    [ "sqliteDbPath", "aafc__workflow_8py.html#a48b5fa8af824873c1c7b7daa98bbddf7", null ],
+    [ "tempSystemDirectoryPath", "aafc__workflow_8py.html#a75ee74058228e6a3864a86fbb1139c56", null ],
+    [ "useExistingDb", "aafc__workflow_8py.html#a146db43ca4bc31549da722e4f117b516", null ],
+    [ "utils", "aafc__workflow_8py.html#a3d2529ac73c212378d3bc6f2df12de9e", null ]
+];
