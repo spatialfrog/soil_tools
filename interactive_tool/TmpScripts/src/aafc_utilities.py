@@ -162,10 +162,16 @@ class Utils:
     
     def parseFileName(self):
         """
-        #TODO: parse file name. extract cmp/snf/snl from passed in dbf files. return dict of ie cmp:pathToFile
+        #TODO: parse file name. extract cmp/snf/snl from passed in dbf files. 
+        
+        ?? update class instance variable that can be checked else where? 
+        
+        return dict of ie cmp:pathToFile
         """
         
         pass
+    
+    
     
     
 
