@@ -63,6 +63,25 @@ class Db:
         # update table name via sql
         sql = "alter table %s rename to %s" % (baseDbName,tableName)
         results = self.executeSql(sql)
+    
+    
+    def prefixDbTableColumns(self):
+        """
+        prefix table name ie cmp to each column ie cmp_sl
+        
+        ensures when join occurs, it is clear what column table is from. *ensures that duplicate column names not prepended with :1 from sqlite.
+        
+        updates original table with new column names.
+        """
+        
+        #TODO: prefix db table columns names
+        
+        """
+        get listing of columns per table via sqlite3. create sql alter name calls. prepend table name with underscore separating table/column
+        """
+        
+        pass
+    
 
 
     # ========== soil queries between tables
