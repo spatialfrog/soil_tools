@@ -8,6 +8,7 @@ from qgis.utils import *
 
 import os
 import sqlite3
+from aafc_workflow import dbCmpKey, dbLayerNumberKey
 
 
 class Db:
@@ -220,7 +221,6 @@ class Db:
         ##-- join cmp & snf first to get soilkey to be used, join cmp row selected against slf table constrained by layer number
         ##select cmp32.sl, cmp32.soilkey as cmp32_soilkey, snf32.drainage, slf32.* from cmp32 join snf32 on snf32.soilkey like 'ABBUFgl###N' and cmp32.sl = 242021 and cmp32.cmp = 1 join slf32 on cmp32.soilkey like slf32.soilkey and slf32.layer_no = 2
         
-        #TODO: join all tables -- implement.
         """
         should be similar to 2 table join. determine if slf has layer requested for soilkey.
         
@@ -289,19 +289,35 @@ class Db:
                     # join slf table based on soil key and layer number
                     # check if user requested snl layer number is avaiable. if not, disgard slc id and process next one
                     snlLayerNumberToUse = ""
+                    snlLayerNumberFound = False
                     
-                    # get distinct matches of layer numbers in snl table
-                    sql = "select distinct(%s) from %s where %s like '%s'" %(dbSoilKey, snfTableName, dbSoilKey, strippedCmpSoilTableKey)
+                    # get distinct layer numbers in snl table based on snf soilkey to be used
+                    sql = "select distinct(%s) from %s where %s like '%s'" %(dbLayerNumberKey, snlTableName, dbSoilKey, snfSoilKeyToUse)
                     results = self.executeSql(sql)
                     
-                    print "\nresults of distinct keys ", results
+                    print "\nresults of distinct snl layer numbers ", results
                     
+                    # is user requested slf layer number available
+                    for e in results:
+                        if e[0] == layerNumber:
+                            # match
+                            snlLayerNumberToUse = e[0]
+                            snlLayerNumberFound = True
+                            break
                     
+                    print "snl layer number to use is ", snlLayerNumberToUse
+                    
+                    # user layer number missing. drop this slc id + cmp row. process next slc id + cmp row
+                    if snlLayerNumberFound == False:    
+                        print "layer number not found. skipping this slc id + cmp row."
+                        break    
+                    
+                    # process join
                     if not resultsTableCreated:
                         print "creating results table"
                         # table does not exist
                         # create table
-                        sql = "create table %s as select * from %s join %s on %s.%s like '%s' and %s.%s = %s and %s.%s = %s" %(resultsTableName, cmpTableName, snfTableName, snfTableName, dbSoilKey, snfSoilKeyToUse, cmpTableName, dbSlcKey, slcId, cmpTableName, dbCmpKey, cmpId)
+                        sql = "create table %s as select * from %s join %s on %s.%s like %s and %s.%s = %s and %s.%s = %s join %s on %s.%s like %s.%s and %s.%s = %s" %(resultsTableName, cmpTableName, snfTableName, snfTableName, dbSoilKey, snfSoilKeyToUse, cmpTableName, dbSlcKey, slcId, cmpTableName, dbCmpKey, cmpId, snlTableName, cmpTableName, dbSoilKey, snlTableName, dbSoilKey, snlTableName, dbLayerNumberKey, snlLayerNumberToUse)
                         print "\nsql to create table is:\n", sql
                         self.executeSql(sql)
                         
@@ -310,12 +326,12 @@ class Db:
                         
                         # flaf that table has been created
                         resultsTableCreated = True
-                
+                    
                     #== insert data into table
                     print "inserting rows into results table"
-                    # join cmp32 sl row to snf row with soilkey match. return all columns from both tables.
-                    # cmp32 cmp id constrains to create unique row id for cmp32.
-                    sql = "insert into %s select * from %s join %s on %s.%s like '%s' and %s.%s = %s and %s.%s = %s" %(resultsTableName, cmpTableName, snfTableName, snfTableName, dbSoilKey, snfSoilKeyToUse, cmpTableName, dbSlcKey, slcId, cmpTableName, dbCmpKey, cmpId)
+                    # join cmp sl row to snf row and slf row with soilkey and layer number match. return all columns from tables
+                    # cmp cmp id constrains to create unique row id for cmp
+                    sql = "insert into %s select * from %s join %s on %s.%s like %s and %s.%s = %s and %s.%s = %s join %s on %s.%s like %s.%s and %s.%s = %s" %(resultsTableName, cmpTableName, snfTableName, snfTableName, dbSoilKey, snfSoilKeyToUse, cmpTableName, dbSlcKey, slcId, cmpTableName, dbCmpKey, cmpId, snlTableName, cmpTableName, dbSoilKey, snlTableName, dbSoilKey, snlTableName, dbLayerNumberKey, snlLayerNumberToUse)
                     self.executeSql(sql)
                      
                 # commit transaction
