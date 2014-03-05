@@ -8,7 +8,7 @@ from qgis.utils import *
 
 import os
 import sqlite3
-from aafc_workflow import dbCmpKey, dbLayerNumberKey
+##from aafc_workflow import dbCmpKey, dbLayerNumberKey
 
 
 class Db:
@@ -212,7 +212,7 @@ class Db:
         processSlcRows(slcIds, dbSlcKey, dbCmpKey, dbSoilKey, cmpTableName, snfTableName, landuse, resultsTableName)
         
     
-    def resultsTableJoiningCmpSnfSlfBySoilkey(self,slcIds, dbSlcKey, dbCmpKey, dbSoilKey, dbLayerNumberKey, cmpTableName, snfTableName, snlTableName, landuse, layerNumber):
+    def resultsTableJoiningCmpSnfSlfBySoilkey(self,slcIds, dbSlcKey, dbCmpKey, dbSoilKey, dbLayerNumberKey, cmpTableName, snfTableName, slfTableName, landuse, layerNumber):
         """
         joins all 3 soil tables, cmp -- snf -- slf table together based on single distinct sl from cmp with common soilkey and single slf layer number.
         """
@@ -230,7 +230,7 @@ class Db:
         
         resultsTableName = "results_joinedCmpSnfSnl"
             
-        def processSlcRows(slcIds, dbSlcKey, dbCmpKey, dbSoilKey, dbLayerNumberKey, cmpTableName, snfTableName, snlTableName, landuse, layerNumber):
+        def processSlcRows(slcIds, dbSlcKey, dbCmpKey, dbSoilKey, dbLayerNumberKey, cmpTableName, snfTableName, slfTableName, landuse, layerNumber):
             """
             process slc ids and insert data into flat results table
             """
@@ -292,7 +292,7 @@ class Db:
                     snlLayerNumberFound = False
                     
                     # get distinct layer numbers in snl table based on snf soilkey to be used
-                    sql = "select distinct(%s) from %s where %s like '%s'" %(dbLayerNumberKey, snlTableName, dbSoilKey, snfSoilKeyToUse)
+                    sql = "select distinct(%s) from %s where %s like '%s'" %(dbLayerNumberKey, slfTableName, dbSoilKey, snfSoilKeyToUse)
                     results = self.executeSql(sql)
                     
                     print "\nresults of distinct snl layer numbers ", results
@@ -317,7 +317,7 @@ class Db:
                         print "creating results table"
                         # table does not exist
                         # create table
-                        sql = "create table %s as select * from %s join %s on %s.%s like %s and %s.%s = %s and %s.%s = %s join %s on %s.%s like %s.%s and %s.%s = %s" %(resultsTableName, cmpTableName, snfTableName, snfTableName, dbSoilKey, snfSoilKeyToUse, cmpTableName, dbSlcKey, slcId, cmpTableName, dbCmpKey, cmpId, snlTableName, cmpTableName, dbSoilKey, snlTableName, dbSoilKey, snlTableName, dbLayerNumberKey, snlLayerNumberToUse)
+                        sql = "create table %s as select * from %s join %s on %s.%s like %s and %s.%s = %s and %s.%s = %s join %s on %s.%s like %s.%s and %s.%s = %s" %(resultsTableName, cmpTableName, snfTableName, snfTableName, dbSoilKey, snfSoilKeyToUse, cmpTableName, dbSlcKey, slcId, cmpTableName, dbCmpKey, cmpId, slfTableName, cmpTableName, dbSoilKey, slfTableName, dbSoilKey, slfTableName, dbLayerNumberKey, snlLayerNumberToUse)
                         print "\nsql to create table is:\n", sql
                         self.executeSql(sql)
                         
@@ -331,7 +331,7 @@ class Db:
                     print "inserting rows into results table"
                     # join cmp sl row to snf row and slf row with soilkey and layer number match. return all columns from tables
                     # cmp cmp id constrains to create unique row id for cmp
-                    sql = "insert into %s select * from %s join %s on %s.%s like %s and %s.%s = %s and %s.%s = %s join %s on %s.%s like %s.%s and %s.%s = %s" %(resultsTableName, cmpTableName, snfTableName, snfTableName, dbSoilKey, snfSoilKeyToUse, cmpTableName, dbSlcKey, slcId, cmpTableName, dbCmpKey, cmpId, snlTableName, cmpTableName, dbSoilKey, snlTableName, dbSoilKey, snlTableName, dbLayerNumberKey, snlLayerNumberToUse)
+                    sql = "insert into %s select * from %s join %s on %s.%s like %s and %s.%s = %s and %s.%s = %s join %s on %s.%s like %s.%s and %s.%s = %s" %(resultsTableName, cmpTableName, snfTableName, snfTableName, dbSoilKey, snfSoilKeyToUse, cmpTableName, dbSlcKey, slcId, cmpTableName, dbCmpKey, cmpId, slfTableName, cmpTableName, dbSoilKey, slfTableName, dbSoilKey, slfTableName, dbLayerNumberKey, snlLayerNumberToUse)
                     self.executeSql(sql)
                      
                 # commit transaction
@@ -343,7 +343,7 @@ class Db:
         self.executeSql(sql)
         
         # create new results table with join results inserted for each slc id row
-        processSlcRows(slcIds, dbSlcKey, dbCmpKey, dbSoilKey, dbLayerNumberKey, cmpTableName, snfTableName, snlTableName, landuse, layerNumber)
+        processSlcRows(slcIds, dbSlcKey, dbCmpKey, dbSoilKey, dbLayerNumberKey, cmpTableName, snfTableName, slfTableName, landuse, layerNumber)
     
     
     
