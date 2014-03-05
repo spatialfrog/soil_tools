@@ -65,7 +65,7 @@ class Db:
         results = self.executeSql(sql)
     
     
-    def prefixDbTableColumns(self):
+    def prefixDbTableColumns(self, tableName):
         """
         prefix table name ie cmp to each column ie cmp_sl
         
@@ -74,11 +74,25 @@ class Db:
         updates original table with new column names.
         """
         
-        #TODO: prefix db table columns names
+        #TODO: nice to have -- prefix db table columns names
         
         """
-        get listing of columns per table via sqlite3. create sql alter name calls. prepend table name with underscore separating table/column
+        sqlite does not provide alter column name command. either have to recreate target table with cleaned up names and insert data into
+        or update sqlite_master table (http://www.gfairchild.com/2012/08/03/how-to-rename-columns-in-an-sqlite-database/)
         """
+        
+        # pragma of table_info on user supplied table name
+        sql = "pragma table_info(%)" %(tableName)
+        results = self.executeSql(sql)
+        
+        # second column contains field names (0, u'OGC_FID', u'INTEGER', 0, None, 1)
+        tmpNames = []
+        for i in results:
+            # append table name as prefix separated from column name with underscore
+            columnName = tableName + "_" + i[1]
+            tmpNames.append(columnName)
+        
+        # update db table with new names
         
         pass
     
