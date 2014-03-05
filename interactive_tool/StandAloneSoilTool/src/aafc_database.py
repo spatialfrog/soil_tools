@@ -136,7 +136,7 @@ class Db:
             
             # captures key results that will be added and written to csv only if writeTextCsv = True
             messagesTestCsv = []
-            messagesTestCsv.append(("///// land use preference is ", landuse))
+            messagesTestCsv.append(("///// land use preference is %s\n\n\n"%(landuse)))
                     
             # process slc ids
             for slcId in slcIds:
