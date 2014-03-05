@@ -215,18 +215,13 @@ class Db:
     def resultsTableJoiningCmpSnfSlfBySoilkey(self,slcIds, dbSlcKey, dbCmpKey, dbSoilKey, dbLayerNumberKey, cmpTableName, snfTableName, slfTableName, landuse, layerNumber):
         """
         joins all 3 soil tables, cmp -- snf -- slf table together based on single distinct sl from cmp with common soilkey and single slf layer number.
+        
+        if slf layer number not present for row being evaluated, that row is dropped from resultant table.
         """
     
         ##-- sql example -- join all three tables
         ##-- join cmp & snf first to get soilkey to be used, join cmp row selected against slf table constrained by layer number
         ##select cmp32.sl, cmp32.soilkey as cmp32_soilkey, snf32.drainage, slf32.* from cmp32 join snf32 on snf32.soilkey like 'ABBUFgl###N' and cmp32.sl = 242021 and cmp32.cmp = 1 join slf32 on cmp32.soilkey like slf32.soilkey and slf32.layer_no = 2
-        
-        """
-        should be similar to 2 table join. determine if slf has layer requested for soilkey.
-        
-        notes:
-        - if user selected layer number for all joins against slf table absent from any slf row, drop that row.
-        """
         
         resultsTableName = "results_joinedCmpSnfSnl"
             
