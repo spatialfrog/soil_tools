@@ -96,7 +96,7 @@ utils.validateUserInput(cmpDbfPath)
 utils.communicateWithUserInQgis("Creating new db...",level="INFO", messageExistanceDuration=4)    
 
 # remove existing db if user provides same name
-utils.deleteFile(os.path.join(sqliteDbPath, sqliteDbName))
+utils.deleteFile(os.path.join(outDirectory, sqliteDbName))
 
 # remove all layers in qgis
 utils.removeAllQgisLayers()
@@ -154,13 +154,22 @@ def proveSingleColumnCalculation(slcs, dbSlcKey, dbPercentKey, tableName, column
             file_open.write(msg)
             
             # write headers
-            file_open.write(headers)
+            print headers
+            file_open.writelines(headers)
+            # print each row of data per sl
+            for e in results:
+                file_open.writelines(str(e))
+            
+            msg = "----- Calculation -----"
+            file_open.write(msg)
             
             # calculate final value 
             headers, results = db.calculateField([id], dbSlcKey=dbSlcIdKey, tableName=tableName, column=columnName, dbPercentKey=dbPercentKey)
             
+            print results
+            
             # write result
-            file_open.write(results)
+            file_open.writelines(str(results[0]))
             file_open.write("\n\n")
         
 # categorical
