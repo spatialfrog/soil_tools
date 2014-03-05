@@ -21,13 +21,14 @@ import aafc_gui as gui
 
 
 # root directories
-dbfDirectory = r"/Users/drownedfrog/Projects/Contracts/AAFC/dec2013_mar2014_tool_dev/data/Soil/SLC-fordistribution"
-outDirectory = r"/Users/drownedfrog/Projects/Contracts/AAFC/dec2013_mar2014_tool_dev/data/test"
+dbfDirectory = r"/Users/drownedfrog/Projects/Contracts/AAFC/dec2013_mar2014_tool_dev/data/Soil/SLC-fordistribution/"
+outDirectory = r"/Users/drownedfrog/Projects/Contracts/AAFC/dec2013_mar2014_tool_dev/data/test/"
 
 
 # == input paths to dbf's
 # cmp dbf to be converted. * must always be passed if not then quit!
 cmpDbfPath = os.path.join(dbfDirectory,"cmp32.dbf")
+print cmpDbfPath
 # snf dbf. landuse table.
 snfDbfPath = os.path.join(dbfDirectory,"snf32.dbf")
 # slf dbf. layer table.
@@ -37,8 +38,6 @@ slfDbfPath = os.path.join(dbfDirectory,"slf32.dbf")
 # == output main db name & path
 # output spatialite db. ogr will add extension.
 sqliteDbName = "soilDb_testSuite"
-sqliteDbPath = os.path.join(outDirectory, sqliteDbName)
-
 
 # =========== configuration options.
 
@@ -75,7 +74,8 @@ landusePreference = "A"
 
 # ========= set high level variables
 # full path to spatialite db
-inSoilDbPath = os.path.join(sqliteDbPath, sqliteDbName + ".sqlite")
+inSoilDbPath = os.path.join(outDirectory, sqliteDbName + ".sqlite")
+print inSoilDbPath
 
 
 # ==================================== work flow
@@ -87,6 +87,7 @@ tempSystemDirectoryPath = utils.determineSystemTempDirectory()
 
 # class instance of io
 io = inout.Io(inSoilDbPath, tempSystemDirectoryPath)
+print io
 
 # validate user input
 utils.validateUserInput(cmpDbfPath)
