@@ -114,7 +114,7 @@ class Db:
     slf layer_no appears to be layer number.
     """
 
-    def resultsTableJoiningCmpSnfBySoilkey(self,slcIds, dbSlcKey, dbCmpKey, dbSoilKey, cmpTableName, snfTableName, landuse):
+    def resultsTableJoiningCmpSnfBySoilkey(self,slcIds, dbSlcKey, dbCmpKey, dbSoilKey, cmpTableName, snfTableName, landuse, writeTestCsv=False, writeTestCsvDirectory=None):
         """
         provide cmp soilkey to match landuse on.
 
@@ -128,18 +128,24 @@ class Db:
         def processSlcRows(slcIds, dbSlcKey, dbCmpKey, dbSoilKey, cmpTableName, snfTableName, landuse, resultsTableName):
             """
             process slc ids and insert data into flat results table
+            
+            returns list of messages used for testing
             """
             
             resultsTableCreated = False
             
-            print "land us is ", landuse
-            
+            # captures key results that will be added and written to csv only if writeTextCsv = True
+            messagesTestCsv = []
+            messagesTestCsv.append(("land use preference is ", landuse))
+                    
             # process slc ids
             for slcId in slcIds:
                 # process each row within given sl.
                 # get cmp count. int id from 1 to n. cmp id will allow unique row id within sl
                 sql = "select %s from %s where %s = %s" %(dbCmpKey, cmpTableName, dbSlcKey, slcId)
                 results = self.executeSql(sql)
+                
+                messagesTestCsv.append(("----- slc %s being processed \n" %(slcId)))
                 
                 # iterate over every cmp number
                 for i in results:
@@ -150,7 +156,8 @@ class Db:
                     sql = "select %s from %s where %s = %s and %s = %s" %(dbSoilKey, cmpTableName, dbSlcKey, slcId, dbCmpKey, cmpId)
                     result = self.executeSql(sql)
                     
-                    print "\nsoilkey from cmp table is ", result
+                    msg = "soilkey from cmp table is %s\n" %(result)
+                    messagesTestCsv.append(msg)
                     
                     # find soil key matches avaibale in snf table to user by stripping supplied soil key from cmp table row
                     # strip end landuse from provided key & append %. used for sql character matching
@@ -160,7 +167,8 @@ class Db:
                     sql = "select distinct(%s) from %s where %s like '%s'" %(dbSoilKey, snfTableName, dbSoilKey, strippedCmpSoilTableKey)
                     results = self.executeSql(sql)
                     
-                    print "\nresults of distinct keys ", results
+                    msg = "results of distinct keys in slf table is %s\n" %(results)
+                    messagesTestCsv.append(msg)
                     
                     # is user landuse preference availabe
                     # check end character of string; if matches user then select key else use default of N
@@ -177,14 +185,13 @@ class Db:
                             # only one soil key in snf. must use this.
                             snfSoilKeyToUse = e[0]
                     
-                    print "snf soilkey to us is ", snfSoilKeyToUse
+                    msg = "snf soilkey to us is %s\n" %(snfSoilKeyToUse)
+                    messagesTestCsv.append(msg)
                     
                     if not resultsTableCreated:
-                        print "creating results table"
                         # table does not exist
                         # create table
                         sql = "create table %s as select * from %s join %s on %s.%s like '%s' and %s.%s = %s and %s.%s = %s" %(resultsTableName, cmpTableName, snfTableName, snfTableName, dbSoilKey, snfSoilKeyToUse, cmpTableName, dbSlcKey, slcId, cmpTableName, dbCmpKey, cmpId)
-                        print "\nsql to create table is:\n", sql
                         self.executeSql(sql)
                         
                         # commit transaction
@@ -194,7 +201,6 @@ class Db:
                         resultsTableCreated = True
                 
                     #== insert data into table
-                    print "inserting rows into results table"
                     # join cmp32 sl row to snf row with soilkey match. return all columns from both tables.
                     # cmp32 cmp id constrains to create unique row id for cmp32.
                     sql = "insert into %s select * from %s join %s on %s.%s like '%s' and %s.%s = %s and %s.%s = %s" %(resultsTableName, cmpTableName, snfTableName, snfTableName, dbSoilKey, snfSoilKeyToUse, cmpTableName, dbSlcKey, slcId, cmpTableName, dbCmpKey, cmpId)
@@ -202,14 +208,24 @@ class Db:
                      
                 # commit transaction
                 self.conn.commit()
-
+        
+            # return list of messages
+            return messagesTestCsv
 
         # drop results table
         sql = "drop table if exists %s" %(resultsTableName)
         self.executeSql(sql)
         
         # create new results table with join results inserted for each slc id row
-        processSlcRows(slcIds, dbSlcKey, dbCmpKey, dbSoilKey, cmpTableName, snfTableName, landuse, resultsTableName)
+        messages = processSlcRows(slcIds, dbSlcKey, dbCmpKey, dbSoilKey, cmpTableName, snfTableName, landuse, resultsTableName)
+        
+        # write test csv output if writeTestCsv requested
+        if writeTestCsv:
+            with open(os.path.join(writeTestCsvDirectory, "2_tableJoin.txt"),"a") as file_open:
+                for msg in messages:
+                    file_open.writeline(msg)
+                    file_open.writeline("\n")
+        
         
     
     def resultsTableJoiningCmpSnfSlfBySoilkey(self,slcIds, dbSlcKey, dbCmpKey, dbSoilKey, dbLayerNumberKey, cmpTableName, snfTableName, slfTableName, landuse, layerNumber):
