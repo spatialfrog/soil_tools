@@ -20,14 +20,6 @@ import aafc_database as database
 import aafc_gui as gui
 
 
-#TODO: test suite -- code
-
-# sl from cmp to look at
-# 974040 -- exact tie
-# 972018 -- 3 values
-# 615009
-
-
 # root directories
 dbfDirectory = r"/Users/drownedfrog/Projects/Contracts/AAFC/dec2013_mar2014_tool_dev/data/Soil/SLC-fordistribution"
 outDirectory = r"/Users/drownedfrog/Projects/Contracts/AAFC/dec2013_mar2014_tool_dev/data/test"
@@ -125,57 +117,46 @@ db = database.Db(inSoilDbPath, tempSystemDirectoryPath)
 # TODO: parameterize name from dbf -- might need to be generic in utilities. io.createDb has similar
 db.updateDbTableName("cmp32")
 
-# get listing of tables
-results = db.executeSql("select name from sqlite_master where type='table'")
-#print results
-
-#===== demo to stdout
-db.demoCalcCategorical()
-db.demoCalcNumeric()
-
 
 #======== calculations
 #TODO: 1 critical --- parameterize all method arguments below
 
-#===== process single column categorical
-# write all sl's for single column to csv
-# warn user process may take several minutes
-message = "Calculating column %s may take several minutes" % ("slope")
-utils.communicateWithUserInQgis(message,messageExistanceDuration=10)
-# get all distinct id's from cmp table
-ids = db.executeSql("select distinct(sl) from cmp32")
-# convert sl ids list of tuples to simple list
-ids_cleaned = utils.convertDbResults2SimpleList(ids)
-headers, results = db.calculateField(ids_cleaned[:5], dbSlcKey=dbSlcIdKey, tableName="cmp32", column="slope", dbPercentKey=dbPercentKey)
+# sl from cmp to look at
+# 974040 -- exact tie
+# 972018 -- 3 values
+# 615009 -- 4 unique values + A/N options
+
+
+#===== test numeric/categorical calculations 
+"""
+test on selected slc ids
+"""
+
+#== categorical
+# slope column
+headers, results = db.calculateField([615009], dbSlcKey=dbSlcIdKey, tableName="cmp32", column="slope", dbPercentKey=dbPercentKey)
 io.writeCsvFile("slope", headers, results, outDirectory, csvFilePrefixName=csvFilePrefix)
 
 
-#===== process single column numeric
-# write all sl's for single column to csv
-# warn user process may take several minutes
-message = "Calculating column %s may take several minutes" % ("awhc_v")
-utils.communicateWithUserInQgis(message,messageExistanceDuration=10)
-# get all distinct id's from cmp table
-ids = db.executeSql("select distinct(sl) from cmp32")
-# convert sl ids list of tuples to simple list
-ids_cleaned = utils.convertDbResults2SimpleList(ids)
-headers, results = db.calculateField(ids_cleaned[:5], dbSlcKey=dbSlcIdKey, tableName="cmp32", column="awhc_v", dbPercentKey=dbPercentKey)
+#== numeric
+# awhc_v column
+headers, results = db.calculateField([615009], dbSlcKey=dbSlcIdKey, tableName="cmp32", column="awhc_v", dbPercentKey=dbPercentKey)
 io.writeCsvFile("awhc_v", headers, results, outDirectory, csvFilePrefixName=csvFilePrefix)
 
 
-#===== join cmp to snf tables
-db.resultsTableJoiningCmpSnfBySoilkey([242025,376001,615009], dbSlcKey=dbSlcIdKey, dbCmpKey=dbCmpKey, dbSoilKey=dbSoilKey, cmpTableName="cmp32", snfTableName="snf32", landuse=landusePreference)
-
-# categorical calc on joined column g_group3; snf column
-message = "Calculating column %s may take several minutes" % ("g_group3")
-utils.communicateWithUserInQgis(message,messageExistanceDuration=10)
-# get all distinct id's from cmp table
-ids = db.executeSql("select distinct(sl) from results_joinedCmpSnf")
-# convert sl ids list of tuples to simple list
-ids_cleaned = utils.convertDbResults2SimpleList(ids)
-headers, results = db.calculateField(ids_cleaned[:5], dbSlcKey=dbSlcIdKey, tableName="results_joinedCmpSnf", column="g_group3", dbPercentKey=dbPercentKey)
-io.writeCsvFile("'g_group3:1'", headers, results, outDirectory, csvFilePrefixName=csvFilePrefix)
-
-
-#====== join all 3 tables together
-db.resultsTableJoiningCmpSnfSlfBySoilkey([242025,376001,615009], dbSlcKey=dbSlcIdKey, dbCmpKey=dbCmpKey, dbSoilKey=dbSoilKey, dbLayerNumberKey=dbLayerNumberKey, cmpTableName="cmp32", snfTableName="snf32", slfTableName="slf32", landuse=landusePreference, layerNumber=1)
+# #===== join cmp to snf tables
+# db.resultsTableJoiningCmpSnfBySoilkey([242025,376001,615009], dbSlcKey=dbSlcIdKey, dbCmpKey=dbCmpKey, dbSoilKey=dbSoilKey, cmpTableName="cmp32", snfTableName="snf32", landuse=landusePreference)
+# 
+# # categorical calc on joined column g_group3; snf column
+# message = "Calculating column %s may take several minutes" % ("g_group3")
+# utils.communicateWithUserInQgis(message,messageExistanceDuration=10)
+# # get all distinct id's from cmp table
+# ids = db.executeSql("select distinct(sl) from results_joinedCmpSnf")
+# # convert sl ids list of tuples to simple list
+# ids_cleaned = utils.convertDbResults2SimpleList(ids)
+# headers, results = db.calculateField(ids_cleaned[:5], dbSlcKey=dbSlcIdKey, tableName="results_joinedCmpSnf", column="g_group3", dbPercentKey=dbPercentKey)
+# io.writeCsvFile("'g_group3:1'", headers, results, outDirectory, csvFilePrefixName=csvFilePrefix)
+# 
+# 
+# #====== join all 3 tables together
+# db.resultsTableJoiningCmpSnfSlfBySoilkey([242025,376001,615009], dbSlcKey=dbSlcIdKey, dbCmpKey=dbCmpKey, dbSoilKey=dbSoilKey, dbLayerNumberKey=dbLayerNumberKey, cmpTableName="cmp32", snfTableName="snf32", slfTableName="slf32", landuse=landusePreference, layerNumber=1)
