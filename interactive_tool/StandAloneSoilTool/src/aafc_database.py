@@ -391,12 +391,8 @@ class Db:
             if fieldDataType.lower().startswith("var") or fieldDataType.lower().startswith("tex"):
                 # text
                 columnDataType = "string"
-                
-                print "found string"
-                
                 return columnDataType
             else:
-                print "numeric"
                 return columnDataType
 
                 
