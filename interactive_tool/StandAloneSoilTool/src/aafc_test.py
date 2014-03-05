@@ -62,12 +62,8 @@ dbCmpKey = "cmp"
 dbLayerNumberKey = "layer_no"
 
 
-# == csv prefix name for file to be created
-"""
-default will be calculated
-csv name will be prefixed by user supplied name. remainder of name derived from column
-"""
-csvFilePrefix = "test"
+# == prefix name for file to be created
+filePrefix = "test"
 
 # == snf landuse preference
 """
@@ -131,6 +127,105 @@ db.updateDbTableName("cmp32")
 """
 test on selected slc ids
 """
+
+
+def calcNumeric(slcs, dbSlcKey, dbPercentKey, tableName="cmp32", columnName="cfrag1_v", filePrefix, outDirectory):
+    """
+    input:
+    list of slc's to process
+    
+    calculate numeric weighting
+    
+    output:
+    write single csv file
+    """
+    
+    # open file
+    with open(os.path.join(outDirectory,filePrefix + "_" + columnName +".txt"),"w") as file_open:
+        for id in slcs:
+            # get rows for calculation
+            sql = "select %s, %s from %s where %s = %s" %(dbSlcKey, dbPercentKey, tableName, dbSlcKey, id)
+            headers, results = db.executeSql(sql, fieldNames=True)
+            
+            # write intro to file
+            msg = "SLC id %s rows for column %s\n" %(id, columnName)
+            file_open.write(msg)
+            
+            # write headers
+            file_open.write(headers)
+            
+            # calculate final value 
+            headers, results = db.calculateField([id], dbSlcKey=dbSlcIdKey, tableName=tableName, column=columnName, dbPercentKey=dbPercentKey)
+            
+            # write result
+            file_open.write(results)
+            file_open.write("\n\n")
+        
+
+def demoCalcCategorical(self,sl=254001,tableName="cmp32",column="slope"):
+    """
+    demo output for client. show pretty print output of business logic.
+
+    calculate categorical dominate/sub-dominate.
+    """
+
+    # textual: calculate dominate/sub-dominate
+    print "="*20 + " categorical calculation for sl %s" %(sl)
+    sql = """select %s,percent from %s where sl = %s""" %(column,tableName,sl)
+    results = self.executeSql(sql)
+    print "Rows for %s, percent column prior to calculation" %(column)
+    print results
+    print "-"*20
+    print "-"*10 + "results"
+    sql = """select distinct(%s),count(%s) as count, sum(percent) as dominance from %s where sl = %s group by %s order by count(%s) desc""" %(column,column,tableName,sl,column,column)
+    results = self.executeSql(sql)
+    print "Calculated dominate/sub-dominate raw results for %s.\nCategory -- Count -- Percentage" %(column)
+    print results
+    print "-"*20
+
+
+def demoCategoricalColumnToCsv(self, sl=254001, tableName="cmp32", column="slope"):
+    """
+    demo to return categorical calculation.
+    
+    returns headers and row data to write to csv.
+    """
+    
+    # query
+    sql = """select distinct(%s),count(%s) as count, sum(percent) as dominance from %s where sl = %s group by %s order by count(%s) desc""" %(column,column,tableName,sl,column,column)
+    headers, results = self.executeSql(sql,fieldNames=True)
+    
+    # return headers + results
+    return headers, results
+    
+
+
+def demoSimpleJoinBetweenCmpSnfTables(self, cmpTableName="cmp32", snfTableName="snf32", soilKey="ABBUFgl###N", slcId=242021):
+    """
+    simple join between cmp and snf table via single soilkey.
+
+    return columns hardcoded @ moment.
+    """
+
+    sql = """select %s.soilkey as %s_soilkey,%s.slope,%s.soilkey as %s_soilkey,%s.'order',
+    %s.g_group3 from %s join %s on %s.soilkey = %s.soilkey where %s.soilkey
+    like %s and %s.sl = %s""" % (cmpTableName,cmpTableName,cmpTableName,snfTableName,snfTableName,snfTableName,snfTableName,cmpTableName,snfTableName,cmpTableName,snfTableName,cmpTableName,soilKey,cmpTableName,slcId)
+
+#        sql = """select cmp32.soilkey as cmp32_soilkey,cmp32.slope,snf32.soilkey as snf32_soilkey,snf32.'order',
+#        snf32.g_group3 from cmp32 join snf32 on cmp32.soilkey = snf32.soilkey where cmp32.soilkey
+#        like "ABBUFgl###N" and cmp32.sl = 242021"""
+    
+    print sql
+    
+    headers, results = self.executeSql(sql,fieldNames=True)
+
+    print headers
+    print results
+
+
+
+
+
 
 #== categorical
 # slope column
