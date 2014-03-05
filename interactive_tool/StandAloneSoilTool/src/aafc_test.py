@@ -28,7 +28,6 @@ outDirectory = r"/Users/drownedfrog/Projects/Contracts/AAFC/dec2013_mar2014_tool
 # == input paths to dbf's
 # cmp dbf to be converted. * must always be passed if not then quit!
 cmpDbfPath = os.path.join(dbfDirectory,"cmp32.dbf")
-print cmpDbfPath
 # snf dbf. landuse table.
 snfDbfPath = os.path.join(dbfDirectory,"snf32.dbf")
 # slf dbf. layer table.
@@ -75,7 +74,6 @@ landusePreference = "A"
 # ========= set high level variables
 # full path to spatialite db
 inSoilDbPath = os.path.join(outDirectory, sqliteDbName + ".sqlite")
-print inSoilDbPath
 
 
 # ==================================== work flow
@@ -87,7 +85,6 @@ tempSystemDirectoryPath = utils.determineSystemTempDirectory()
 
 # class instance of io
 io = inout.Io(inSoilDbPath, tempSystemDirectoryPath)
-print io
 
 # validate user input
 utils.validateUserInput(cmpDbfPath)
@@ -146,27 +143,28 @@ def proveSingleColumnCalculation(slcs, dbSlcKey, dbPercentKey, tableName, column
     with open(os.path.join(outDirectory,filePrefix + "_" + columnName +".txt"),"w") as file_open:
         for id in slcs:
             # get rows for calculation
-            sql = "select %s, %s from %s where %s = %s" %(dbSlcKey, dbPercentKey, tableName, dbSlcKey, id)
+            sql = "select %s, %s, %s from %s where %s = %s" %(dbSlcKey, columnName, dbPercentKey, tableName, dbSlcKey, id)
             headers, results = db.executeSql(sql, fieldNames=True)
             
             # write intro to file
-            msg = "SLC id %s rows for column %s\n" %(id, columnName)
+            msg = "column: %s\nSLC id %s\n" %(columnName, id)
             file_open.write(msg)
             
             # write headers
-            print headers
-            file_open.writelines(headers)
+            writeHeaders = "%s, %s, %s" %(headers[0], headers[1], headers[2])
+            file_open.write(writeHeaders)
+            file_open.write("\n")
+            
             # print each row of data per sl
             for e in results:
                 file_open.writelines(str(e))
+                file_open.write("\n")
             
-            msg = "----- Calculation -----"
+            msg = "----- Calculation -----\n"
             file_open.write(msg)
             
             # calculate final value 
             headers, results = db.calculateField([id], dbSlcKey=dbSlcIdKey, tableName=tableName, column=columnName, dbPercentKey=dbPercentKey)
-            
-            print results
             
             # write result
             file_open.writelines(str(results[0]))
