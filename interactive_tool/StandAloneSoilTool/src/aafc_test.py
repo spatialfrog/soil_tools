@@ -12,7 +12,7 @@ from qgis.gui import *
 from qgis.utils import *
 
 # TODO: remove from final implementation. not an issue as qgis put .qgis/python/plugins onto sys path
-sys.path.append(r"/Users/drownedfrog/Documents/workspace/git/aafc-grip-tool-dev-dec2013-mar2014/interactive_tool/StandAloneSoilTool/src/")
+sys.path.append(r"/Users/drownedfrog/Documents/workspace/git/aafc-grip-tool-dev-dec2013-mar2014/interactive_tool/StandAloneSoilTool/src")
 
 import aafc_io as inout
 import aafc_utilities as utilities
@@ -177,19 +177,20 @@ proveSingleColumnCalculation(slcIds, dbSlcKey=dbSlcIdKey, dbPercentKey=dbPercent
 proveSingleColumnCalculation(slcIds, dbSlcKey=dbSlcIdKey, dbPercentKey=dbPercentKey, tableName="cmp32", columnName="awhc_v", filePrefix=filePrefix, outDirectory=outDirectory)
 
 
-# #===== join cmp to snf tables
-# db.resultsTableJoiningCmpSnfBySoilkey([242025,376001,615009], dbSlcKey=dbSlcIdKey, dbCmpKey=dbCmpKey, dbSoilKey=dbSoilKey, cmpTableName="cmp32", snfTableName="snf32", landuse=landusePreference)
-# 
-# # categorical calc on joined column g_group3; snf column
-# message = "Calculating column %s may take several minutes" % ("g_group3")
-# utils.communicateWithUserInQgis(message,messageExistanceDuration=10)
-# # get all distinct id's from cmp table
-# ids = db.executeSql("select distinct(sl) from results_joinedCmpSnf")
-# # convert sl ids list of tuples to simple list
-# ids_cleaned = utils.convertDbResults2SimpleList(ids)
-# headers, results = db.calculateField(ids_cleaned[:5], dbSlcKey=dbSlcIdKey, tableName="results_joinedCmpSnf", column="g_group3", dbPercentKey=dbPercentKey)
-# io.writeCsvFile("'g_group3:1'", headers, results, outDirectory, csvFilePrefixName=csvFilePrefix)
-# 
-# 
+#===== 2 table join
+#== cmp to snf table via soilkey
+# create join table
+db.resultsTableJoiningCmpSnfBySoilkey(slcIds, dbSlcKey=dbSlcIdKey, dbCmpKey=dbCmpKey, dbSoilKey=dbSoilKey, cmpTableName="cmp32", snfTableName="snf32", landuse=landusePreference, writeTestCsv=True, writeTestCsvDirectory=outDirectory)
+
+
+# write number of columns in each table
+
+# write number of columns in joined table
+
+
 # #====== join all 3 tables together
 # db.resultsTableJoiningCmpSnfSlfBySoilkey([242025,376001,615009], dbSlcKey=dbSlcIdKey, dbCmpKey=dbCmpKey, dbSoilKey=dbSoilKey, dbLayerNumberKey=dbLayerNumberKey, cmpTableName="cmp32", snfTableName="snf32", slfTableName="slf32", landuse=landusePreference, layerNumber=1)
+
+
+#==== clean up
+sys.path.pop()
