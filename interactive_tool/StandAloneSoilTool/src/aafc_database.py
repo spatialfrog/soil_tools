@@ -136,7 +136,7 @@ class Db:
             
             # captures key results that will be added and written to csv only if writeTextCsv = True
             messagesTestCsv = []
-            messagesTestCsv.append(("land use preference is ", landuse))
+            messagesTestCsv.append(("///// land use preference is ", landuse))
                     
             # process slc ids
             for slcId in slcIds:
@@ -145,7 +145,7 @@ class Db:
                 sql = "select %s from %s where %s = %s" %(dbCmpKey, cmpTableName, dbSlcKey, slcId)
                 results = self.executeSql(sql)
                 
-                messagesTestCsv.append(("----- slc %s being processed \n" %(slcId)))
+                messagesTestCsv.append(("===== slc %s being processed \n" %(slcId)))
                 
                 # iterate over every cmp number
                 for i in results:
@@ -156,7 +156,7 @@ class Db:
                     sql = "select %s from %s where %s = %s and %s = %s" %(dbSoilKey, cmpTableName, dbSlcKey, slcId, dbCmpKey, cmpId)
                     result = self.executeSql(sql)
                     
-                    msg = "soilkey from cmp table is %s\n" %(result)
+                    msg = "cmp row %s from component table soilkey is %s\n" %(cmpId, result)
                     messagesTestCsv.append(msg)
                     
                     # find soil key matches avaibale in snf table to user by stripping supplied soil key from cmp table row
@@ -167,7 +167,7 @@ class Db:
                     sql = "select distinct(%s) from %s where %s like '%s'" %(dbSoilKey, snfTableName, dbSoilKey, strippedCmpSoilTableKey)
                     results = self.executeSql(sql)
                     
-                    msg = "results of distinct keys in slf table is %s\n" %(results)
+                    msg = "slf table distinct soilkeys are %s\n" %(results)
                     messagesTestCsv.append(msg)
                     
                     # is user landuse preference availabe
@@ -182,10 +182,13 @@ class Db:
                             snfSoilKeyToUse = e[0]
                             break
                         else:
-                            # only one soil key in snf. must use this.
+                            # only one soil key in snf. must use this
                             snfSoilKeyToUse = e[0]
+                            messagesTestCsv.append(("* Can't accomindate land use preference"))
                     
                     msg = "snf soilkey to us is %s\n" %(snfSoilKeyToUse)
+                    messagesTestCsv.append(msg)
+                    msg = "----------\n\n"
                     messagesTestCsv.append(msg)
                     
                     if not resultsTableCreated:
@@ -221,10 +224,10 @@ class Db:
         
         # write test csv output if writeTestCsv requested
         if writeTestCsv:
-            with open(os.path.join(writeTestCsvDirectory, "2_tableJoin.txt"),"a") as file_open:
+            with open(os.path.join(writeTestCsvDirectory, "2_tableJoin.txt"),"w") as file_open:
                 for msg in messages:
-                    file_open.writeline(msg)
-                    file_open.writeline("\n")
+                    file_open.writelines(msg)
+                    file_open.write("\n")
         
         
     
