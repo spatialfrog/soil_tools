@@ -23,6 +23,7 @@ from qgis.core import *
 from qgis.gui import *
 from qgis.utils import *
 
+
 # TODO: remove from final implementation. not an issue as qgis put .qgis/python/plugins onto sys path
 sys.path.append(r"/Users/drownedfrog/Documents/workspace/git/aafc-grip-tool-dev-dec2013-mar2014/interactive_tool/StandAloneSoilTool/src/")
 
@@ -220,20 +221,3 @@ else:
 print "========= done ========"
 # clean up
 # utils.cleanUp(db.conn)
-
-# remove scripts dir from sys path
-sys.path.pop()
-
-## ========= testing
-#if __name__ == "main":
-#    # run following
-#
-#    # show demo output
-#    demoCalcCategorical()
-#    demoCalcCategorical(sl=242025,column="cfrag1")
-#    demoCalcCategorical(sl=242025,column="stone")
-#    demoCalcNumeric()
-#    demoCalcNumeric(sl=376001,column="awhc")
-#
-#    # house keeping
-#    cleanUp(dbConnection=conn)
