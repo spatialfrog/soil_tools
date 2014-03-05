@@ -84,6 +84,9 @@ dbPercentKey = "percent"
 # what field in cmp table is cmp field. integer field listing unique id
 dbCmpKey = "cmp"
 
+# what field in snl table is layer_no field.
+dbLayerNumberKey = "layer_no"
+
 
 
 # == output directory for csv

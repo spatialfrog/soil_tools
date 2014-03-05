@@ -211,7 +211,7 @@ class Db:
         processSlcRows(slcIds, dbSlcKey, dbCmpKey, dbSoilKey, cmpTableName, snfTableName, landuse, resultsTableName)
         
     
-    def resultsTableJoiningCmpSnfSlfBySoilkey(self,slcIds, dbSlcKey, dbCmpKey, dbSoilKey, cmpTableName, snfTableName, landuse):
+    def resultsTableJoiningCmpSnfSlfBySoilkey(self,slcIds, dbSlcKey, dbCmpKey, dbSoilKey, dbLayerNumberKey, cmpTableName, snfTableName, snlTableName, landuse, layerNumber):
         """
         joins all 3 soil tables, cmp -- snf -- slf table together based on single distinct sl from cmp with common soilkey and single slf layer number.
         """
@@ -228,7 +228,106 @@ class Db:
         - if user selected layer number for all joins against slf table absent from any slf row, drop that row.
         """
         
-        pass
+        resultsTableName = "results_joinedCmpSnfSnl"
+            
+        def processSlcRows(slcIds, dbSlcKey, dbCmpKey, dbSoilKey, dbLayerNumberKey, cmpTableName, snfTableName, snlTableName, landuse, layerNumber):
+            """
+            process slc ids and insert data into flat results table
+            """
+            
+            resultsTableCreated = False
+            
+            print "land us is ", landuse
+            print "layer number is ", layerNumber
+            
+            # process slc ids
+            for slcId in slcIds:
+                # process each row within given sl.
+                # get cmp count. int id from 1 to n. cmp id will allow unique row id within sl
+                sql = "select %s from %s where %s = %s" %(dbCmpKey, cmpTableName, dbSlcKey, slcId)
+                results = self.executeSql(sql)
+                
+                # iterate over every cmp number
+                for i in results:
+                    # extract cmp id from tuple
+                    cmpId = i[0]
+                    
+                    # return soil key column for cmp + sl
+                    sql = "select %s from %s where %s = %s and %s = %s" %(dbSoilKey, cmpTableName, dbSlcKey, slcId, dbCmpKey, cmpId)
+                    result = self.executeSql(sql)
+                    
+                    print "\nsoilkey from cmp table is ", result
+                    
+                    # find soil key matches avaibale in snf table to user by stripping supplied soil key from cmp table row
+                    # strip end landuse from provided key & append %. used for sql character matching
+                    strippedCmpSoilTableKey = (result[0][0])[:-1] + "%"
+                    
+                    # get distinct matches of sl cmp soil keys in snf table
+                    sql = "select distinct(%s) from %s where %s like '%s'" %(dbSoilKey, snfTableName, dbSoilKey, strippedCmpSoilTableKey)
+                    results = self.executeSql(sql)
+                    
+                    print "\nresults of distinct keys ", results
+                    
+                    # is user landuse preference availabe
+                    # check end character of string; if matches user then select key else use default of N
+                    snfSoilKeyToUse = ""
+                    
+                    for e in results:
+                        # convert to lowercase for checking
+                        eToLowerCase = e[0].lower()    
+                        if eToLowerCase.endswith(landuse.lower()):
+                            # user land preference can be accomindated
+                            snfSoilKeyToUse = e[0]
+                            break
+                        else:
+                            # only one soil key in snf. must use this.
+                            snfSoilKeyToUse = e[0]
+                    
+                    print "snf soilkey to us is ", snfSoilKeyToUse
+                    
+                    
+                    # join slf table based on soil key and layer number
+                    # check if user requested snl layer number is avaiable. if not, disgard slc id and process next one
+                    snlLayerNumberToUse = ""
+                    
+                    # get distinct matches of layer numbers in snl table
+                    sql = "select distinct(%s) from %s where %s like '%s'" %(dbSoilKey, snfTableName, dbSoilKey, strippedCmpSoilTableKey)
+                    results = self.executeSql(sql)
+                    
+                    print "\nresults of distinct keys ", results
+                    
+                    
+                    if not resultsTableCreated:
+                        print "creating results table"
+                        # table does not exist
+                        # create table
+                        sql = "create table %s as select * from %s join %s on %s.%s like '%s' and %s.%s = %s and %s.%s = %s" %(resultsTableName, cmpTableName, snfTableName, snfTableName, dbSoilKey, snfSoilKeyToUse, cmpTableName, dbSlcKey, slcId, cmpTableName, dbCmpKey, cmpId)
+                        print "\nsql to create table is:\n", sql
+                        self.executeSql(sql)
+                        
+                        # commit transaction
+                        self.conn.commit()
+                        
+                        # flaf that table has been created
+                        resultsTableCreated = True
+                
+                    #== insert data into table
+                    print "inserting rows into results table"
+                    # join cmp32 sl row to snf row with soilkey match. return all columns from both tables.
+                    # cmp32 cmp id constrains to create unique row id for cmp32.
+                    sql = "insert into %s select * from %s join %s on %s.%s like '%s' and %s.%s = %s and %s.%s = %s" %(resultsTableName, cmpTableName, snfTableName, snfTableName, dbSoilKey, snfSoilKeyToUse, cmpTableName, dbSlcKey, slcId, cmpTableName, dbCmpKey, cmpId)
+                    self.executeSql(sql)
+                     
+                # commit transaction
+                self.conn.commit()
+
+
+        # drop results table
+        sql = "drop table if exists %s" %(resultsTableName)
+        self.executeSql(sql)
+        
+        # create new results table with join results inserted for each slc id row
+        processSlcRows(slcIds, dbSlcKey, dbCmpKey, dbSoilKey, dbLayerNumberKey, cmpTableName, snfTableName, snlTableName, landuse, layerNumber)
     
     
     
