@@ -380,7 +380,7 @@ class Db:
     entire table of unique sl id's
     """
 
-    def calculateField(self, slcIds, dbSlcKey="sl", tableName="cmp32", column="slope", dbPercentKey="percent"):
+    def calculateField(self, slcIds, dbSlcKey, tableName, columnName, dbPercentKey):
         """
         TODO: categorical calc -- update doc string
         
@@ -391,7 +391,7 @@ class Db:
         
         # determine column data type
         # used to dispatch appriopate method to calculate
-        def determineFieldDataType(tableName, column):
+        def determineFieldDataType(tableName, columnName):
             """
             determine sqlite column data type. this ensures that characters such as #, _, - or "" not interpretted wrongly.
             in several cases first row that starts with them is a numeric field.
@@ -401,21 +401,23 @@ class Db:
             return single value of "string" or "numeric"
             """
             
+            # data type from sqlite for user supplied column
+            columnDataType = "" 
+
             # query sqlite pragma table_info
             sql = "pragma table_info(%s)" % (tableName)
             data = self.executeSql(sql)
-    
+                
             # match user column to sqlite field data returned from pragma
             # process tuples of this format (0, u'OGC_FID', u'INTEGER', 0, None, 1)
             fieldDataType = ""
             for row in data:
-                if row[1] == column:
+                # remove double quote within single quote if present. only passed if db column name is duplicate ie '"slope:2"'
+                columnNameStripped = columnName.strip('\"')
+                if row[1].lower() == columnNameStripped.lower():
                     # match found. get sqlite field type
                     fieldDataType = row[2]
                     break
-            
-            # assume numeric field
-            columnDataType = "numeric" 
             
             # check fieldType
             # sqlite provides either VARCHAR/TEXT or INTEGER/REAL
@@ -424,11 +426,14 @@ class Db:
                 # text
                 columnDataType = "string"
                 return columnDataType
+            elif fieldDataType.lower().startswith("int") or fieldDataType.lower().startswith("rea"):
+                columnDataType = "numeric"
             else:
-                return columnDataType
+                print "could not match data type!!"
+            
 
                 
-        def categoricalCalculation(slcIds, dbSlcKey="sl", tableName="cmp32", column="slope", dbPercentKey="percent"):
+        def categoricalCalculation(slcIds, dbSlcKey, tableName, columnName, dbPercentKey):
             """
             - only show sub-dominate if dominate % < 60
             - % has no wieght on sub-dominate. take first one.
@@ -454,7 +459,7 @@ class Db:
                 
                 sql = """select sl,dominate_category, dominate_weight from
                 (select distinct(%s) as dominate_category, %s, sum(%s) as dominate_weight 
-                from %s where %s = %s group by %s order by count(%s) desc limit 1) as t """ %(column,dbSlcKey,dbPercentKey, tableName, dbSlcKey, slcId,column,column)
+                from %s where %s = %s group by %s order by count(%s) desc limit 1) as t """ %(columnName,dbSlcKey,dbPercentKey, tableName, dbSlcKey, slcId,columnName,columnName)
                 
                 header, row = self.executeSql(sql,fieldNames=True)
                 
@@ -471,7 +476,7 @@ class Db:
             return header, results
 
 
-        def numericCalculation(slcIds, dbSlcKey="sl", tableName="cmp32", column="slope", dbPercentKey="percent"):
+        def numericCalculation(slcIds, dbSlcKey, tableName, columnName, dbPercentKey):
             """
             TODO: field calc -- add to numeric doc string
     
@@ -490,7 +495,7 @@ class Db:
                 ## select distinct(sl) as sl, sum(awhc_v * (percent/100.0)) as final from cmp32 where sl = 376002 group by sl
                 ## sql = """select distinct(sl) as sl, sum(%s * (percent/100.0)) as final from %s where sl = %s group by sl""" %(column,tableName,sl)
                 
-                sql ="""select distinct(%s) as %s, sum(%s * (%s/100.0)) as %s from %s where %s = %s group by %s""" % (dbSlcKey, dbSlcKey, column, dbPercentKey, column + "_weighted_average", tableName, dbSlcKey,  slcId, dbSlcKey)
+                sql ="""select distinct(%s) as %s, sum(%s * (%s/100.0)) as %s from %s where %s = %s group by %s""" % (dbSlcKey, dbSlcKey, columnName, dbPercentKey, columnName + "_weighted_average", tableName, dbSlcKey,  slcId, dbSlcKey)
                 header, row = self.executeSql(sql,fieldNames=True)
                 
                 #== format numeric calc in db tuple before passing back
@@ -509,24 +514,25 @@ class Db:
         
         
         # determine column field data type
-        columnDataTypeIs = determineFieldDataType(tableName, column)
+        columnDataTypeIs = determineFieldDataType(tableName, columnName)
         
         # dispatch to correct calculation method based on field data type
         if columnDataTypeIs == "string":
             # categorical column calculation
-            headers, results = categoricalCalculation(slcIds, dbSlcKey, tableName, column, dbPercentKey)
+            print "processing categorical column"
+            headers, results = categoricalCalculation(slcIds, dbSlcKey, tableName, columnName, dbPercentKey)
             
             return headers, results
         
         elif columnDataTypeIs == "numeric":
+            print "processing numeric calculation"
             # numeric column calculation
-            headers, results = numericCalculation(slcIds, dbSlcKey, tableName, column, dbPercentKey)
+            headers, results = numericCalculation(slcIds, dbSlcKey, tableName, columnName, dbPercentKey)
             
             return headers, results
         
         else:
             # error
             #TODO: calculation -- if issue determining column data type report error
-            pass
-            
+            print "mmmm couldn't figure out column type"
 
