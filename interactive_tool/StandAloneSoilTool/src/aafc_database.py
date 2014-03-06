@@ -414,16 +414,12 @@ class Db:
             for row in data:
                 # remove double quote within single quote if present. only passed if db column name is duplicate ie '"slope:2"'
                 columnNameStripped = columnName.strip('\"')
-                print row[1].lower(), columnName, columnNameStripped
-                print len(row[1]), len(columnNameStripped)
                 if row[1].lower() == columnNameStripped.lower():
                     # match found. get sqlite field type
-                    print "match found =="
                     fieldDataType = row[2]
                     break
                 elif row[1].lower() in columnNameStripped.lower() and len(row[1]) == len(columnNameStripped):
                     fieldDataType = row[2]
-                    print "match found 'in' and len"
                     break
                 else:
                     print "no data type found"
@@ -531,13 +527,11 @@ class Db:
         # dispatch to correct calculation method based on field data type
         if columnDataTypeIs == "string":
             # categorical column calculation
-            print "processing categorical column"
             headers, results = categoricalCalculation(slcIds, dbSlcKey, tableName, columnName, dbPercentKey)
             
             return headers, results
         
         elif columnDataTypeIs == "numeric":
-            print "processing numeric calculation"
             # numeric column calculation
             headers, results = numericCalculation(slcIds, dbSlcKey, tableName, columnName, dbPercentKey)
             
