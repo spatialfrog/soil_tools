@@ -69,6 +69,9 @@ default if not A is N
 """
 landusePreference = "A"
 
+# == slf layer number
+layerNumberToUse = 4
+
 
 # ========= set high level variables
 # full path to spatialite db
@@ -189,7 +192,7 @@ db.resultsTableJoiningCmpSnfBySoilkey(slcIds, dbSlcKey=dbSlcIdKey, dbCmpKey=dbCm
 
 #====== 3 table join
 #== cmp - snf - slf via soilkey and layer number in slf
-db.resultsTableJoiningCmpSnfSlfBySoilkey(slcIds, dbSlcKey=dbSlcIdKey, dbCmpKey=dbCmpKey, dbSoilKey=dbSoilKey, dbLayerNumberKey=dbLayerNumberKey, cmpTableName="cmp32", snfTableName="snf32", slfTableName="slf32", landuse=landusePreference, layerNumber=1, writeTestCsv=True, writeTestCsvDirectory=outDirectory)
+db.resultsTableJoiningCmpSnfSlfBySoilkey(slcIds, dbSlcKey=dbSlcIdKey, dbCmpKey=dbCmpKey, dbSoilKey=dbSoilKey, dbLayerNumberKey=dbLayerNumberKey, cmpTableName="cmp32", snfTableName="snf32", slfTableName="slf32", landuse=landusePreference, layerNumber=layerNumberToUse, writeTestCsv=True, writeTestCsvDirectory=outDirectory)
 
 # need to choose layer number that will result in several rows being dropped
 
