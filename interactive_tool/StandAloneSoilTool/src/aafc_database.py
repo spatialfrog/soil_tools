@@ -514,11 +514,8 @@ class Db:
         
         #TODO: field calculation -- clean up. shouldn't need to cascade return values
         
-        
         # determine column field data type
         columnDataTypeIs = determineFieldDataType(tableName, columnName)
-        
-        print "columnDataTypeIs ",  columnDataTypeIs
         
         # dispatch to correct calculation method based on field data type
         if columnDataTypeIs == "string":
