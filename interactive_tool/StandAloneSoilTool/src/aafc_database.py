@@ -231,7 +231,7 @@ class Db:
         
         
     
-    def resultsTableJoiningCmpSnfSlfBySoilkey(self,slcIds, dbSlcKey, dbCmpKey, dbSoilKey, dbLayerNumberKey, cmpTableName, snfTableName, slfTableName, landuse, layerNumber):
+    def resultsTableJoiningCmpSnfSlfBySoilkey(self,slcIds, dbSlcKey, dbCmpKey, dbSoilKey, dbLayerNumberKey, cmpTableName, snfTableName, slfTableName, landuse, layerNumber, writeTestCsv=False, writeTestCsvDirectory=None):
         """
         joins all 3 soil tables, cmp -- snf -- slf table together based on single distinct sl from cmp with common soilkey and single slf layer number.
         
@@ -250,10 +250,11 @@ class Db:
             """
             
             resultsTableCreated = False
-            
-            print "land us is ", landuse
-            print "layer number is ", layerNumber
-            
+            # captures key results that will be added and written to csv only if writeTextCsv = True
+            messagesTestCsv = []
+            messagesTestCsv.append(("///// land use preference is %s\n\n"%(landuse)))
+            messagesTestCsv.append("/////  layer number is %s\n\n"%(layerNumber))
+                        
             # process slc ids
             for slcId in slcIds:
                 # process each row within given sl.
@@ -270,7 +271,8 @@ class Db:
                     sql = "select %s from %s where %s = %s and %s = %s" %(dbSoilKey, cmpTableName, dbSlcKey, slcId, dbCmpKey, cmpId)
                     result = self.executeSql(sql)
                     
-                    print "\nsoilkey from cmp table is ", result
+                    msg = "cmp row %s from component table soilkey is %s\n" %(cmpId, result)
+                    messagesTestCsv.append(msg)
                     
                     # find soil key matches avaibale in snf table to user by stripping supplied soil key from cmp table row
                     # strip end landuse from provided key & append %. used for sql character matching
@@ -280,7 +282,8 @@ class Db:
                     sql = "select distinct(%s) from %s where %s like '%s'" %(dbSoilKey, snfTableName, dbSoilKey, strippedCmpSoilTableKey)
                     results = self.executeSql(sql)
                     
-                    print "\nresults of distinct keys ", results
+                    msg = "slf table distinct soilkeys are %s\n" %(results)
+                    messagesTestCsv.append(msg)
                     
                     # is user landuse preference availabe
                     # check end character of string; if matches user then select key else use default of N
@@ -296,8 +299,12 @@ class Db:
                         else:
                             # only one soil key in snf. must use this.
                             snfSoilKeyToUse = e[0]
+                            messagesTestCsv.append(("* Can't accomindate land use preference"))
                     
-                    print "snf soilkey to us is ", snfSoilKeyToUse
+                    msg = "snf soilkey to us is %s\n" %(snfSoilKeyToUse)
+                    messagesTestCsv.append(msg)
+                    msg = "----------\n\n"
+                    messagesTestCsv.append(msg)
                     
                     
                     # join slf table based on soil key and layer number
@@ -317,22 +324,22 @@ class Db:
                             # match
                             snlLayerNumberToUse = e[0]
                             snlLayerNumberFound = True
+                            messagesTestCsv.append(("user requested soil layer in slf table found"))
                             break
                     
                     print "snl layer number to use is ", snlLayerNumberToUse
                     
                     # user layer number missing. drop this slc id + cmp row. process next slc id + cmp row
                     if snlLayerNumberFound == False:    
-                        print "layer number not found. skipping this slc id + cmp row."
+                        msg = "* slf layer number not found. skipping current slc id + cmp row. will try next row."
+                        messagesTestCsv.append(msg)
                         break    
                     
                     # process join
                     if not resultsTableCreated:
-                        print "creating results table"
                         # table does not exist
                         # create table
                         sql = "create table %s as select * from %s join %s on %s.%s like '%s' and %s.%s = %s and %s.%s = %s join %s on %s.%s like %s.%s and %s.%s = %s" %(resultsTableName, cmpTableName, snfTableName, snfTableName, dbSoilKey, snfSoilKeyToUse, cmpTableName, dbSlcKey, slcId, cmpTableName, dbCmpKey, cmpId, slfTableName, cmpTableName, dbSoilKey, slfTableName, dbSoilKey, slfTableName, dbLayerNumberKey, snlLayerNumberToUse)
-                        print "\nsql to create table is:\n", sql
                         self.executeSql(sql)
                         
                         # commit transaction
@@ -351,14 +358,21 @@ class Db:
                 # commit transaction
                 self.conn.commit()
 
+            return messagesTestCsv
 
         # drop results table
         sql = "drop table if exists %s" %(resultsTableName)
         self.executeSql(sql)
         
         # create new results table with join results inserted for each slc id row
-        processSlcRows(slcIds, dbSlcKey, dbCmpKey, dbSoilKey, dbLayerNumberKey, cmpTableName, snfTableName, slfTableName, landuse, layerNumber)
-    
+        messages = processSlcRows(slcIds, dbSlcKey, dbCmpKey, dbSoilKey, dbLayerNumberKey, cmpTableName, snfTableName, slfTableName, landuse, layerNumber)
+        
+        # write test csv output if writeTestCsv requested
+        if writeTestCsv:
+            with open(os.path.join(writeTestCsvDirectory, "3_tableJoin.txt"),"w") as file_open:
+                for msg in messages:
+                    file_open.writelines(msg)
+                    file_open.write("\n")
     
     
     # ========== categorical and numeric calculation methods
