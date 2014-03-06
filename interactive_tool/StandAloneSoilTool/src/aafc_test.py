@@ -196,5 +196,5 @@ db.resultsTableJoiningCmpSnfSlfBySoilkey(slcIds, dbSlcKey=dbSlcIdKey, dbCmpKey=d
 
 #==== clean up
 msg = "Finished running test suite. Find results in %s" %(outDirectory)
-utils.communicateWithUserInQgis(msg, level="INFO", messageExistanceDuration=4)
+utils.communicateWithUserInQgis(msg, level="INFO", messageExistanceDuration=10)
 sys.path.pop()
