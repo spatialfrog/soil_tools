@@ -465,6 +465,8 @@ class Db:
                 
                 header, row = self.executeSql(sql,fieldNames=True)
                 
+                #TODO: ** critical -- check if any value returned - categorical
+                
                 # only single row returned per slc. remove outer list to ensure we return a list of tuples.
                 results.append(row[0])
                     
@@ -499,6 +501,9 @@ class Db:
                 
                 sql ="""select distinct(%s) as %s, sum(%s * (%s/100.0)) as weighted_average from %s where %s = %s group by %s""" % (dbSlcKey, dbSlcKey, columnName, dbPercentKey, tableName, dbSlcKey,  slcId, dbSlcKey)
                 header, row = self.executeSql(sql,fieldNames=True)
+                
+                
+                #TODO: ** critical -- check if any value returned - numeric
                 
                 #== format numeric calc in db tuple before passing back
                 # format calculated value to 2 decimal places
