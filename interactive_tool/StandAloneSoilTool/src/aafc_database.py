@@ -264,6 +264,8 @@ class Db:
                 sql = "select %s from %s where %s = %s" %(dbCmpKey, cmpTableName, dbSlcKey, slcId)
                 results = self.executeSql(sql)
                 
+                messagesTestCsv.append(("===== slc %s being processed \n" %(slcId)))
+                
                 # iterate over every cmp number
                 for i in results:
                     # extract cmp id from tuple
