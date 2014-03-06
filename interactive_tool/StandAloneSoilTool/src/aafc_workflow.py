@@ -176,7 +176,7 @@ else:
     ids = db.executeSql("select distinct(sl) from cmp32")
     # convert sl ids list of tuples to simple list
     ids_cleaned = utils.convertDbResults2SimpleList(ids)
-    headers, results = db.calculateField(ids_cleaned[:5], dbSlcKey=dbSlcIdKey, tableName="cmp32", column="slope", dbPercentKey=dbPercentKey)
+    headers, results = db.calculateField(ids_cleaned[:5], dbSlcKey=dbSlcIdKey, tableName="cmp32", columnName='"slope"', dbPercentKey=dbPercentKey)
     io.writeCsvFile("slope", headers, results, outDirectory, csvFilePrefixName=csvFilePrefix)
     
     
@@ -189,7 +189,7 @@ else:
     ids = db.executeSql("select distinct(sl) from cmp32")
     # convert sl ids list of tuples to simple list
     ids_cleaned = utils.convertDbResults2SimpleList(ids)
-    headers, results = db.calculateField(ids_cleaned[:5], dbSlcKey=dbSlcIdKey, tableName="cmp32", column="awhc_v", dbPercentKey=dbPercentKey)
+    headers, results = db.calculateField(ids_cleaned[:5], dbSlcKey=dbSlcIdKey, tableName="cmp32", columnName='"awhc_v"', dbPercentKey=dbPercentKey)
     io.writeCsvFile("awhc_v", headers, results, outDirectory, csvFilePrefixName=csvFilePrefix)
     
     
@@ -204,7 +204,7 @@ else:
     ids = db.executeSql("select distinct(sl) from results_joinedCmpSnf")
     # convert sl ids list of tuples to simple list
     ids_cleaned = utils.convertDbResults2SimpleList(ids)
-    headers, results = db.calculateField(ids_cleaned[:5], dbSlcKey=dbSlcIdKey, tableName="results_joinedCmpSnf", column="g_group3", dbPercentKey=dbPercentKey)
+    headers, results = db.calculateField(ids_cleaned[:5], dbSlcKey=dbSlcIdKey, tableName="results_joinedCmpSnf", columnName='"g_group3:1"', dbPercentKey=dbPercentKey)
     io.writeCsvFile("'g_group3:1'", headers, results, outDirectory, csvFilePrefixName=csvFilePrefix)
     
     
