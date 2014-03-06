@@ -350,7 +350,6 @@ class Db:
                         resultsTableCreated = True
                     
                     #== insert data into table
-                    print "inserting rows into results table"
                     # join cmp sl row to snf row and slf row with soilkey and layer number match. return all columns from tables
                     # cmp cmp id constrains to create unique row id for cmp
                     sql = "insert into %s select * from %s join %s on %s.%s like '%s' and %s.%s = %s and %s.%s = %s join %s on %s.%s like %s.%s and %s.%s = %s" %(resultsTableName, cmpTableName, snfTableName, snfTableName, dbSoilKey, snfSoilKeyToUse, cmpTableName, dbSlcKey, slcId, cmpTableName, dbCmpKey, cmpId, slfTableName, cmpTableName, dbSoilKey, slfTableName, dbSoilKey, slfTableName, dbLayerNumberKey, snlLayerNumberToUse)
@@ -516,14 +515,12 @@ class Db:
         # dispatch to correct calculation method based on field data type
         if columnDataTypeIs == "string":
             # categorical column calculation
-            print "Processing categorical calculation"
             headers, results = categoricalCalculation(slcIds, dbSlcKey, tableName, column, dbPercentKey)
             
             return headers, results
         
         elif columnDataTypeIs == "numeric":
             # numeric column calculation
-            print "Processing numeric calculation"
             headers, results = numericCalculation(slcIds, dbSlcKey, tableName, column, dbPercentKey)
             
             return headers, results
