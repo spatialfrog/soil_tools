@@ -418,11 +418,7 @@ class Db:
                     # match found. get sqlite field type
                     fieldDataType = row[2]
                     break
-                elif row[1].lower() in columnNameStripped.lower() and len(row[1]) == len(columnNameStripped):
-                    fieldDataType = row[2]
-                    break
-                else:
-                    print "no data type found"
+            
             
             # check fieldType
             # sqlite provides either VARCHAR/TEXT or INTEGER/REAL
