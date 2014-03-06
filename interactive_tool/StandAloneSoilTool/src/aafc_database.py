@@ -414,10 +414,19 @@ class Db:
             for row in data:
                 # remove double quote within single quote if present. only passed if db column name is duplicate ie '"slope:2"'
                 columnNameStripped = columnName.strip('\"')
+                print row[1].lower(), columnName, columnNameStripped
+                print len(row[1]), len(columnNameStripped)
                 if row[1].lower() == columnNameStripped.lower():
                     # match found. get sqlite field type
+                    print "match found =="
                     fieldDataType = row[2]
                     break
+                elif row[1].lower() in columnNameStripped.lower() and len(row[1]) == len(columnNameStripped):
+                    fieldDataType = row[2]
+                    print "match found 'in' and len"
+                    break
+                else:
+                    print "no data type found"
             
             # check fieldType
             # sqlite provides either VARCHAR/TEXT or INTEGER/REAL
@@ -428,6 +437,7 @@ class Db:
                 return columnDataType
             elif fieldDataType.lower().startswith("int") or fieldDataType.lower().startswith("rea"):
                 columnDataType = "numeric"
+                return columnDataType
             else:
                 print "could not match data type!!"
             
@@ -495,7 +505,7 @@ class Db:
                 ## select distinct(sl) as sl, sum(awhc_v * (percent/100.0)) as final from cmp32 where sl = 376002 group by sl
                 ## sql = """select distinct(sl) as sl, sum(%s * (percent/100.0)) as final from %s where sl = %s group by sl""" %(column,tableName,sl)
                 
-                sql ="""select distinct(%s) as %s, sum(%s * (%s/100.0)) as %s from %s where %s = %s group by %s""" % (dbSlcKey, dbSlcKey, columnName, dbPercentKey, columnName + "_weighted_average", tableName, dbSlcKey,  slcId, dbSlcKey)
+                sql ="""select distinct(%s) as %s, sum(%s * (%s/100.0)) as weighted_average from %s where %s = %s group by %s""" % (dbSlcKey, dbSlcKey, columnName, dbPercentKey, tableName, dbSlcKey,  slcId, dbSlcKey)
                 header, row = self.executeSql(sql,fieldNames=True)
                 
                 #== format numeric calc in db tuple before passing back
@@ -516,6 +526,8 @@ class Db:
         # determine column field data type
         columnDataTypeIs = determineFieldDataType(tableName, columnName)
         
+        print "columnDataTypeIs ",  columnDataTypeIs
+        
         # dispatch to correct calculation method based on field data type
         if columnDataTypeIs == "string":
             # categorical column calculation
@@ -535,4 +547,5 @@ class Db:
             # error
             #TODO: calculation -- if issue determining column data type report error
             print "mmmm couldn't figure out column type"
+            print columnDataTypeIs
 
