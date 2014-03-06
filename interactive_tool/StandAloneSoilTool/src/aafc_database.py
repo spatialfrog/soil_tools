@@ -331,7 +331,7 @@ class Db:
                     
                     # user layer number missing. drop this slc id + cmp row. process next slc id + cmp row
                     if snlLayerNumberFound == False:    
-                        msg = "* slf layer number not found. skipping current slc id + cmp row. will try next row.\nn----------\n"
+                        msg = "* slf layer number not found. skipping current slc id + cmp row. will try next row.\n\n----------\n"
                         messagesTestCsv.append(msg)
                         break    
                     
