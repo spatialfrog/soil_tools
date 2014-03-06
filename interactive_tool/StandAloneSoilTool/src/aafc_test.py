@@ -80,6 +80,9 @@ inSoilDbPath = os.path.join(outDirectory, sqliteDbName + ".sqlite")
 # create utility class instance
 utils = utilities.Utils(iface)
 
+#== message user via qgis that testing is taking place
+utils.communicateWithUserInQgis("Running test suite. Please be patient, may take several minutes.", level="WARNING", messageExistanceDuration=10)
+
 # get path to temp directory
 tempSystemDirectoryPath = utils.determineSystemTempDirectory()
 
@@ -88,9 +91,6 @@ io = inout.Io(inSoilDbPath, tempSystemDirectoryPath)
 
 # validate user input
 utils.validateUserInput(cmpDbfPath)
-
-# inform user that db creation is about to start
-utils.communicateWithUserInQgis("Creating new db...",level="INFO", messageExistanceDuration=4)    
 
 # remove existing db if user provides same name
 utils.deleteFile(os.path.join(outDirectory, sqliteDbName))
@@ -196,4 +196,6 @@ db.resultsTableJoiningCmpSnfSlfBySoilkey(slcIds, dbSlcKey=dbSlcIdKey, dbCmpKey=d
 
 
 #==== clean up
+msg = "Finished running test suite. Find results in %s" %(outDirectory)
+utils.communicateWithUserInQgis(msg, level="INFO", messageExistanceDuration=4)
 sys.path.pop()
