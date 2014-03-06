@@ -324,12 +324,12 @@ class Db:
                             # match
                             snlLayerNumberToUse = e[0]
                             snlLayerNumberFound = True
-                            messagesTestCsv.append(("-- user requested soil layer in slf table found\n"))
+                            messagesTestCsv.append((">>> user requested soil layer in slf table found\n\n----------\n"))
                             break
                     
                     # user layer number missing. drop this slc id + cmp row. process next slc id + cmp row
                     if snlLayerNumberFound == False:    
-                        msg = "* slf layer number not found. skipping current slc id + cmp row. will try next row.\n"
+                        msg = "* slf layer number not found. skipping current slc id + cmp row. will try next row.\nn----------\n"
                         messagesTestCsv.append(msg)
                         break    
                     
