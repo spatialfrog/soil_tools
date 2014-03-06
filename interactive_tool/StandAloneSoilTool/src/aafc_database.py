@@ -226,7 +226,7 @@ class Db:
         
         # write test csv output if writeTestCsv requested
         if writeTestCsv:
-            with open(os.path.join(writeTestCsvDirectory, "2_tableJoin.txt"),"w") as file_open:
+            with open(os.path.join(writeTestCsvDirectory, "test_2_tableJoin.txt"),"w") as file_open:
                 for msg in messages:
                     file_open.writelines(msg)
                     file_open.write("\n")
@@ -368,7 +368,7 @@ class Db:
         
         # write test csv output if writeTestCsv requested
         if writeTestCsv:
-            with open(os.path.join(writeTestCsvDirectory, "3_tableJoin.txt"),"w") as file_open:
+            with open(os.path.join(writeTestCsvDirectory, "test_3_tableJoin.txt"),"w") as file_open:
                 for msg in messages:
                     file_open.writelines(msg)
                     file_open.write("\n")
