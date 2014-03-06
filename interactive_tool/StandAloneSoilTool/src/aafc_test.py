@@ -17,7 +17,6 @@ sys.path.append(r"/Users/drownedfrog/Documents/workspace/git/aafc-grip-tool-dev-
 import aafc_io as inout
 import aafc_utilities as utilities
 import aafc_database as database
-import aafc_gui as gui
 
 
 # root directories
