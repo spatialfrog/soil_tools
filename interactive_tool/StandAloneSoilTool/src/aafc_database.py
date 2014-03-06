@@ -305,9 +305,6 @@ class Db:
                     
                     msg = "snf soilkey to us is %s\n" %(snfSoilKeyToUse)
                     messagesTestCsv.append(msg)
-                    msg = "----------\n\n"
-                    messagesTestCsv.append(msg)
-                    
                     
                     # join slf table based on soil key and layer number
                     # check if user requested snl layer number is avaiable. if not, disgard slc id and process next one
@@ -318,7 +315,7 @@ class Db:
                     sql = "select distinct(%s) from %s where %s like '%s'" %(dbLayerNumberKey, slfTableName, dbSoilKey, snfSoilKeyToUse)
                     results = self.executeSql(sql)
                     
-                    msg = "\ndistinct snl layer numbers is %s "%(results)
+                    msg = "distinct snl layer numbers is %s\n" %(results)
                     messagesTestCsv.append(msg)
                     
                     # is user requested slf layer number available
@@ -327,12 +324,12 @@ class Db:
                             # match
                             snlLayerNumberToUse = e[0]
                             snlLayerNumberFound = True
-                            messagesTestCsv.append(("user requested soil layer in slf table found"))
+                            messagesTestCsv.append(("-- user requested soil layer in slf table found\n"))
                             break
                     
                     # user layer number missing. drop this slc id + cmp row. process next slc id + cmp row
                     if snlLayerNumberFound == False:    
-                        msg = "* slf layer number not found. skipping current slc id + cmp row. will try next row."
+                        msg = "* slf layer number not found. skipping current slc id + cmp row. will try next row.\n"
                         messagesTestCsv.append(msg)
                         break    
                     
