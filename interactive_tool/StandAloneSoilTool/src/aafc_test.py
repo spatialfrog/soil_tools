@@ -179,16 +179,14 @@ proveSingleColumnCalculation(slcIds, dbSlcKey=dbSlcIdKey, dbPercentKey=dbPercent
 proveSingleColumnCalculation(slcIds, dbSlcKey=dbSlcIdKey, dbPercentKey=dbPercentKey, tableName="cmp32", columnName="awhc_v", filePrefix=filePrefix, outDirectory=outDirectory)
 
 
+#============== table joins
+#TODO: testing -- write final join results table to csv
+
+
 #===== 2 table join
 #== cmp to snf table via soilkey
 # create join table
 db.resultsTableJoiningCmpSnfBySoilkey(slcIds, dbSlcKey=dbSlcIdKey, dbCmpKey=dbCmpKey, dbSoilKey=dbSoilKey, cmpTableName="cmp32", snfTableName="snf32", landuse=landusePreference, writeTestCsv=True, writeTestCsvDirectory=outDirectory)
-
-
-# write number of columns in each table
-
-# write number of columns in joined table
-
 
 #====== 3 table join
 #== cmp - snf - slf via soilkey and layer number in slf
