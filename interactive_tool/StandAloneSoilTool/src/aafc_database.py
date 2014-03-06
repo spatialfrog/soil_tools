@@ -315,7 +315,7 @@ class Db:
                     sql = "select distinct(%s) from %s where %s like '%s'" %(dbLayerNumberKey, slfTableName, dbSoilKey, snfSoilKeyToUse)
                     results = self.executeSql(sql)
                     
-                    msg = "distinct snl layer numbers is %s\n" %(results)
+                    msg = "distinct snl layer numbers are %s\n" %(results)
                     messagesTestCsv.append(msg)
                     
                     # is user requested slf layer number available
