@@ -166,33 +166,44 @@ def proveSingleColumnCalculation(slcs, dbSlcKey, dbPercentKey, tableName, column
             file_open.write(msg)
             
             # calculate final value 
-            headers, results = db.calculateField([id], dbSlcKey=dbSlcIdKey, tableName=tableName, column=columnName, dbPercentKey=dbPercentKey)
+            headers, results = db.calculateField([id], dbSlcKey, tableName, columnName, dbPercentKey)
             
             # write result
             file_open.writelines(str(results[0]))
             file_open.write("\n\n")
-        
+
+
+#============= single column calculation verification
 # categorical
-proveSingleColumnCalculation(slcIds, dbSlcKey=dbSlcIdKey, dbPercentKey=dbPercentKey, tableName="cmp32", columnName="slope", filePrefix=filePrefix, outDirectory=outDirectory)
+proveSingleColumnCalculation(slcIds, dbSlcKey=dbSlcIdKey, dbPercentKey=dbPercentKey, tableName="cmp32", columnName='"slope"', filePrefix=filePrefix, outDirectory=outDirectory)
 
 # numeric
-proveSingleColumnCalculation(slcIds, dbSlcKey=dbSlcIdKey, dbPercentKey=dbPercentKey, tableName="cmp32", columnName="awhc_v", filePrefix=filePrefix, outDirectory=outDirectory)
+proveSingleColumnCalculation(slcIds, dbSlcKey=dbSlcIdKey, dbPercentKey=dbPercentKey, tableName="cmp32", columnName='"awhc_v"', filePrefix=filePrefix, outDirectory=outDirectory)
+
 
 
 #============== table joins
 #TODO: testing -- write final join results table to csv
 
-
 #===== 2 table join
 #== cmp to snf table via soilkey
+
 # create join table
 db.resultsTableJoiningCmpSnfBySoilkey(slcIds, dbSlcKey=dbSlcIdKey, dbCmpKey=dbCmpKey, dbSoilKey=dbSoilKey, cmpTableName="cmp32", snfTableName="snf32", landuse=landusePreference, writeTestCsv=True, writeTestCsvDirectory=outDirectory)
+
+# categorical calc on joined table. snf column tested.
+proveSingleColumnCalculation(slcIds, dbSlcKey=dbSlcIdKey, dbPercentKey=dbPercentKey, tableName="results_joinedCmpSnf", columnName='"g_group3:1"', filePrefix=filePrefix, outDirectory=outDirectory)
+
+# numerical calc on joined table. snf column tested.
+proveSingleColumnCalculation(slcIds, dbSlcKey=dbSlcIdKey, dbPercentKey=dbPercentKey, tableName="results_joinedCmpSnf", columnName='"rootrestri"', filePrefix=filePrefix, outDirectory=outDirectory)
+
 
 #====== 3 table join
 #== cmp - snf - slf via soilkey and layer number in slf
 db.resultsTableJoiningCmpSnfSlfBySoilkey(slcIds, dbSlcKey=dbSlcIdKey, dbCmpKey=dbCmpKey, dbSoilKey=dbSoilKey, dbLayerNumberKey=dbLayerNumberKey, cmpTableName="cmp32", snfTableName="snf32", slfTableName="slf32", landuse=landusePreference, layerNumber=layerNumberToUse, writeTestCsv=True, writeTestCsvDirectory=outDirectory)
 
 # need to choose layer number that will result in several rows being dropped
+
 
 
 #==== clean up
