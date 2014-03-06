@@ -81,7 +81,7 @@ inSoilDbPath = os.path.join(outDirectory, sqliteDbName + ".sqlite")
 utils = utilities.Utils(iface)
 
 #== message user via qgis that testing is taking place
-utils.communicateWithUserInQgis("Running test suite. Please be patient, may take several minutes.", level="WARNING", messageExistanceDuration=10)
+utils.communicateWithUserInQgis("Running test suite. Please be patient, may take several minutes.", level="INFO", messageExistanceDuration=4)
 
 # get path to temp directory
 tempSystemDirectoryPath = utils.determineSystemTempDirectory()
