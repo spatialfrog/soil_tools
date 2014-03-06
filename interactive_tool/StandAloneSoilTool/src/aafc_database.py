@@ -318,7 +318,8 @@ class Db:
                     sql = "select distinct(%s) from %s where %s like '%s'" %(dbLayerNumberKey, slfTableName, dbSoilKey, snfSoilKeyToUse)
                     results = self.executeSql(sql)
                     
-                    print "\nresults of distinct snl layer numbers ", results
+                    msg = "\ndistinct snl layer numbers is %s "%(results)
+                    messagesTestCsv.append(msg)
                     
                     # is user requested slf layer number available
                     for e in results:
@@ -328,8 +329,6 @@ class Db:
                             snlLayerNumberFound = True
                             messagesTestCsv.append(("user requested soil layer in slf table found"))
                             break
-                    
-                    print "snl layer number to use is ", snlLayerNumberToUse
                     
                     # user layer number missing. drop this slc id + cmp row. process next slc id + cmp row
                     if snlLayerNumberFound == False:    
