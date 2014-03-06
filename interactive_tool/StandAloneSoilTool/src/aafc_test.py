@@ -70,6 +70,7 @@ default if not A is N
 landusePreference = "A"
 
 # == slf layer number
+# with test slcIds, this ensure several rows are dropped
 layerNumberToUse = 4
 
 
@@ -202,7 +203,6 @@ proveSingleColumnCalculation(slcIds, dbSlcKey=dbSlcIdKey, dbPercentKey=dbPercent
 #== cmp - snf - slf via soilkey and layer number in slf
 db.resultsTableJoiningCmpSnfSlfBySoilkey(slcIds, dbSlcKey=dbSlcIdKey, dbCmpKey=dbCmpKey, dbSoilKey=dbSoilKey, dbLayerNumberKey=dbLayerNumberKey, cmpTableName="cmp32", snfTableName="snf32", slfTableName="slf32", landuse=landusePreference, layerNumber=layerNumberToUse, writeTestCsv=True, writeTestCsvDirectory=outDirectory)
 
-# need to choose layer number that will result in several rows being dropped
 
 
 
