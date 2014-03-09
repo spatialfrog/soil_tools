@@ -211,6 +211,20 @@ proveSingleColumnCalculation(slcIds, dbSlcKey=dbSlcIdKey, dbPercentKey=dbPercent
 
 
 
+#======= CSV writer
+#= categorical output "-" removed
+# slc 242025 contains "-" for g_group3:1 on cmp - snf table join
+
+
+#= inappropiate file name characters removed
+# any duplicate column from joins will be 'columnName3/number' ie calculated_'g_group3/1'.csv
+# cmp-snf table join for g_group3:1 column
+
+
+#= do not print data rows with None
+# slc 376001 for 3 table join, column domsand is None if layer number = 4
+
+
 #==== clean up
 msg = "Finished running test suite. Find results in %s" %(outDirectory)
 utils.communicateWithUserInQgis(msg, level="INFO", messageExistanceDuration=10)
