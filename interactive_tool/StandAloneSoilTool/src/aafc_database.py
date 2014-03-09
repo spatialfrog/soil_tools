@@ -468,7 +468,7 @@ class Db:
                 #TODO: ** critical -- check if any value returned - categorical
                 if len(row) == 0:
                     # no data returned
-                    pass
+                    results.append(None)
                 else:
                     # only single row returned per slc. remove outer list to ensure we return a list of tuples.
                     results.append(row[0])
@@ -509,7 +509,7 @@ class Db:
                 #TODO: ** critical -- check if any value returned - numeric
                 if len(row) == 0:
                     # no data returned
-                    pass
+                    results.append(None)
                 else:
                     #== format numeric calc in db tuple before passing back
                     # format calculated value to 2 decimal places
