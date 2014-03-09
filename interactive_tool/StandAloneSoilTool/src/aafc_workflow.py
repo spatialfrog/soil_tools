@@ -111,6 +111,14 @@ default if not A is N
 """
 landusePreference = "A"
 
+# == slc ids
+# sl from cmp to look at
+# 974040 -- exact tie
+# 972018 -- 3 values
+# 615009 -- 4 unique values + A/N options
+
+slcIds = [974040, 972018, 615009, 242025, 376001]
+
 
 # ========= set high level variables
 # full path to spatialite db
@@ -195,7 +203,7 @@ else:
     
     #===== 2 table join 
     # cmp to snf tables
-    db.resultsTableJoiningCmpSnfBySoilkey([242025,376001,615009], dbSlcKey=dbSlcIdKey, dbCmpKey=dbCmpKey, dbSoilKey=dbSoilKey, cmpTableName="cmp32", snfTableName="snf32", landuse=landusePreference, writeTestCsv=False, writeTestCsvDirectory=None)
+    db.resultsTableJoiningCmpSnfBySoilkey(slcIds, dbSlcKey=dbSlcIdKey, dbCmpKey=dbCmpKey, dbSoilKey=dbSoilKey, cmpTableName="cmp32", snfTableName="snf32", landuse=landusePreference, writeTestCsv=False, writeTestCsvDirectory=None)
     
     # categorical calc on joined column g_group3; snf column
     message = "Calculating column %s may take several minutes" % ("g_group3")
@@ -204,12 +212,12 @@ else:
     ids = db.executeSql("select distinct(sl) from results_joinedCmpSnf")
     # convert sl ids list of tuples to simple list
     ids_cleaned = utils.convertDbResults2SimpleList(ids)
-    headers, results = db.calculateField(ids_cleaned[:5], dbSlcKey=dbSlcIdKey, tableName="results_joinedCmpSnf", columnName='"g_group3:1"', dbPercentKey=dbPercentKey)
+    headers, results = db.calculateField(ids_cleaned, dbSlcKey=dbSlcIdKey, tableName="results_joinedCmpSnf", columnName='"g_group3:1"', dbPercentKey=dbPercentKey)
     io.writeCsvFile("'g_group3:1'", headers, results, outDirectory, csvFilePrefixName=csvFilePrefix)
     
     
     #====== 3 table join 
-    db.resultsTableJoiningCmpSnfSlfBySoilkey([242025,376001,615009], dbSlcKey=dbSlcIdKey, dbCmpKey=dbCmpKey, dbSoilKey=dbSoilKey, dbLayerNumberKey=dbLayerNumberKey, cmpTableName="cmp32", snfTableName="snf32", slfTableName="slf32", landuse=landusePreference, layerNumber=4)
+    db.resultsTableJoiningCmpSnfSlfBySoilkey(slcIds, dbSlcKey=dbSlcIdKey, dbCmpKey=dbCmpKey, dbSoilKey=dbSoilKey, dbLayerNumberKey=dbLayerNumberKey, cmpTableName="cmp32", snfTableName="snf32", slfTableName="slf32", landuse=landusePreference, layerNumber=4)
     # categorical calc on joined column domsand; slf column
     message = "Calculating column %s may take several minutes" % ("domsand")
     utils.communicateWithUserInQgis(message,messageExistanceDuration=10)
