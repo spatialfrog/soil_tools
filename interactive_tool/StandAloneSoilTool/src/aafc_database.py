@@ -466,9 +466,12 @@ class Db:
                 header, row = self.executeSql(sql,fieldNames=True)
                 
                 #TODO: ** critical -- check if any value returned - categorical
-                
-                # only single row returned per slc. remove outer list to ensure we return a list of tuples.
-                results.append(row[0])
+                if len(row) == 0:
+                    # no data returned
+                    pass
+                else:
+                    # only single row returned per slc. remove outer list to ensure we return a list of tuples.
+                    results.append(row[0])
                     
                 
                 #TODO: categorical calc -- check return sql values for "" and replace with nulls
@@ -504,13 +507,16 @@ class Db:
                 
                 
                 #TODO: ** critical -- check if any value returned - numeric
-                
-                #== format numeric calc in db tuple before passing back
-                # format calculated value to 2 decimal places
-                formattedNumber = (row[0][0],"{:0.2f}".format(round(row[0][1],2)))
-                
-                # only single row returned per slc. remove outer list to ensure we return a list of tuples.
-                results.append(formattedNumber)
+                if len(row) == 0:
+                    # no data returned
+                    pass
+                else:
+                    #== format numeric calc in db tuple before passing back
+                    # format calculated value to 2 decimal places
+                    formattedNumber = (row[0][0],"{:0.2f}".format(round(row[0][1],2)))
+                    
+                    # only single row returned per slc. remove outer list to ensure we return a list of tuples.
+                    results.append(formattedNumber)
                     
             
             # return headers and results. headers will be last iteration.
