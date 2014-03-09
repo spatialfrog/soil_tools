@@ -209,8 +209,16 @@ else:
     
     
     #====== 3 table join 
-    db.resultsTableJoiningCmpSnfSlfBySoilkey([242025,376001,615009], dbSlcKey=dbSlcIdKey, dbCmpKey=dbCmpKey, dbSoilKey=dbSoilKey, dbLayerNumberKey=dbLayerNumberKey, cmpTableName="cmp32", snfTableName="snf32", slfTableName="slf32", landuse=landusePreference, layerNumber=1)
-    
+    db.resultsTableJoiningCmpSnfSlfBySoilkey([242025,376001,615009], dbSlcKey=dbSlcIdKey, dbCmpKey=dbCmpKey, dbSoilKey=dbSoilKey, dbLayerNumberKey=dbLayerNumberKey, cmpTableName="cmp32", snfTableName="snf32", slfTableName="slf32", landuse=landusePreference, layerNumber=4)
+    # categorical calc on joined column domsand; slf column
+    message = "Calculating column %s may take several minutes" % ("domsand")
+    utils.communicateWithUserInQgis(message,messageExistanceDuration=10)
+    # get all distinct id's from cmp table
+    ids = db.executeSql("select distinct(sl) from results_joinedCmpSnfSlf")
+    # convert sl ids list of tuples to simple list
+    ids_cleaned = utils.convertDbResults2SimpleList(ids)
+    headers, results = db.calculateField(ids_cleaned, dbSlcKey=dbSlcIdKey, tableName="results_joinedCmpSnfSlf", columnName='"domsand"', dbPercentKey=dbPercentKey)
+    io.writeCsvFile("'domsand'", headers, results, outDirectory, csvFilePrefixName=csvFilePrefix)
     
     
     
