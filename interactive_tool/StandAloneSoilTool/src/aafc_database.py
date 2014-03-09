@@ -465,7 +465,7 @@ class Db:
                 
                 header, row = self.executeSql(sql,fieldNames=True)
                 
-                #TODO: ** critical -- check if any value returned - categorical
+                
                 if len(row) == 0:
                     # no data returned
                     results.append(None)
@@ -506,7 +506,6 @@ class Db:
                 header, row = self.executeSql(sql,fieldNames=True)
                 
                 
-                #TODO: ** critical -- check if any value returned - numeric
                 if len(row) == 0:
                     # no data returned
                     results.append(None)
