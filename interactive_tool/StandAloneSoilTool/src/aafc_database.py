@@ -78,6 +78,25 @@ class Db:
         sql = "drop table if exists %s" %(tableName)
         self.executeSql(sql)
     
+    def getTableListing(self):
+        """
+        purpose:
+        gets listing of user loaded soil tables
+        
+        how:
+        searchs for cmp/slf/snf names
+        
+        returns:
+        list of table names strings
+        """
+        
+        # list of tables in db
+        sql = "select name from sqlite_master where type='table'"
+        results = self.executeSql(sql)
+        
+        
+        
+    
     
     def prefixDbTableColumns(self, tableName):
         """
