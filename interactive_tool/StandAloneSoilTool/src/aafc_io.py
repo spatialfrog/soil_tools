@@ -217,9 +217,18 @@ class Io:
 
     def writeCsvFile(self, column, headers, data, path, csvFilePrefixName):
         """
-        write sql results to new csv file.
+        purpose:
+        write csv file containing either numeric/categorical calculation results
         
-        base name of csv is column derived, with a user defined prefix. an underscore separates.
+        how:
+        python
+        
+        notes:
+        prefix filename with user defined word
+        base name of csv is column derived
+        
+        returns:
+        nothing
         """
         
         #TODO: csv writer -- ensure duplicate fields not overwritten
