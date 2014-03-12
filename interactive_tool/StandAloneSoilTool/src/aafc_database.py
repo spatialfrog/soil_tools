@@ -170,7 +170,7 @@ class Db:
         return avaibale soilkey.
         """
         
-        #TODO: refactor 2 table & 3 table join methods into single method
+        #TODO: nice to do -- refactor 2 table & 3 table join methods into single method
         
         resultsTableName = self.joinTableName
             
