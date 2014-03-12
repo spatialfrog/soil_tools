@@ -153,7 +153,7 @@ if useExistingDb:
     # remove all layers in qgis
     utils.removeAllQgisLayers()
     
-    #TODO: get listing of tables for use. searching for cmp/slf/snf/joined table names
+    #TODO: get listing of tables for use. searching for cmp/slf/snf tables
 else:
     # validate user input
     utils.validateUserInput(cmpDbfPath)
