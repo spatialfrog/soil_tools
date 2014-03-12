@@ -23,7 +23,7 @@ class Io:
         self.tmpDirectory = tmpSystemDirectory
 
 
-    def createNewDb(self, cmpDbfPath, *params):
+    def createNewDb(self, namesToPaths):
         """
         create initial spatialite db using cmp db; this table is always used.
 
@@ -32,45 +32,54 @@ class Io:
         pass additional dbf's to be added.
         """
 
-        def determineDbfName(dbfPath):
+        def createInitialDb(path, tableName):
             """
-            return basename of dbf minus extension
-            """
-
-            return os.path.splitext(os.path.basename(dbfPath))[0]
-
-
-        def createInitialDb(cmpDbfPath, tableName):
-            """
-            create initial spatialite db
+            purpose:
+            create initial spatialite db by loading cmp soil dbf
+            
+            how:
+            using qgis api to load dbf layer into qgis without showing user. dbf converted to spatialite via ogr
+            
+            notes:
+            cmp table is initially named after the name of db
+            
+            return:
+            nothing
             """
 
             # TODO: error checking and reporting -- loading cmp dbf
 
             # loads as qgis vector layer, but do not display on canvas
             # tableName will be table name in spatialite
-            dbfLayer = QgsVectorLayer(cmpDbfPath,tableName,"ogr")
+            dbfLayer = QgsVectorLayer(path,tableName,"ogr")
 
             # convert cmp dbf to sqlite db
             # write dbf to sqlite. must be spatialite to work for loading back into qgis
             QgsVectorFileWriter.writeAsVectorFormat(dbfLayer,self.sqliteDbPath,"CP1250",None,"SQLite",False,None,["SPATIALITE=yes"])
 
 
-        def addOtherDbfsToDb(dbfPath, tableName):
+        def addOtherDbfsToDb(path, tableName):
             """
-            add snl/snf or other dfb's to spatialite db.
-
-            convert dbf to csv, write to tmp system directory. import csv in to existing db.
-            table names reflect csv name.
+            purpose:
+            load additional soil dbf's such as snf, slf into existing spatialite db
+            
+            how:
+            qgis api loads dbf's, converts to csv in tmp location. csv's loaded into existing spatialite db
+            
+            notes:
+            table names are user controlled when loading from csv file
+            
+            returns:
+            nothing
             """
 
             # TODO: error checking -- loading additional tables
 
-            # temp path for conversion
+            # tmp path for conversion
             tmpPathToWriteCsv = os.path.join(self.tmpDirectory, tableName)
 
             # create qgis vector layer
-            dbfLayer = QgsVectorLayer(dbfPath, tableName,"ogr")
+            dbfLayer = QgsVectorLayer(path, tableName,"ogr")
 
             # convert to csv using qgis ogr provider
             QgsVectorFileWriter.writeAsVectorFormat(dbfLayer,tmpPathToWriteCsv,"CP1250",None,"CSV",False,None)
@@ -80,19 +89,18 @@ class Io:
 
 
         # process cmp dbf first
-        tableName = determineDbfName(cmpDbfPath)
         # create initial table
-        createInitialDb(cmpDbfPath,tableName)
-
-        # check if additional dbf paths passed
-        if params:
-            # process each path
-            for i in params:
-                # get table name
-                tableName = determineDbfName(i)
-                # convert to csv & load
-                addOtherDbfsToDb(i, tableName)
+        createInitialDb(namesToPaths["cmp"],"cmp")
         
+        # remove cmp key from mapping
+        namesToPaths.pop("cmp")
+        
+        # check if additional mapping keys present
+        for name, path in namesToPaths.items():
+            # process each path
+            # convert to csv & load
+            addOtherDbfsToDb(path, name)
+    
 
 
     # ========== read csv file into existing sqlite db
