@@ -123,9 +123,7 @@ class Utils:
         returns
         tuple consisting of message and status of True/False
         """
-        
-        #TODO: validate input -- check cmp table passed; check filename. if not warning and quite
-        
+            
         cmpDbfPresent = False
         
         # process all passed parameters
