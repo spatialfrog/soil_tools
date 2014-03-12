@@ -155,9 +155,13 @@ if useExistingDb:
     
     #TODO: get listing of tables for use. searching for cmp/slf/snf tables
 else:
+    #= create new db
     # validate user input
-    utils.validateUserInput(cmpDbfPath)
-
+    utils.validateUserInput(cmpDbfPath, snfDbfPath, slfDbfPath)
+    
+    # get mapping of soil names to use for db from dbf file name paths
+    tableNamesToDbfPaths = utils.getTableNamesToPathFromDbfPaths(cmpDbfPath, snfDbfPath, slfDbfPath)
+    
     # inform user that db creation is about to start
     utils.communicateWithUserInQgis("Creating new db...",level="INFO", messageExistanceDuration=4)    
     
@@ -169,16 +173,14 @@ else:
 
     #=== create db and load with passed dbf paths
     # create new db
-    io.createNewDb(cmpDbfPath,snfDbfPath,slfDbfPath)
+    io.createNewDb(tableNamesToDbfPaths)
     
     # create database class instance
     # db must exist before sqlite connection can exit
     db = database.Db(inSoilDbPath, tempSystemDirectoryPath)
 
-    # change initial loaded table to correct table name
-    # created db table has name of db. change this to name of dbf
-    # TODO: parameterize name from dbf -- might need to be generic in utilities. io.createDb has similar
-    db.updateDbTableName("cmp32")
+    # change initial loaded cmp table name from db name to "cmp"
+    db.updateDbTableName("cmp")
 
     # get listing of tables
     results = db.executeSql("select name from sqlite_master where type='table'")
