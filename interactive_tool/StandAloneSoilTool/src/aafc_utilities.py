@@ -112,22 +112,6 @@ class Utils:
             os.remove(path)
 
 
-    def validateUserInput(self, *params):
-        """
-        validate all user path inputs. if any path incorrect, return error message
-        of first incorrect path
-        """
-        
-        #TODO: validate input -- check cmp table passed; check filename. if not warning and quite
-
-        # simply check all paths correct
-        for e in params:
-            if os.path.exists(e):
-                continue
-            else:
-                return "Path %s is incorrect. Please check again." % (e)
-
-
     def removeAllQgisLayers(self):
         """
         remove all layers in the qgis toc
