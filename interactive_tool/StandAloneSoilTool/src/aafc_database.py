@@ -146,40 +146,6 @@ class Db:
         return cleanedResults
         
     
-        
-    def prefixDbTableColumns(self, tableName):
-        """
-        prefix table name ie cmp to each column ie cmp_sl
-        
-        ensures when join occurs, it is clear what column table is from. *ensures that duplicate column names not prepended with :1 from sqlite.
-        
-        updates original table with new column names.
-        """
-        
-        #TODO: nice to have -- prefix db table columns names
-        
-        """
-        sqlite does not provide alter column name command. either have to recreate target table with cleaned up names and insert data into
-        or update sqlite_master table (http://www.gfairchild.com/2012/08/03/how-to-rename-columns-in-an-sqlite-database/)
-        """
-        
-        # pragma of table_info on user supplied table name
-        sql = "pragma table_info(%)" %(tableName)
-        results = self.executeSql(sql)
-        
-        # second column contains field names (0, u'OGC_FID', u'INTEGER', 0, None, 1)
-        tmpNames = []
-        for i in results:
-            # append table name as prefix separated from column name with underscore
-            columnName = tableName + "_" + i[1]
-            tmpNames.append(columnName)
-        
-        # update db table with new names
-        
-        pass
-    
-
-
     # ========== soil queries between tables
     """
     cmp32 is base table for all quieries. must go in order of cmp32 -- snf32 -- slf32.
