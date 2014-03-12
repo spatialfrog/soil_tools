@@ -193,17 +193,21 @@ tableOptionsForProcessing = utils.getTableProcessingOptions(soilTablesPresent)
 
 #TODO: gui -- show user avaiable table options to select
 
+# user selection from gui for table(s) to work with
+userTableSelection = 0
 
 # user selection for table to use for column calculation
-if tableOptionsForProcessing == 0:
+if userTableSelection == 0:
     # no join. cmp table
     calculationTableName = "cmp"
-elif tableOptionsForProcessing == 1:
+    
+elif userTableSelection == 1:
     # join requested
     # 2 table join -- cmp - snf tables
     db.resultsTableJoiningCmpSnfBySoilkey(slcIds, dbSlcKey=dbSlcIdKey, dbCmpKey=dbCmpKey, dbSoilKey=dbSoilKey, cmpTableName="cmp", snfTableName="snf", landuse=landusePreference, writeTestCsv=False, writeTestCsvDirectory=None)
     calculationTableName = db.joinTableName
-elif tableOptionsForProcessing == 2:
+    
+elif userTableSelection == 2:
     # 3 table join -- cmp - snf - slf
     db.resultsTableJoiningCmpSnfSlfBySoilkey(slcIds, dbSlcKey=dbSlcIdKey, dbCmpKey=dbCmpKey, dbSoilKey=dbSoilKey, dbLayerNumberKey=dbLayerNumberKey, cmpTableName="cmp", snfTableName="snf", slfTableName="slf", landuse=landusePreference, layerNumber=dbLayerNumberKey)
     calculationTableName = db.joinTableName
