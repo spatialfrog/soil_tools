@@ -152,7 +152,6 @@ if useExistingDb:
     # remove all layers in qgis
     utils.removeAllQgisLayers()
     
-    #TODO: get listing of tables for use. searching for cmp/slf/snf tables
 else:
     # create new db
     
