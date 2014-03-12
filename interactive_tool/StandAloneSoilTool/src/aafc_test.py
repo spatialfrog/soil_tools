@@ -193,10 +193,10 @@ proveSingleColumnCalculation(slcIds, dbSlcKey=dbSlcIdKey, dbPercentKey=dbPercent
 db.resultsTableJoiningCmpSnfBySoilkey(slcIds, dbSlcKey=dbSlcIdKey, dbCmpKey=dbCmpKey, dbSoilKey=dbSoilKey, cmpTableName="cmp32", snfTableName="snf32", landuse=landusePreference, writeTestCsv=True, writeTestCsvDirectory=outDirectory)
 
 # categorical calc on joined table. snf column tested.
-proveSingleColumnCalculation(slcIds, dbSlcKey=dbSlcIdKey, dbPercentKey=dbPercentKey, tableName="results_joinedCmpSnf", columnName='"g_group3:1"', filePrefix=filePrefix, outDirectory=outDirectory)
+proveSingleColumnCalculation(slcIds, dbSlcKey=dbSlcIdKey, dbPercentKey=dbPercentKey, tableName=db.joinTableName, columnName='"g_group3:1"', filePrefix=filePrefix, outDirectory=outDirectory)
 
 # numerical calc on joined table. snf column tested.
-proveSingleColumnCalculation(slcIds, dbSlcKey=dbSlcIdKey, dbPercentKey=dbPercentKey, tableName="results_joinedCmpSnf", columnName='"rootrestri"', filePrefix=filePrefix, outDirectory=outDirectory)
+proveSingleColumnCalculation(slcIds, dbSlcKey=dbSlcIdKey, dbPercentKey=dbPercentKey, tableName=db.joinTableName, columnName='"rootrestri"', filePrefix=filePrefix, outDirectory=outDirectory)
 
 
 #====== 3 table join
@@ -204,10 +204,10 @@ proveSingleColumnCalculation(slcIds, dbSlcKey=dbSlcIdKey, dbPercentKey=dbPercent
 db.resultsTableJoiningCmpSnfSlfBySoilkey(slcIds, dbSlcKey=dbSlcIdKey, dbCmpKey=dbCmpKey, dbSoilKey=dbSoilKey, dbLayerNumberKey=dbLayerNumberKey, cmpTableName="cmp32", snfTableName="snf32", slfTableName="slf32", landuse=landusePreference, layerNumber=layerNumberToUse, writeTestCsv=True, writeTestCsvDirectory=outDirectory)
 
 # categorical calc on joined table. snf column tested.
-proveSingleColumnCalculation(slcIds, dbSlcKey=dbSlcIdKey, dbPercentKey=dbPercentKey, tableName="results_joinedCmpSnfSlf", columnName='"domsand"', filePrefix=filePrefix, outDirectory=outDirectory)
+proveSingleColumnCalculation(slcIds, dbSlcKey=dbSlcIdKey, dbPercentKey=dbPercentKey, tableName=db.joinTableName, columnName='"domsand"', filePrefix=filePrefix, outDirectory=outDirectory)
 
 # numerical calc on joined table. snf column tested.
-proveSingleColumnCalculation(slcIds, dbSlcKey=dbSlcIdKey, dbPercentKey=dbPercentKey, tableName="results_joinedCmpSnfSlf", columnName='"bd"', filePrefix=filePrefix, outDirectory=outDirectory)
+proveSingleColumnCalculation(slcIds, dbSlcKey=dbSlcIdKey, dbPercentKey=dbPercentKey, tableName=db.joinTableName, columnName='"bd"', filePrefix=filePrefix, outDirectory=outDirectory)
 
 
 
