@@ -574,11 +574,17 @@ class Db:
 
         def numericCalculation(slcIds, dbSlcKey, tableName, columnName, dbPercentKey):
             """
-            TODO: field calc -- add to numeric doc string
-    
-            calculates weighted summed average of single numeric db field.
-    
-            returns sl ids,rows
+            purpose:
+            calculates weighted summed average of single numeric db field by slc id
+            
+            how:
+            sql query
+            
+            notes:
+            db drops rows with no data
+            
+            returns:
+            sl id and value
             """
             
             # hold calculated sum weighted value
