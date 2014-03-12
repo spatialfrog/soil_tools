@@ -232,4 +232,6 @@ io.writeCsvFile(calculationColumnName, headers, results, outDirectory, csvFilePr
 print "========= done ========"
 # clean up
 # utils.cleanUp(db.conn)
+
+#TODO: remove -- when plugin built. no longer required to clean up system path
 sys.path.pop()
