@@ -219,6 +219,19 @@ print(results)
 results = db.getTableFieldNames(db.joinTableName)
 print(results)
 
+#= validate user input
+# all paths correct + cmp table supplied
+msg, status = utils.validateUserInput(cmpDbfPath,snfDbfPath)
+print msg,status
+
+# path incorrect
+msg, status = utils.validateUserInput("/Users/me")
+print msg, status
+
+# cmp table absent
+msg, status = utils.validateUserInput(snfDbfPath,slfDbfPath)
+print msg, status
+
 
 #======= CSV writer
 #= categorical output "-" removed
