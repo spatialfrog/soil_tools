@@ -78,7 +78,7 @@ class Db:
         sql = "drop table if exists %s" %(tableName)
         self.executeSql(sql)
     
-    def getTableListing(self):
+    def getSoilTableListing(self):
         """
         purpose:
         gets listing of user loaded soil tables
