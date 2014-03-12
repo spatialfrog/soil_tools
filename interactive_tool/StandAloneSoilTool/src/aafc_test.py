@@ -179,10 +179,10 @@ def proveSingleColumnCalculation(slcs, dbSlcKey, dbPercentKey, tableName, column
 
 #============= single column calculation verification
 # categorical
-proveSingleColumnCalculation(slcIds, dbSlcKey=dbSlcIdKey, dbPercentKey=dbPercentKey, tableName="cmp32", columnName='"slope"', filePrefix=filePrefix, outDirectory=outDirectory)
+proveSingleColumnCalculation(slcIds, dbSlcKey=dbSlcIdKey, dbPercentKey=dbPercentKey, tableName="cmp", columnName='"slope"', filePrefix=filePrefix, outDirectory=outDirectory)
 
 # numeric
-proveSingleColumnCalculation(slcIds, dbSlcKey=dbSlcIdKey, dbPercentKey=dbPercentKey, tableName="cmp32", columnName='"awhc_v"', filePrefix=filePrefix, outDirectory=outDirectory)
+proveSingleColumnCalculation(slcIds, dbSlcKey=dbSlcIdKey, dbPercentKey=dbPercentKey, tableName="cmp", columnName='"awhc_v"', filePrefix=filePrefix, outDirectory=outDirectory)
 
 
 
@@ -193,7 +193,7 @@ proveSingleColumnCalculation(slcIds, dbSlcKey=dbSlcIdKey, dbPercentKey=dbPercent
 #== cmp to snf table via soilkey
 
 # create join table
-db.resultsTableJoiningCmpSnfBySoilkey(slcIds, dbSlcKey=dbSlcIdKey, dbCmpKey=dbCmpKey, dbSoilKey=dbSoilKey, cmpTableName="cmp32", snfTableName="snf32", landuse=landusePreference, writeTestCsv=True, writeTestCsvDirectory=outDirectory)
+db.resultsTableJoiningCmpSnfBySoilkey(slcIds, dbSlcKey=dbSlcIdKey, dbCmpKey=dbCmpKey, dbSoilKey=dbSoilKey, cmpTableName="cmp", snfTableName="snf", landuse=landusePreference, writeTestCsv=True, writeTestCsvDirectory=outDirectory)
 
 # categorical calc on joined table. snf column tested.
 proveSingleColumnCalculation(slcIds, dbSlcKey=dbSlcIdKey, dbPercentKey=dbPercentKey, tableName=db.joinTableName, columnName='"g_group3:1"', filePrefix=filePrefix, outDirectory=outDirectory)
@@ -204,7 +204,7 @@ proveSingleColumnCalculation(slcIds, dbSlcKey=dbSlcIdKey, dbPercentKey=dbPercent
 
 #====== 3 table join
 #== cmp - snf - slf via soilkey and layer number in slf
-db.resultsTableJoiningCmpSnfSlfBySoilkey(slcIds, dbSlcKey=dbSlcIdKey, dbCmpKey=dbCmpKey, dbSoilKey=dbSoilKey, dbLayerNumberKey=dbLayerNumberKey, cmpTableName="cmp32", snfTableName="snf32", slfTableName="slf32", landuse=landusePreference, layerNumber=layerNumberToUse, writeTestCsv=True, writeTestCsvDirectory=outDirectory)
+db.resultsTableJoiningCmpSnfSlfBySoilkey(slcIds, dbSlcKey=dbSlcIdKey, dbCmpKey=dbCmpKey, dbSoilKey=dbSoilKey, dbLayerNumberKey=dbLayerNumberKey, cmpTableName="cmp", snfTableName="snf", slfTableName="slf", landuse=landusePreference, layerNumber=layerNumberToUse, writeTestCsv=True, writeTestCsvDirectory=outDirectory)
 
 # categorical calc on joined table. snf column tested.
 proveSingleColumnCalculation(slcIds, dbSlcKey=dbSlcIdKey, dbPercentKey=dbPercentKey, tableName=db.joinTableName, columnName='"domsand"', filePrefix=filePrefix, outDirectory=outDirectory)
