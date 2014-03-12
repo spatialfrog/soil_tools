@@ -225,6 +225,9 @@ headers, results = db.calculateField(slcIds, dbSlcKey=dbSlcIdKey, tableName=calc
 io.writeCsvFile(calculationColumnName, headers, results, outDirectory, csvFilePrefixName=csvFilePrefix)
 
 
+# inform user processing finished
+msg = "Finished processing column %s. Find output CSV in directory %s" %(calculationColumnName, outDirectory)
+utils.communicateWithUserInQgis(msg)
 
     
     
