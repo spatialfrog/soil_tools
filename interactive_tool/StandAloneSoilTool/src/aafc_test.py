@@ -217,7 +217,7 @@ print(results)
 
 #= get fieldnames from joined table
 results = db.getTableFieldNames(db.joinTableName)
-
+print(results)
 
 
 #======= CSV writer
