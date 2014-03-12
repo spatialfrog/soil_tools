@@ -93,7 +93,10 @@ tempSystemDirectoryPath = utils.determineSystemTempDirectory()
 io = inout.Io(inSoilDbPath, tempSystemDirectoryPath)
 
 # validate user input
-utils.validateUserInput(cmpDbfPath)
+utils.validateUserInput(cmpDbfPath, snfDbfPath, slfDbfPath)
+
+# get mapping of soil names to use for db from dbf file name paths
+tableNamesToDbfPaths = utils.getTableNamesToPathFromDbfPaths(cmpDbfPath, snfDbfPath, slfDbfPath)
 
 # remove existing db if user provides same name
 utils.deleteFile(os.path.join(outDirectory, sqliteDbName))
@@ -103,7 +106,7 @@ utils.removeAllQgisLayers()
 
 #=== create db and load with passed dbf paths
 # create new db
-io.createNewDb(cmpDbfPath,snfDbfPath,slfDbfPath)
+io.createNewDb(tableNamesToDbfPaths)
 
 # create database class instance
 # db must exist before sqlite connection can exit
@@ -112,7 +115,7 @@ db = database.Db(inSoilDbPath, tempSystemDirectoryPath)
 # change initial loaded table to correct table name
 # created db table has name of db. change this to name of dbf
 # TODO: parameterize name from dbf -- might need to be generic in utilities. io.createDb has similar
-db.updateDbTableName("cmp32")
+db.updateDbTableName("cmp")
 
 
 #======== calculations
