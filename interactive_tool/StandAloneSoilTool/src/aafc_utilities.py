@@ -145,18 +145,36 @@ class Utils:
         return tempfile.gettempdir()
         
     
-    def parseFileName(self):
+    def getTableNamesToPathFromDbfPaths(self, *params):
         """
-        #TODO: 1 critical -- parse user supplied dbf file names. 
+        purpose:
+        parse table names from user supplied dbf file paths. it is expected
+        that path will contain cmp/slf/snf in filename. * these become the
+        table names in db.
         
-        extract cmp/snf/snl from passed in dbf files. 
+        how:
+        simple string match against cmp/snf/slf
         
-        ?? update class instance variable that can be checked else where? 
+        returns:
+        mapping of cmp/slf/snf to dbf path for each if present
+        """   
         
-        return dict of ie cmp:pathToFile
-        """
+        # soil names that must be contained somewhere in file name
+        soilNames = ["cmp","snf","slf"]
         
-        pass
+        # mapping of found soil names to full dbf path
+        nameToFilePath = {}
+        
+        for soilName in soilNames:
+            # process supplied file paths
+            for path in params:
+                # get file name
+                fileName = os.path.basename(path)
+                if soilName in fileName.lower():
+                    # match found
+                    nameToFilePath[soilName] = path
+        
+        return nameToFilePath
     
     
     def determineUserTableNeeds(self):
