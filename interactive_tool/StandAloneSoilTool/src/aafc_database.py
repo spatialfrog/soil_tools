@@ -50,7 +50,7 @@ class Db:
             # only return data
             return self.curs.fetchall()
 
-    def convertDbResults2SimpleList(self,data):
+    def convertDbResults2SimpleList(self,data, columnIndex=0):
         """
         convert db query data from list of tuples into simple list
         
@@ -60,7 +60,7 @@ class Db:
         results = []
         for i in data:
             # extract single value from tuple
-            results.append((i[0]))
+            results.append((i[columnIndex]))
         
         return results
 
