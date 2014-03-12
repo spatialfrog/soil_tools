@@ -68,6 +68,16 @@ class Db:
         sql = "alter table %s rename to %s" % (baseDbName,tableName)
         results = self.executeSql(sql)
     
+    def dropTable(self,tableName):
+        """
+        convience method
+        
+        drops table name from user supplied table name
+        """
+        
+        sql = "drop table if exists %s" %(tableName)
+        self.executeSql(sql)
+    
     
     def prefixDbTableColumns(self, tableName):
         """
