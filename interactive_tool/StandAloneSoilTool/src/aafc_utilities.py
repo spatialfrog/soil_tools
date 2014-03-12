@@ -204,23 +204,40 @@ class Utils:
         return nameToFilePath
     
     
-    def determineUserTableNeeds(self):
+    def getTableProcessingOptions(self, soilTableNames):
         """
-        what does uer want to do with tables? how to join them?
+        purpose:
+        provide user options for use of soil tables
         
-        #TODO: 1 critcal -- determine how user wants to use tables for join
+        notes:
+        - cmp  --> default and min
+        - cmp - snf
+        - cmp - snf - slf
         
-        see notes from march 2/2014
-        - user could load all tables to create db to use for future use
-        - could load all tables but only want 1 table for calc
-        - * user needs to explicitly select join workflow ie
-           - cmp
-           - cmp - snf
-           - cmp - snf - slf
+        how:
+        check listing of soil tables. then construct listing. cmp is base table for everything.
+        
+        returns:
+        mapping of table join options. key is numeric while value is string of table ordering
+        ie 0:cmp
         """
         
-        pass
-    
+        tableOptions = {}
+        
+        for name in soilTableNames:
+            if "cmp" in name.lower():
+                tableOptions[0] = "cmp"
+                continue
+            elif "snf" in name.lower():
+                tableOptions[1] = "cmp - snf"
+                continue
+            elif "slf" in name.lower():
+                tableOptions[2] = "cmp - snf - slf"
+        
+        return tableOptions 
+        
+        
+            
     
     
     
