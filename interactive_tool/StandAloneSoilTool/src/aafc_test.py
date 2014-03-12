@@ -236,18 +236,18 @@ print results
 results = utils.getTableProcessingOptions(results.keys())
 print results
 
+
 #======= CSV writer
-#= categorical output "-" removed
-# slc 242025 contains "-" for g_group3:1 on cmp - snf table join
-
-
 #= inappropiate file name characters removed
 # any duplicate column from joins will be 'columnName3/number' ie calculated_'g_group3/1'.csv
 # cmp-snf table join for g_group3:1 column
-
+headers, results = db.calculateField(slcIds, dbSlcKey=dbSlcIdKey, tableName=db.joinTableName, columnName='"g_group3:1"', dbPercentKey=dbPercentKey)
+io.writeCsvFile('"g_group3:1"', headers, results, outDirectory, csvFilePrefixName="test")
 
 #= do not print data rows with None
 # slc 376001 for 3 table join, column domsand is None if layer number = 4
+headers, results = db.calculateField(slcIds, dbSlcKey=dbSlcIdKey, tableName=db.joinTableName, columnName='"domsand"', dbPercentKey=dbPercentKey)
+io.writeCsvFile('"domsand"', headers, results, outDirectory, csvFilePrefixName="test")
 
 
 #==== clean up
