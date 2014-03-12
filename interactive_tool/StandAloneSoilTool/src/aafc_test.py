@@ -225,13 +225,16 @@ msg, status = utils.validateUserInput(cmpDbfPath,snfDbfPath)
 print msg,status
 
 # path incorrect
-msg, status = utils.validateUserInput("/Users/me")
+msg, status = utils.validateUserInput(cmpDbfPath,"/Users/me")
 print msg, status
 
 # cmp table absent
 msg, status = utils.validateUserInput(snfDbfPath,slfDbfPath)
 print msg, status
 
+#= mapping of dbf names to paths. keys = table names to create
+results = utils.getTableNamesToPathFromDbfPaths(cmpDbfPath, snfDbfPath, slfDbfPath)
+print results
 
 #======= CSV writer
 #= categorical output "-" removed
