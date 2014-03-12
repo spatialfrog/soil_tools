@@ -182,10 +182,8 @@ else:
     # change initial loaded cmp table name from db name to "cmp"
     db.updateDbTableName("cmp")
 
-    # get listing of tables
-    results = db.executeSql("select name from sqlite_master where type='table'")
-    #print results
-    
+    # list of soil tables present in db
+    soilTablesPresent = db.getSoilTablesListing()
     
     #======== calculations
     #TODO: 1 critical --- parameterize all method arguments below
