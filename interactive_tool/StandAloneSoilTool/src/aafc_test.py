@@ -184,7 +184,6 @@ proveSingleColumnCalculation(slcIds, dbSlcKey=dbSlcIdKey, dbPercentKey=dbPercent
 
 
 #============== table joins
-#TODO: testing -- write final join results table to csv
 
 #===== 2 table join
 #== cmp to snf table via soilkey
