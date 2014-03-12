@@ -97,20 +97,34 @@ class Db:
         gets listing of user loaded soil tables
         
         how:
-        searchs for cmp/slf/snf names
+        searches for cmp/slf/snf names
         
         returns:
-        list of table names strings
+        list of soil table name strings
         """
         
         # list of tables in db
         sql = "select name from sqlite_master where type='table'"
         results = self.executeSql(sql)
         
+        # clean data into simple list
+        cleanedResults = self.convertDbResults2SimpleList(results)
         
+        # search for soil names
+        soilTableNames = ["cmp","snf","slf"]
         
-    
-    
+        soilTablesPresent = []
+        
+        for soilName in soilTableNames:
+            for tableName in cleanedResults:
+                if soilName.lower() in tableName.lower():
+                    # match
+                    soilTablesPresent.append(soilName)
+                    continue
+        
+        return soilTablesPresent 
+
+        
     def prefixDbTableColumns(self, tableName):
         """
         prefix table name ie cmp to each column ie cmp_sl
