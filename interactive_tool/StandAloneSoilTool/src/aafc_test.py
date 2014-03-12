@@ -114,12 +114,9 @@ db = database.Db(inSoilDbPath, tempSystemDirectoryPath)
 
 # change initial loaded table to correct table name
 # created db table has name of db. change this to name of dbf
-# TODO: parameterize name from dbf -- might need to be generic in utilities. io.createDb has similar
 db.updateDbTableName("cmp")
 
 
-#======== calculations
-#TODO: 1 critical --- parameterize all method arguments below
 
 # sl from cmp to look at
 # 974040 -- exact tie
