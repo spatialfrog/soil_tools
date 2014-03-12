@@ -186,6 +186,9 @@ else:
 # list of soil tables present in db
 soilTablesPresent = db.getSoilTablesListing()
 
+# user determines if join occuring based on tables selected
+tableOptionsForProcessing = utils.getTableProcessingOptions(soilTablesPresent.keys())
+
 #======== calculations
 #TODO: 1 critical --- parameterize all method arguments below
 
