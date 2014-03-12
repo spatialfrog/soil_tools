@@ -130,13 +130,19 @@ class Db:
         return listing of field names present in user supplied table
         
         how:
-        sqlite pragma
+        sqlite pragma table_info
         
         returns:
         list of all field names
         """
         
-        pass
+        # list db fields
+        sql = "pragma table_info(%s)" %(tableName)
+        results = self.executeSql(sql)
+        
+        # clean results
+        cleanedResults = self.convertDbResults2SimpleList(results)
+        
     
         
     def prefixDbTableColumns(self, tableName):
