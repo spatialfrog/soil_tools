@@ -31,7 +31,10 @@ class Io:
 
         pass additional dbf's to be added.
         """
-
+        
+        # status of loading layers via qgis api 
+        loadStatus = True
+        
         def createInitialDb(path, tableName):
             """
             purpose:
@@ -47,15 +50,21 @@ class Io:
             nothing
             """
 
-            # TODO: error checking and reporting -- loading cmp dbf
-
             # loads as qgis vector layer, but do not display on canvas
             # tableName will be table name in spatialite
             dbfLayer = QgsVectorLayer(path,tableName,"ogr")
-
-            # convert cmp dbf to sqlite db
-            # write dbf to sqlite. must be spatialite to work for loading back into qgis
-            QgsVectorFileWriter.writeAsVectorFormat(dbfLayer,self.sqliteDbPath,"CP1250",None,"SQLite",False,None,["SPATIALITE=yes"])
+            
+            # check layer valid
+            if not dbfLayer.isValid():
+                # problem with layer. return issue
+                return False
+            else:
+                # convert cmp dbf to sqlite db
+                # write dbf to sqlite. must be spatialite to work for loading back into qgis
+                QgsVectorFileWriter.writeAsVectorFormat(dbfLayer,self.sqliteDbPath,"CP1250",None,"SQLite",False,None,["SPATIALITE=yes"])
+                
+                # loaded ok
+                return True
 
 
         def addOtherDbfsToDb(path, tableName):
@@ -73,35 +82,51 @@ class Io:
             nothing
             """
 
-            # TODO: error checking -- loading additional tables
-
             # tmp path for conversion
             tmpPathToWriteCsv = os.path.join(self.tmpDirectory, tableName)
 
             # create qgis vector layer
             dbfLayer = QgsVectorLayer(path, tableName,"ogr")
-
-            # convert to csv using qgis ogr provider
-            QgsVectorFileWriter.writeAsVectorFormat(dbfLayer,tmpPathToWriteCsv,"CP1250",None,"CSV",False,None)
-
-            # load csv into db.
-            self.convert(tmpPathToWriteCsv + ".csv", self.sqliteDbPath,tableName)
+            
+            # check if layer valid
+            if not dbfLayer.isValid():
+                return False
+            else:
+                # convert to csv using qgis ogr provider
+                QgsVectorFileWriter.writeAsVectorFormat(dbfLayer,tmpPathToWriteCsv,"CP1250",None,"CSV",False,None)
+    
+                # load csv into db.
+                self.convert(tmpPathToWriteCsv + ".csv", self.sqliteDbPath,tableName)
+                
+                return True
 
 
         # process cmp dbf first
         # create initial table
-        createInitialDb(namesToPaths["cmp"],"cmp")
+        loadStatus = createInitialDb(namesToPaths["cmp"],"cmp")
         
-        # remove cmp key from mapping
-        namesToPaths.pop("cmp")
+        if loadStatus:
+            # remove cmp key from mapping
+            namesToPaths.pop("cmp")
         
-        # check if additional mapping keys present
-        for name, path in namesToPaths.items():
-            # process each path
-            # convert to csv & load
-            addOtherDbfsToDb(path, name)
-    
+            # check if additional mapping keys present
+            for name, path in namesToPaths.items():
+                # process each path
+                # convert to csv & load
+                loadStatus = addOtherDbfsToDb(path, name)
+                
+                # check if issues loading additional layers
+                if loadStatus:
+                    continue
+                else:
+                    return loadStatus
 
+        else:
+            # problem loading layer
+            # return load status of layers
+            return loadStatus
+
+        return loadStatus
 
     # ========== read csv file into existing sqlite db
     """

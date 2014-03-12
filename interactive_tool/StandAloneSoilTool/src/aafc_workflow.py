@@ -173,7 +173,11 @@ else:
 
     #=== create db and load with passed dbf paths
     # create new db
-    io.createNewDb(tableNamesToDbfPaths)
+    loadStatus = io.createNewDb(tableNamesToDbfPaths)
+    if not loadStatus:
+        # issue loading layers qith qgis api
+        utils.communicateWithUserInQgis("Problem loading/processing user dbf files into spatialdb. Is dbf okay? Stopping processing!", level="CRITICAL", messageExistanceDuration=10)
+        sys.exit()
     
     # create database class instance
     # db must exist before sqlite connection can exit
