@@ -140,14 +140,13 @@ class Utils:
                 # check if cmp supplied
                 if "cmp" in fileName.lower():
                     cmpDbfPresent = True
-                    break
             
-            # is directory path
-            if os.path.isdir(item):
-                # check valid
-                if not os.path.exists(item):
-                    return ("invalid path supplied", False)
-        
+            # path exits
+            if not os.path.exists(item):
+                return ("invalid path supplied", False)
+            
+            else:
+                pass
         
         if not cmpDbfPresent:
             # cmp dbf table absent
