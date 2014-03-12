@@ -463,11 +463,19 @@ class Db:
 
     def calculateField(self, slcIds, dbSlcKey, tableName, columnName, dbPercentKey):
         """
-        TODO: categorical calc -- update doc string
+        purpose:
+        calculate user selected column. determines field type to dispatch either numeric or categorical calculation
+        by slc id.
         
+        notes:
         dbSlcKey is column for slc id's.
         slcIds is any iterable object. 
         
+        how:
+        sql query via python to db
+        
+        returns:
+        sql query headers & results        
         """
         
         # determine column data type
