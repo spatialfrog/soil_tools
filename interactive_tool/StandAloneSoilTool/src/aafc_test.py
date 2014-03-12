@@ -239,6 +239,10 @@ print msg, status
 results = utils.getTableNamesToPathFromDbfPaths(cmpDbfPath, snfDbfPath, slfDbfPath)
 print results
 
+#= determine table options
+results = utils.getTableProcessingOptions(results.keys())
+print results
+
 #======= CSV writer
 #= categorical output "-" removed
 # slc 242025 contains "-" for g_group3:1 on cmp - snf table join
