@@ -63,7 +63,7 @@ ie. overwrite files, primary key of tables, default name of csv etc
 """
 # == use existing db
 useExistingDb = False
-
+existingDbPath = "/Users/drownedfrog/Projects/Contracts/AAFC/dec2013_mar2014_tool_dev/data/test/soilDb.sqlite"
 
 # == delete csv's in directory
 # TODO: config -- implement user option to delete all csv's in output directory
@@ -138,9 +138,20 @@ io = inout.Io(inSoilDbPath, tempSystemDirectoryPath)
 
 # check user preference for using existing db or create new one
 if useExistingDb:
-    # TODO validate user input
-    # TODO: user wants to use existing db
-    pass
+    """
+    user must select existing db with full path 
+    if selected then disable users ability to provide paths for individual dbf's
+    """ 
+    
+    # check path provided exists
+    status = utils.checkFileExits(existingDbPath)
+    if not status:
+        # file path incorrect
+        utils.communicateWithUserInQgis("DB path supplied is incorrect. Stopping process.",level="CRITICAL")
+        sys.exit()
+    
+    # remove all layers in qgis
+    utils.removeAllQgisLayers()
 else:
     # validate user input
     utils.validateUserInput(cmpDbfPath)
