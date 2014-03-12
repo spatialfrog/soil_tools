@@ -557,7 +557,7 @@ class Db:
                 
                 #TODO: categorical calc -- check return sql values for "" and replace with nulls
             
-                #TODO: categorical calc -- only show sub-dominate if dominate < 60%
+                #TODO: categorical calc -- show sub-dominate
             
                 
             # return headers and results. headers will be last iteration.
