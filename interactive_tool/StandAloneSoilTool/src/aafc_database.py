@@ -27,6 +27,9 @@ class Db:
         # temp system directory
         self.tmpDirectory = tmpSystemDirectory
         
+        # join table name. generic as you can only have 1 join table at a time
+        self.joinTableName = "joinedTable"
+        
     
     def executeSql(self,sqlString, fieldNames=False):
         """
@@ -125,7 +128,7 @@ class Db:
         
         #TODO: refactor 2 table & 3 table join methods into single method
         
-        resultsTableName = "results_joinedCmpSnf"
+        resultsTableName = self.joinTableName
             
         def processSlcRows(slcIds, dbSlcKey, dbCmpKey, dbSoilKey, cmpTableName, snfTableName, landuse, resultsTableName):
             """
@@ -244,7 +247,7 @@ class Db:
         ##-- join cmp & snf first to get soilkey to be used, join cmp row selected against slf table constrained by layer number
         ##select cmp32.sl, cmp32.soilkey as cmp32_soilkey, snf32.drainage, slf32.* from cmp32 join snf32 on snf32.soilkey like 'ABBUFgl###N' and cmp32.sl = 242021 and cmp32.cmp = 1 join slf32 on cmp32.soilkey like slf32.soilkey and slf32.layer_no = 2
         
-        resultsTableName = "results_joinedCmpSnfSlf"
+        resultsTableName = self.joinTableName
             
         def processSlcRows(slcIds, dbSlcKey, dbCmpKey, dbSoilKey, dbLayerNumberKey, cmpTableName, snfTableName, slfTableName, landuse, layerNumber):
             """
