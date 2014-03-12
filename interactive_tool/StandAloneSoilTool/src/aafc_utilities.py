@@ -155,15 +155,6 @@ class Utils:
         return ("user input ok", True)
 
 
-    def removeAllQgisLayers(self):
-        """
-        remove all layers in the qgis toc
-        """
-
-        # remove all layers in qgis
-        QgsMapLayerRegistry.instance().removeAllMapLayers()
-
-
     def determineSystemTempDirectory(self):
         """
         return path of system temp directory
