@@ -112,6 +112,50 @@ class Utils:
             os.remove(path)
 
 
+    def validateUserInput(self, *params):
+        """
+        purpose:
+        validate user inputs. primialarly concerned with file/directory path correct.
+        
+        how:
+        check each item passed
+        
+        returns
+        tuple consisting of message and status of True/False
+        """
+        
+        #TODO: validate input -- check cmp table passed; check filename. if not warning and quite
+        
+        cmpDbfPresent = False
+        
+        # process all passed parameters
+        for item in params:
+            # is file path
+            if os.path.isfile(item):
+                # check valid path
+                if not os.path.exists(item):
+                    return ("invalid path supplied", False)
+                
+                fileName = os.path.basename(item)
+                # check if cmp supplied
+                if "cmp" in fileName.lower():
+                    cmpDbfPresent = True
+                    break
+            
+            # is directory path
+            if os.path.isdir(item):
+                # check valid
+                if not os.path.exists(item):
+                    return ("invalid path supplied", False)
+        
+        
+        if not cmpDbfPresent:
+            # cmp dbf table absent
+            return ("cmp dbf missing", False)
+        
+        return ("user input ok", True)
+
+
     def removeAllQgisLayers(self):
         """
         remove all layers in the qgis toc
