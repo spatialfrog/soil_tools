@@ -189,7 +189,7 @@ else:
 soilTablesPresent = db.getSoilTablesListing()
 
 # user determines what tables they want to work with
-tableOptionsForProcessing = utils.getTableProcessingOptions(soilTablesPresent.keys())
+tableOptionsForProcessing = utils.getTableProcessingOptions(soilTablesPresent)
 
 #TODO: gui -- show user avaiable table options to select
 
