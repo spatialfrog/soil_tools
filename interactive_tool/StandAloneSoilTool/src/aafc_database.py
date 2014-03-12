@@ -50,6 +50,19 @@ class Db:
             # only return data
             return self.curs.fetchall()
 
+    def convertDbResults2SimpleList(self,data):
+        """
+        convert db query data from list of tuples into simple list
+        
+        returns list
+        """
+        
+        results = []
+        for i in data:
+            # extract single value from tuple
+            results.append((i[0]))
+        
+        return results
 
     def updateDbTableName(self,tableName):
         """
