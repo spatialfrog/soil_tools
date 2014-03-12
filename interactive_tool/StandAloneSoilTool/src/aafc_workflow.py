@@ -189,21 +189,18 @@ soilTablesPresent = db.getSoilTablesListing()
 # user determines if join occuring based on tables selected
 tableOptionsForProcessing = utils.getTableProcessingOptions(soilTablesPresent.keys())
 
-# what
+#TODO: gui -- show user avaiable table options to select
 
 
 # is table join occuring
 if tableOptionsForProcessing == 1:
     # join requested
     # 2 table join -- cmp - snf tables
-    db.resultsTableJoiningCmpSnfBySoilkey(slcIds, dbSlcKey=dbSlcIdKey, dbCmpKey=dbCmpKey, dbSoilKey=dbSoilKey, cmpTableName="cmp32", snfTableName="snf32", landuse=landusePreference, writeTestCsv=False, writeTestCsvDirectory=None)
+    db.resultsTableJoiningCmpSnfBySoilkey(slcIds, dbSlcKey=dbSlcIdKey, dbCmpKey=dbCmpKey, dbSoilKey=dbSoilKey, cmpTableName="cmp", snfTableName="snf", landuse=landusePreference, writeTestCsv=False, writeTestCsvDirectory=None)
 elif tableOptionsForProcessing == 2:
     # 3 table join -- cmp - snf - slf
-    db.resultsTableJoiningCmpSnfSlfBySoilkey(slcIds, dbSlcKey=dbSlcIdKey, dbCmpKey=dbCmpKey, dbSoilKey=dbSoilKey, dbLayerNumberKey=dbLayerNumberKey, cmpTableName="cmp32", snfTableName="snf32", slfTableName="slf32", landuse=landusePreference, layerNumber=4)
+    db.resultsTableJoiningCmpSnfSlfBySoilkey(slcIds, dbSlcKey=dbSlcIdKey, dbCmpKey=dbCmpKey, dbSoilKey=dbSoilKey, dbLayerNumberKey=dbLayerNumberKey, cmpTableName="cmp", snfTableName="snf", slfTableName="slf", landuse=landusePreference, layerNumber=dbLayerNumberKey)
     
-
-  
-
 
 #======== calculations
 
