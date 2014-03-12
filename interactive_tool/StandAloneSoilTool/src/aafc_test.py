@@ -242,6 +242,9 @@ print results
 # any duplicate column from joins will be 'columnName3/number' ie calculated_'g_group3/1'.csv
 # cmp-snf table join for g_group3:1 column
 headers, results = db.calculateField(slcIds, dbSlcKey=dbSlcIdKey, tableName=db.joinTableName, columnName='"g_group3:1"', dbPercentKey=dbPercentKey)
+print "csv data for 'g_group3/1'"
+print headers
+print results
 io.writeCsvFile('"g_group3:1"', headers, results, outDirectory, csvFilePrefixName="test")
 
 #= do not print data rows with None
