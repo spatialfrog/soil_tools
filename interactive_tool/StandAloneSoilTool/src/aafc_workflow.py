@@ -124,7 +124,9 @@ slcIds = [974040, 972018, 615009, 242025, 376001]
 # full path to spatialite db
 inSoilDbPath = os.path.join(sqliteDbPath, sqliteDbName + ".sqlite")
 
-
+# name of table for calculating numeric/categorical
+calculationTableName = ""
+calculationColumnName = ""
 
 # ========== create class instances
 # create utility class instance
@@ -186,35 +188,41 @@ else:
 # list of soil tables present in db
 soilTablesPresent = db.getSoilTablesListing()
 
-# user determines if join occuring based on tables selected
+# user determines what tables they want to work with
 tableOptionsForProcessing = utils.getTableProcessingOptions(soilTablesPresent.keys())
 
 #TODO: gui -- show user avaiable table options to select
 
 
-# is table join occuring
-if tableOptionsForProcessing == 1:
+# user selection for table to use for column calculation
+if tableOptionsForProcessing == 0:
+    # no join. cmp table
+    calculationTableName = "cmp"
+elif tableOptionsForProcessing == 1:
     # join requested
     # 2 table join -- cmp - snf tables
     db.resultsTableJoiningCmpSnfBySoilkey(slcIds, dbSlcKey=dbSlcIdKey, dbCmpKey=dbCmpKey, dbSoilKey=dbSoilKey, cmpTableName="cmp", snfTableName="snf", landuse=landusePreference, writeTestCsv=False, writeTestCsvDirectory=None)
+    calculationTableName = db.joinTableName
 elif tableOptionsForProcessing == 2:
     # 3 table join -- cmp - snf - slf
     db.resultsTableJoiningCmpSnfSlfBySoilkey(slcIds, dbSlcKey=dbSlcIdKey, dbCmpKey=dbCmpKey, dbSoilKey=dbSoilKey, dbLayerNumberKey=dbLayerNumberKey, cmpTableName="cmp", snfTableName="snf", slfTableName="slf", landuse=landusePreference, layerNumber=dbLayerNumberKey)
+    calculationTableName = db.joinTableName
     
+# get fields present from user option for tables requested to work with
+fieldsPresent = db.getTableFieldNames(calculationTableName)
 
-#======== calculations
+#TODO: gui -- show all fields that can be selected. must quote name as '"name"'
 
-#===== process single column categorical
-# write all sl's for single column to csv
+# get user selected field for calculation
+calculationColumnName = '"slope"'
+
+#===== process field
 # warn user process may take several minutes
-message = "Calculating column %s may take several minutes" % ("slope")
+message = "Calculating column %s may take several minutes" % (calculationColumnName)
 utils.communicateWithUserInQgis(message,messageExistanceDuration=10)
-# get all distinct id's from cmp table
-ids = db.executeSql("select distinct(sl) from cmp32")
-# convert sl ids list of tuples to simple list
-ids_cleaned = utils.convertDbResults2SimpleList(ids)
-headers, results = db.calculateField(ids_cleaned[:5], dbSlcKey=dbSlcIdKey, tableName="cmp32", columnName='"slope"', dbPercentKey=dbPercentKey)
-io.writeCsvFile("slope", headers, results, outDirectory, csvFilePrefixName=csvFilePrefix)
+
+headers, results = db.calculateField(slcIds, dbSlcKey=dbSlcIdKey, tableName=calculationTableName, columnName=calculationColumnName, dbPercentKey=dbPercentKey)
+io.writeCsvFile(calculationColumnName, headers, results, outDirectory, csvFilePrefixName=csvFilePrefix)
 
 
 #===== process single column numeric
