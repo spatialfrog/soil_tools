@@ -611,8 +611,6 @@ class Db:
             return header, results
 
         
-        #TODO: field calculation -- clean up. shouldn't need to cascade return values
-        
         # determine column field data type
         columnDataTypeIs = determineFieldDataType(tableName, columnName)
         
@@ -630,8 +628,7 @@ class Db:
             return headers, results
         
         else:
-            # error
-            #TODO: calculation -- if issue determining column data type report error
+            # issue determining column data type
             print "mmmm couldn't figure out column type"
             print columnDataTypeIs
 
