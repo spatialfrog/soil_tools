@@ -140,8 +140,10 @@ class Db:
         sql = "pragma table_info(%s)" %(tableName)
         results = self.executeSql(sql)
         
-        # clean results
-        cleanedResults = self.convertDbResults2SimpleList(results)
+        # clean results. field name is second index position
+        cleanedResults = self.convertDbResults2SimpleList(results, columnIndex=1)
+        
+        return cleanedResults
         
     
         
