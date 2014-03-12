@@ -210,6 +210,15 @@ proveSingleColumnCalculation(slcIds, dbSlcKey=dbSlcIdKey, dbPercentKey=dbPercent
 proveSingleColumnCalculation(slcIds, dbSlcKey=dbSlcIdKey, dbPercentKey=dbPercentKey, tableName=db.joinTableName, columnName='"bd"', filePrefix=filePrefix, outDirectory=outDirectory)
 
 
+#======= testing misc functions
+#= listing of tables
+results = db.getSoilTablesListing()
+print(results)
+
+#= get fieldnames from joined table
+results = db.getTableFieldNames(db.joinTableName)
+
+
 
 #======= CSV writer
 #= categorical output "-" removed
