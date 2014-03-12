@@ -149,9 +149,6 @@ if useExistingDb:
         utils.communicateWithUserInQgis("DB path supplied is incorrect. Stopping process.",level="CRITICAL")
         sys.exit()
     
-    # remove all layers in qgis
-    utils.removeAllQgisLayers()
-    
 else:
     # create new db
     
@@ -166,9 +163,6 @@ else:
     
     # remove existing db if user provides same name
     utils.deleteFile(os.path.join(sqliteDbPath, sqliteDbName))
-
-    # remove all layers in qgis
-    utils.removeAllQgisLayers()
 
     #=== create db and load with passed dbf paths
     # create new db
