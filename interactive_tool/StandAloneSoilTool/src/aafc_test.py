@@ -101,9 +101,6 @@ tableNamesToDbfPaths = utils.getTableNamesToPathFromDbfPaths(cmpDbfPath, snfDbfP
 # remove existing db if user provides same name
 utils.deleteFile(os.path.join(outDirectory, sqliteDbName))
 
-# remove all layers in qgis
-utils.removeAllQgisLayers()
-
 #=== create db and load with passed dbf paths
 # create new db
 io.createNewDb(tableNamesToDbfPaths)
