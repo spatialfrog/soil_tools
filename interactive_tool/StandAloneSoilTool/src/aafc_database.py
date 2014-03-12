@@ -124,6 +124,20 @@ class Db:
         
         return soilTablesPresent 
 
+    def getTableFieldNames(self, tableName):
+        """
+        purpose:
+        return listing of field names present in user supplied table
+        
+        how:
+        sqlite pragma
+        
+        returns:
+        list of all field names
+        """
+        
+        pass
+    
         
     def prefixDbTableColumns(self, tableName):
         """
