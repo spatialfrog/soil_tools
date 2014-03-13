@@ -527,9 +527,7 @@ class Db:
                 else:
                     # only single row returned per slc. remove outer list to ensure we return a list of tuples.
                     results.append(row[0])
-                    
                 
-                #TODO: categorical calc -- check return sql values for "" and replace with nulls
             
                 #TODO: categorical calc -- show sub-dominate
             
