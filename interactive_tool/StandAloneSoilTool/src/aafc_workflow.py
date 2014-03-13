@@ -227,10 +227,6 @@ message = "Calculating column %s may take several minutes" % (calculationColumnN
 utils.communicateWithUserInQgis(message,messageExistanceDuration=10)
 
 headers, results = db.calculateField(slcIds, dbSlcKey=dbSlcIdKey, tableName=calculationTableName, columnName=calculationColumnName, dbPercentKey=dbPercentKey)
-
-print headers
-print results
-
 io.writeCsvFile(calculationColumnName, headers, results, outDirectory, csvFilePrefixName=csvFilePrefix)
 
 
