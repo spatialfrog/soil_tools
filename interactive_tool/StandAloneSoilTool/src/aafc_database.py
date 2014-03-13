@@ -523,7 +523,7 @@ class Db:
                 
                 if len(row) == 0:
                     # no data returned
-                    results.append(None)
+                    continue
                 else:
                     # only single row returned per slc. remove outer list to ensure we return a list of tuples.
                     results.append(row[0])
@@ -569,7 +569,7 @@ class Db:
                 
                 if len(row) == 0:
                     # no data returned
-                    results.append(None)
+                    continue
                 else:
                     #== format numeric calc in db tuple before passing back
                     # format calculated value to 2 decimal places
