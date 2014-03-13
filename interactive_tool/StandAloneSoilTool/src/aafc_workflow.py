@@ -33,6 +33,8 @@ import aafc_database as database
 import aafc_gui as gui
 
 
+#TODO: error checking --- ensure it;'s robust and places where failure could occur delat with
+
 #TODO: config file --- check if file exists, if not then write initial config using stored default key/values
 #TODO: config file --- write dict to store all keys with default values where applicable
 
