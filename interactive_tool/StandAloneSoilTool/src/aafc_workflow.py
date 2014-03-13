@@ -121,7 +121,7 @@ userLayerNumber = 4
 # 972018 -- 3 values
 # 615009 -- 4 unique values + A/N options
 
-slcIds = [974040, 972018, 615009, 242025, 376001]
+slcIds = [974040, 972018, 615009, 242025, 376001, 242021]
 
 
 # ========= set high level variables
