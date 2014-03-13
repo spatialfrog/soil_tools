@@ -119,8 +119,10 @@ db.updateDbTableName("cmp")
 # 974040 -- exact tie
 # 972018 -- 3 values
 # 615009 -- 4 unique values + A/N options
+# 242025 -- only 1 dominate & 1 sub dominate slope
+# 242021 -- only 1 dominate slope
 
-slcIds = [ 974040, 972018, 615009, 242025, 376001]
+slcIds = [ 974040, 972018, 615009, 242025, 376001, 242021]
 
 #===== test numeric/categorical calculations 
 """
@@ -177,6 +179,13 @@ def proveSingleColumnCalculation(slcs, dbSlcKey, dbPercentKey, tableName, column
 #============= single column calculation verification
 # categorical
 proveSingleColumnCalculation(slcIds, dbSlcKey=dbSlcIdKey, dbPercentKey=dbPercentKey, tableName="cmp", columnName='"slope"', filePrefix=filePrefix, outDirectory=outDirectory)
+
+# csv writing for 2 table test
+headers, results = db.calculateField(slcIds, dbSlcKey=dbSlcIdKey, tableName="cmp", columnName='"slope"', dbPercentKey=dbPercentKey)
+print headers
+print results
+io.writeCsvFile('"slope"', headers, results, outDirectory, csvFilePrefixName="test_1_table")
+
 
 # numeric
 proveSingleColumnCalculation(slcIds, dbSlcKey=dbSlcIdKey, dbPercentKey=dbPercentKey, tableName="cmp", columnName='"awhc_v"', filePrefix=filePrefix, outDirectory=outDirectory)
