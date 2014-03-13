@@ -195,7 +195,7 @@ tableOptionsForProcessing = utils.getTableProcessingOptions(soilTablesPresent)
 #TODO: gui -- show user avaiable table options to select
 
 # user selection from gui for table(s) to work with
-userTableSelection = 2
+userTableSelection = 1
 
 # user selection for table to use for column calculation
 if userTableSelection == 0:
@@ -227,6 +227,10 @@ message = "Calculating column %s may take several minutes" % (calculationColumnN
 utils.communicateWithUserInQgis(message,messageExistanceDuration=10)
 
 headers, results = db.calculateField(slcIds, dbSlcKey=dbSlcIdKey, tableName=calculationTableName, columnName=calculationColumnName, dbPercentKey=dbPercentKey)
+
+print headers
+print results
+
 io.writeCsvFile(calculationColumnName, headers, results, outDirectory, csvFilePrefixName=csvFilePrefix)
 
 
