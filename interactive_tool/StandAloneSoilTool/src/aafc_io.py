@@ -231,10 +231,15 @@ class Io:
         nothing
         """
         
-        #TODO: csv writer -- cleanup output names for duplicate columns should not be calc_"awh_c".txt of calc_"g_group/3".txt
+        # file name
+        outName = csvFilePrefixName + "_" + column + ".csv"
         
-        # outfile name
-        writeCsvFilePath = os.path.join(path,csvFilePrefixName + "_" + column + ".csv")
+        # remove quoting and colon from filename
+        outNameCleaned = outName.replace(":","_")
+        outNameCleaned = outNameCleaned.replace('"',"")
+        
+        # full csv path
+        writeCsvFilePath = os.path.join(path, outNameCleaned)
         
         with open(writeCsvFilePath,"wb") as csvfile:
             f_writer = csv.writer(csvfile,delimiter=",")
