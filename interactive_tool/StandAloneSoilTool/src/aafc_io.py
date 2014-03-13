@@ -278,15 +278,40 @@ class Io:
                 writeRow = "%s:%s\n" %(k,v)
                 file_open.writeline(writeRow)
         
+    
+    def readConfigFile(self, scriptDirectory, name="config.txt"):
+        """
+        purpose:
+        read configuration file and return mapping of key value pairs
         
+        notes:
+        key value pairs must be separated by colon
+        
+        returns:
+        mapping of key value pairs
+        """
+        
+        # return data
+        configData = {}
+        
+        # read file
+        with open(os.path.join(scriptDirectory, name),"r") as file_open:
+            rows = file_open.readlines()
+            # process
+            for row in rows:
+                # remove eol/whitespace ad split on colon
+                k,v = row.strip().split(":")
+                # add to mapping
+                configData[k] = v
+        
+        return configData
                 
-        
-        
-        
-        
-        
 
-        
-        
 
-        
+
+
+
+
+
+
+            
