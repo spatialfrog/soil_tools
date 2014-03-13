@@ -166,10 +166,6 @@ def proveSingleColumnCalculation(slcs, dbSlcKey, dbPercentKey, tableName, column
             # calculate final value 
             headers, results = db.calculateField([id], dbSlcKey, tableName, columnName, dbPercentKey)
             
-            print "prove single column calculation\n"
-            print headers
-            print results
-            
             # write result
             if len(results) == 0:
                 continue
@@ -196,10 +192,17 @@ proveSingleColumnCalculation(slcIds, dbSlcKey=dbSlcIdKey, dbPercentKey=dbPercent
 db.resultsTableJoiningCmpSnfBySoilkey(slcIds, dbSlcKey=dbSlcIdKey, dbCmpKey=dbCmpKey, dbSoilKey=dbSoilKey, cmpTableName="cmp", snfTableName="snf", landuse=landusePreference, writeTestCsv=True, writeTestCsvDirectory=outDirectory)
 
 # categorical calc on joined table. snf column tested.
-proveSingleColumnCalculation(slcIds, dbSlcKey=dbSlcIdKey, dbPercentKey=dbPercentKey, tableName=db.joinTableName, columnName='"g_group3:1"', filePrefix=filePrefix, outDirectory=outDirectory)
+proveSingleColumnCalculation(slcIds, dbSlcKey=dbSlcIdKey, dbPercentKey=dbPercentKey, tableName=db.joinTableName, columnName='"g_group3:1"', filePrefix="test_2_table", outDirectory=outDirectory)
 
 # numerical calc on joined table. snf column tested.
-proveSingleColumnCalculation(slcIds, dbSlcKey=dbSlcIdKey, dbPercentKey=dbPercentKey, tableName=db.joinTableName, columnName='"rootrestri"', filePrefix=filePrefix, outDirectory=outDirectory)
+proveSingleColumnCalculation(slcIds, dbSlcKey=dbSlcIdKey, dbPercentKey=dbPercentKey, tableName=db.joinTableName, columnName='"rootrestri"', filePrefix="test_2_table", outDirectory=outDirectory)
+
+# csv writing for 2 table test
+headers, results = db.calculateField(slcIds, dbSlcKey=dbSlcIdKey, tableName=db.joinTableName, columnName='"g_group3:1"', dbPercentKey=dbPercentKey)
+io.writeCsvFile('"g_group3:1"', headers, results, outDirectory, csvFilePrefixName="test_2_table")
+
+headers, results = db.calculateField(slcIds, dbSlcKey=dbSlcIdKey, tableName=db.joinTableName, columnName='"rootrestri"', dbPercentKey=dbPercentKey)
+io.writeCsvFile('"rootrestri"', headers, results, outDirectory, csvFilePrefixName="test_2_table")
 
 
 #====== 3 table join
@@ -207,10 +210,13 @@ proveSingleColumnCalculation(slcIds, dbSlcKey=dbSlcIdKey, dbPercentKey=dbPercent
 db.resultsTableJoiningCmpSnfSlfBySoilkey(slcIds, dbSlcKey=dbSlcIdKey, dbCmpKey=dbCmpKey, dbSoilKey=dbSoilKey, dbLayerNumberKey=dbLayerNumberKey, cmpTableName="cmp", snfTableName="snf", slfTableName="slf", landuse=landusePreference, layerNumber=layerNumberToUse, writeTestCsv=True, writeTestCsvDirectory=outDirectory)
  
 # categorical calc on joined table. snf column tested.
-proveSingleColumnCalculation(slcIds, dbSlcKey=dbSlcIdKey, dbPercentKey=dbPercentKey, tableName=db.joinTableName, columnName='"domsand"', filePrefix=filePrefix, outDirectory=outDirectory)
- 
+proveSingleColumnCalculation(slcIds, dbSlcKey=dbSlcIdKey, dbPercentKey=dbPercentKey, tableName=db.joinTableName, columnName='"domsand"', filePrefix="test_3_table", outDirectory=outDirectory)
+
+# categorical calc on joined table. snf column tested.
+proveSingleColumnCalculation(slcIds, dbSlcKey=dbSlcIdKey, dbPercentKey=dbPercentKey, tableName=db.joinTableName, columnName='"g_group3:1"', filePrefix="test_3_table", outDirectory=outDirectory)
+
 # numerical calc on joined table. snf column tested.
-proveSingleColumnCalculation(slcIds, dbSlcKey=dbSlcIdKey, dbPercentKey=dbPercentKey, tableName=db.joinTableName, columnName='"bd"', filePrefix=filePrefix, outDirectory=outDirectory)
+proveSingleColumnCalculation(slcIds, dbSlcKey=dbSlcIdKey, dbPercentKey=dbPercentKey, tableName=db.joinTableName, columnName='"bd"', filePrefix="test_3_table", outDirectory=outDirectory)
 
 
 #======= testing misc functions
@@ -250,23 +256,17 @@ print results
 # cmp-snf table join for g_group3:1 column
 headers, results = db.calculateField(slcIds, dbSlcKey=dbSlcIdKey, tableName=db.joinTableName, columnName='"g_group3:1"', dbPercentKey=dbPercentKey)
 print "csv data for 'g_group3/1'"
-print headers
-print results
-io.writeCsvFile('"g_group3:1"', headers, results, outDirectory, csvFilePrefixName="test")
+io.writeCsvFile('"g_group3:1"', headers, results, outDirectory, csvFilePrefixName="test_3_table")
 
 # 2 table join print out
 headers, results = db.calculateField(slcIds, dbSlcKey=dbSlcIdKey, tableName=db.joinTableName, columnName='"rootrestri"', dbPercentKey=dbPercentKey)
 print "csv data for rootrestri"
-print headers
-print results
-io.writeCsvFile('"rootrestri"', headers, results, outDirectory, csvFilePrefixName="test")
-
-
+io.writeCsvFile('"rootrestri"', headers, results, outDirectory, csvFilePrefixName="test_3_table")
 
 #= do not print data rows with None
 # slc 376001 for 3 table join, column domsand is None if layer number = 4
 headers, results = db.calculateField(slcIds, dbSlcKey=dbSlcIdKey, tableName=db.joinTableName, columnName='"domsand"', dbPercentKey=dbPercentKey)
-io.writeCsvFile('"domsand"', headers, results, outDirectory, csvFilePrefixName="test")
+io.writeCsvFile('"domsand"', headers, results, outDirectory, csvFilePrefixName="test_3_table")
 
 
 #==== clean up
