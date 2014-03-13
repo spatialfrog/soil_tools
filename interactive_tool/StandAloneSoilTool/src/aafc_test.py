@@ -120,7 +120,7 @@ db.updateDbTableName("cmp")
 # 972018 -- 3 values
 # 615009 -- 4 unique values + A/N options
 
-slcIds = [974040, 972018, 615009, 242025, 376001]
+slcIds = [ 974040, 972018, 615009, 242025, 376001]
 
 #===== test numeric/categorical calculations 
 """
@@ -166,9 +166,16 @@ def proveSingleColumnCalculation(slcs, dbSlcKey, dbPercentKey, tableName, column
             # calculate final value 
             headers, results = db.calculateField([id], dbSlcKey, tableName, columnName, dbPercentKey)
             
+            print "prove single column calculation\n"
+            print headers
+            print results
+            
             # write result
-            file_open.writelines(str(results[0]))
-            file_open.write("\n\n")
+            if len(results) == 0:
+                continue
+            else:
+                file_open.writelines(str(results[0]))
+                file_open.write("\n\n")
 
 
 #============= single column calculation verification
@@ -198,10 +205,10 @@ proveSingleColumnCalculation(slcIds, dbSlcKey=dbSlcIdKey, dbPercentKey=dbPercent
 #====== 3 table join
 #== cmp - snf - slf via soilkey and layer number in slf
 db.resultsTableJoiningCmpSnfSlfBySoilkey(slcIds, dbSlcKey=dbSlcIdKey, dbCmpKey=dbCmpKey, dbSoilKey=dbSoilKey, dbLayerNumberKey=dbLayerNumberKey, cmpTableName="cmp", snfTableName="snf", slfTableName="slf", landuse=landusePreference, layerNumber=layerNumberToUse, writeTestCsv=True, writeTestCsvDirectory=outDirectory)
-
+ 
 # categorical calc on joined table. snf column tested.
 proveSingleColumnCalculation(slcIds, dbSlcKey=dbSlcIdKey, dbPercentKey=dbPercentKey, tableName=db.joinTableName, columnName='"domsand"', filePrefix=filePrefix, outDirectory=outDirectory)
-
+ 
 # numerical calc on joined table. snf column tested.
 proveSingleColumnCalculation(slcIds, dbSlcKey=dbSlcIdKey, dbPercentKey=dbPercentKey, tableName=db.joinTableName, columnName='"bd"', filePrefix=filePrefix, outDirectory=outDirectory)
 
@@ -246,6 +253,15 @@ print "csv data for 'g_group3/1'"
 print headers
 print results
 io.writeCsvFile('"g_group3:1"', headers, results, outDirectory, csvFilePrefixName="test")
+
+# 2 table join print out
+headers, results = db.calculateField(slcIds, dbSlcKey=dbSlcIdKey, tableName=db.joinTableName, columnName='"rootrestri"', dbPercentKey=dbPercentKey)
+print "csv data for rootrestri"
+print headers
+print results
+io.writeCsvFile('"rootrestri"', headers, results, outDirectory, csvFilePrefixName="test")
+
+
 
 #= do not print data rows with None
 # slc 376001 for 3 table join, column domsand is None if layer number = 4
