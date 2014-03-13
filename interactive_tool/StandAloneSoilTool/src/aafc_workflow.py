@@ -33,6 +33,8 @@ import aafc_database as database
 import aafc_gui as gui
 
 
+#TODO: config file --- check if file exists, if not then write initial config using stored default key/values
+#TODO: config file --- write dict to store all keys with default values where applicable
 
 # ========= inputs to be set via pyqt4 gui
 """
@@ -66,7 +68,7 @@ useExistingDb = False
 existingDbPath = "/Users/drownedfrog/Projects/Contracts/AAFC/dec2013_mar2014_tool_dev/data/test/soilDb.sqlite"
 
 # == delete csv's in directory
-# TODO: config -- implement user option to delete all csv's in output directory
+# TODO: config file --- implement user option to delete all csv's in output directory
 
 
 # == db fields
