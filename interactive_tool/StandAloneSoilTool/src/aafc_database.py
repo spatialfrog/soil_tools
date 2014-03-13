@@ -514,22 +514,54 @@ class Db:
                 ## select sl, dominate_category, dominate_weight from (select distinct(slope) as dominate_category,sl,sum(percent) as dominate_weight from cmp32 where sl = 254001 group by slope order by count(slope) desc limit 1) as  t
                 ##sql = """select distinct(%s),count(%s) as count, sum(percent) as dominance from %s where %s = %s group by %s order by count(%s) desc""" %(dbSlcKey,column,column,tableName,dbSlcKey,slcId,column,column)
                 
-                sql = """select sl,dominate_category, dominate_weight from
-                (select distinct(%s) as dominate_category, %s, sum(%s) as dominate_weight 
-                from %s where %s = %s group by %s order by count(%s) desc limit 1) as t """ %(columnName,dbSlcKey,dbPercentKey, tableName, dbSlcKey, slcId,columnName,columnName)
+                # return 2 rows, first = dominate; second if present if sub-dominate
+                sql = """select sl,dominate_category, dominate_weight, dominate_count, sub_dominate_category, sub_dominate_weight from
+                (select distinct(%s) as dominate_category, %s, sum(%s) as dominate_weight, count(%s) as dominate_count, NULL as sub_dominate_category, NULL as sub_dominate_weight
+                from %s where %s = %s group by %s order by count(%s) desc limit 2) as t """ %(columnName,dbSlcKey,dbPercentKey,columnName, tableName, dbSlcKey, slcId,columnName,columnName)
                 
                 header, row = self.executeSql(sql,fieldNames=True)
                 
-                
+                # check if any rows returned
                 if len(row) == 0:
                     # no data returned
                     continue
+                # check if only dominate row returned
+                elif len(row) == 1:
+                    # only dominate present
+                    # dominate row. convert from tuple to list
+                    dominateRow = list(row[0])
+                    # remove NULL values in sub_dominate_caetgory/sub_dominate_weight
+                    dominateRow.pop()
+                    dominateRow.pop()
+                    # capture value for output
+                    results.append(dominateRow)
                 else:
-                    # only single row returned per slc. remove outer list to ensure we return a list of tuples.
-                    results.append(row[0])
-                
-            
-                #TODO: categorical calc -- show sub-dominate
+                    # dominate/sub-dominate returned
+                    # reformat two rows into single row
+                    # data returned as below
+                    ## sl    dominate_category    dominate_weight    dominate_count    sub_dominate_category    sub_dominate_weight
+                    ## 242025    A                    80                    None                    None                None                  
+                    ## 242025    C                    20                    None                    None                None                
+                    
+                    # dominate row. convert from tuple to list
+                    dominateRow = list(row[0])
+                    # remove NULL values in sub_dominate_caetgory/sub_dominate_weight/sub_dominate_count
+                    dominateRow.pop()
+                    dominateRow.pop()
+                    
+                    # move sub dominate category and weighht into first rows sub_dominate columns
+                    subDominateRow = list(row[1])
+                    # remove first value containing sl id
+                    subDominateRow.pop(0)
+                    # remove NULL values in sub_dominate_caetgory/sub_dominate_weight/sub_dominate_count
+                    subDominateRow.pop()
+                    subDominateRow.pop()
+                    subDominateRow.pop()
+                    
+                    # final data row
+                    dominateRow.extend(subDominateRow)
+                    
+                    results.append(dominateRow)
             
                 
             # return headers and results. headers will be last iteration.
