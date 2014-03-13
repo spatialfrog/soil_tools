@@ -249,14 +249,14 @@ class Db:
                         # commit transaction
                         self.conn.commit()
                         
-                        # flaf that table has been created
+                        # flag that table has been created
                         resultsTableCreated = True
-                
-                    #== insert data into table
-                    # join cmp32 sl row to snf row with soilkey match. return all columns from both tables.
-                    # cmp32 cmp id constrains to create unique row id for cmp32.
-                    sql = "insert into %s select * from %s join %s on %s.%s like '%s' and %s.%s = %s and %s.%s = %s" %(resultsTableName, cmpTableName, snfTableName, snfTableName, dbSoilKey, snfSoilKeyToUse, cmpTableName, dbSlcKey, slcId, cmpTableName, dbCmpKey, cmpId)
-                    self.executeSql(sql)
+                    else:
+                        #== insert data into table
+                        # join cmp32 sl row to snf row with soilkey match. return all columns from both tables.
+                        # cmp32 cmp id constrains to create unique row id for cmp32.
+                        sql = "insert into %s select * from %s join %s on %s.%s like '%s' and %s.%s = %s and %s.%s = %s" %(resultsTableName, cmpTableName, snfTableName, snfTableName, dbSoilKey, snfSoilKeyToUse, cmpTableName, dbSlcKey, slcId, cmpTableName, dbCmpKey, cmpId)
+                        self.executeSql(sql)
                      
                 # commit transaction
                 self.conn.commit()
@@ -394,12 +394,12 @@ class Db:
                         
                         # flaf that table has been created
                         resultsTableCreated = True
-                    
-                    #== insert data into table
-                    # join cmp sl row to snf row and slf row with soilkey and layer number match. return all columns from tables
-                    # cmp cmp id constrains to create unique row id for cmp
-                    sql = "insert into %s select * from %s join %s on %s.%s like '%s' and %s.%s = %s and %s.%s = %s join %s on %s.%s like %s.%s and %s.%s = %s" %(resultsTableName, cmpTableName, snfTableName, snfTableName, dbSoilKey, snfSoilKeyToUse, cmpTableName, dbSlcKey, slcId, cmpTableName, dbCmpKey, cmpId, slfTableName, cmpTableName, dbSoilKey, slfTableName, dbSoilKey, slfTableName, dbLayerNumberKey, snlLayerNumberToUse)
-                    self.executeSql(sql)
+                    else:
+                        #== insert data into table
+                        # join cmp sl row to snf row and slf row with soilkey and layer number match. return all columns from tables
+                        # cmp cmp id constrains to create unique row id for cmp
+                        sql = "insert into %s select * from %s join %s on %s.%s like '%s' and %s.%s = %s and %s.%s = %s join %s on %s.%s like %s.%s and %s.%s = %s" %(resultsTableName, cmpTableName, snfTableName, snfTableName, dbSoilKey, snfSoilKeyToUse, cmpTableName, dbSlcKey, slcId, cmpTableName, dbCmpKey, cmpId, slfTableName, cmpTableName, dbSoilKey, slfTableName, dbSoilKey, slfTableName, dbLayerNumberKey, snlLayerNumberToUse)
+                        self.executeSql(sql)
                      
                 # commit transaction
                 self.conn.commit()
