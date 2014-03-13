@@ -233,7 +233,6 @@ class Io:
         
         #TODO: csv writer -- ensure duplicate fields not overwritten
         #TODO: csv writer -- cleanup output names for duplicate columns should not be calc_"awh_c".txt of calc_"g_group/3".txt
-        #TODO: csv writer -- if passed data contains None, do not write
         
         # outfile name
         writeCsvFilePath = os.path.join(path,csvFilePrefixName + "_" + column + ".csv")
