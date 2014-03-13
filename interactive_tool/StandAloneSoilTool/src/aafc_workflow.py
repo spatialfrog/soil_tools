@@ -109,7 +109,11 @@ csvFilePrefix = "calculated"
 either N or A
 default if not A is N
 """
-landusePreference = "A"
+userLandusePreference = "A"
+
+# == slf layer number
+userLayerNumber = 4
+
 
 # == slc ids
 # sl from cmp to look at
@@ -191,7 +195,7 @@ tableOptionsForProcessing = utils.getTableProcessingOptions(soilTablesPresent)
 #TODO: gui -- show user avaiable table options to select
 
 # user selection from gui for table(s) to work with
-userTableSelection = 0
+userTableSelection = 2
 
 # user selection for table to use for column calculation
 if userTableSelection == 0:
@@ -201,12 +205,12 @@ if userTableSelection == 0:
 elif userTableSelection == 1:
     # join requested
     # 2 table join -- cmp - snf tables
-    db.resultsTableJoiningCmpSnfBySoilkey(slcIds, dbSlcKey=dbSlcIdKey, dbCmpKey=dbCmpKey, dbSoilKey=dbSoilKey, cmpTableName="cmp", snfTableName="snf", landuse=landusePreference, writeTestCsv=False, writeTestCsvDirectory=None)
+    db.resultsTableJoiningCmpSnfBySoilkey(slcIds, dbSlcKey=dbSlcIdKey, dbCmpKey=dbCmpKey, dbSoilKey=dbSoilKey, cmpTableName="cmp", snfTableName="snf", landuse=userLandusePreference, writeTestCsv=False, writeTestCsvDirectory=None)
     calculationTableName = db.joinTableName
     
 elif userTableSelection == 2:
     # 3 table join -- cmp - snf - slf
-    db.resultsTableJoiningCmpSnfSlfBySoilkey(slcIds, dbSlcKey=dbSlcIdKey, dbCmpKey=dbCmpKey, dbSoilKey=dbSoilKey, dbLayerNumberKey=dbLayerNumberKey, cmpTableName="cmp", snfTableName="snf", slfTableName="slf", landuse=landusePreference, layerNumber=dbLayerNumberKey)
+    db.resultsTableJoiningCmpSnfSlfBySoilkey(slcIds, dbSlcKey=dbSlcIdKey, dbCmpKey=dbCmpKey, dbSoilKey=dbSoilKey, dbLayerNumberKey=dbLayerNumberKey, cmpTableName="cmp", snfTableName="snf", slfTableName="slf", landuse=userLandusePreference, layerNumber=userLayerNumber)
     calculationTableName = db.joinTableName
     
 # get fields present from user option for tables requested to work with
@@ -215,7 +219,7 @@ fieldsPresent = db.getTableFieldNames(calculationTableName)
 #TODO: gui -- show all fields that can be selected. must quote name as '"name"'
 
 # get user selected field for calculation
-calculationColumnName = '"slope"'
+calculationColumnName = '"domsand"'
 
 #===== process field
 # warn user process may take several minutes
