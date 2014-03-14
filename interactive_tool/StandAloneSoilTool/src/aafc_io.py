@@ -279,7 +279,7 @@ class Io:
                 file_open.writeline(writeRow)
         
     
-    def readConfigFile(self, scriptDirectory, name="config.txt"):
+    def readConfigFile(self, scriptDirectory, name):
         """
         purpose:
         read configuration file and return mapping of key value pairs
