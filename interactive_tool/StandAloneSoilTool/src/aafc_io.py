@@ -250,10 +250,10 @@ class Io:
                 # data contains 1:n list/tuples
                 f_writer.writerow(e)
 
-    def writeConfigFile(self, scriptDirectory, **kargs):
+    def writeConfigFile(self, scriptDirectory, data):
         """
         purpose:
-        write new config file holding common values that don't change much
+        write new config file holding common values that don't change much. expects a mapping to be passed in.
         
         notes:
         accepts mapping of key value pairs
@@ -274,7 +274,7 @@ class Io:
         
         # write file
         with open(filePath,"w") as file_open:
-            for k,v in kargs.items():
+            for k,v in data.items():
                 writeRow = "%s:%s\n" %(k,v)
                 file_open.writeline(writeRow)
         
