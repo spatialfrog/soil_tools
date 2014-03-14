@@ -155,112 +155,117 @@ print configFileParameters
 # ========= set high level variables
 # full path to spatialite db
 inSoilDbPath = os.path.join(sqliteDbPath, sqliteDbName + ".sqlite")
+
  
 # ========== create class instances
 # get path to temp directory
 tempSystemDirectoryPath = utils.determineSystemTempDirectory()
  
 # class instance of io
-io = inout.Io(inSoilDbPath, tempSystemDirectoryPath)
+print inSoilDbPath
+print tempSystemDirectoryPath
+io = inout.Io(inSoilDbPath=inSoilDbPath, tempSystemDirectoryPath=tempSystemDirectoryPath)
  
 #========== create or use existing soil db
 if useExistingDb:
     # use existing db
-         
+          
     # check path provided exists
     status = utils.checkFileExits(existingDbPath)
     if not status:
         # file path incorrect
         utils.communicateWithUserInQgis("DB path supplied is incorrect. Stopping process.",level="CRITICAL")
-        sys.exit()
-     
+        print "**** issue"
+        #sys.exit()
+      
 else:
     # create new db
-     
+      
     # validate user input
     utils.validateUserInput(cmpDbfPath, snfDbfPath, slfDbfPath)
-     
+      
     # get mapping of soil names to use for db from dbf file name paths
     tableNamesToDbfPaths = utils.getTableNamesToPathFromDbfPaths(cmpDbfPath, snfDbfPath, slfDbfPath)
-     
+      
     # inform user that db creation is about to start
     utils.communicateWithUserInQgis("Creating new db...",level="INFO", messageExistanceDuration=4)    
-     
+      
     # remove existing db if user provides same name
     utils.deleteFile(os.path.join(sqliteDbPath, sqliteDbName))
- 
+  
     #=== create db and load with passed dbf paths
     # create new db
     loadStatus = io.createNewDb(tableNamesToDbfPaths)
     if not loadStatus:
         # issue loading layers qith qgis api
         utils.communicateWithUserInQgis("Problem loading/processing user dbf files into spatialdb. Is dbf okay? Stopping processing!", level="CRITICAL", messageExistanceDuration=10)
-        sys.exit()
-     
+        print "----- issue"
+        #sys.exit()
+      
     # create database class instance
     # db must exist before sqlite connection can exit
     db = database.Db(inSoilDbPath, tempSystemDirectoryPath)
- 
+  
     # change initial loaded cmp table name from db name to "cmp"
     db.updateDbTableName("cmp")
- 
- 
+  
+  
 #========== Working with db
- 
+  
 # list of soil tables present in db
 soilTablesPresent = db.getSoilTablesListing()
- 
+  
 # user determines what tables they want to work with
 tableOptionsForProcessing = utils.getTableProcessingOptions(soilTablesPresent)
- 
+  
 #TODO: gui -- show user avaiable table options to select
- 
+  
 # user selection from gui for table(s) to work with
 userTableSelection = 0
- 
+  
 # user selection for table to use for column calculation
 if userTableSelection == 0:
     # no join. cmp table
     calculationTableName = "cmp"
-     
+      
 elif userTableSelection == 1:
     # join requested
     # 2 table join -- cmp - snf tables
     db.resultsTableJoiningCmpSnfBySoilkey(slcIds, dbSlcKey=dbSlcIdKey, dbCmpKey=dbCmpKey, dbSoilKey=dbSoilKey, cmpTableName="cmp", snfTableName="snf", landuse=userLandusePreference, writeTestCsv=False, writeTestCsvDirectory=None)
     calculationTableName = db.joinTableName
-     
+      
 elif userTableSelection == 2:
     # 3 table join -- cmp - snf - slf
     db.resultsTableJoiningCmpSnfSlfBySoilkey(slcIds, dbSlcKey=dbSlcIdKey, dbCmpKey=dbCmpKey, dbSoilKey=dbSoilKey, dbLayerNumberKey=dbLayerNumberKey, cmpTableName="cmp", snfTableName="snf", slfTableName="slf", landuse=userLandusePreference, layerNumber=userLayerNumber)
     calculationTableName = db.joinTableName
-     
+      
 # get fields present from user option for tables requested to work with
 fieldsPresent = db.getTableFieldNames(calculationTableName)
- 
+  
 #TODO: gui -- show all fields that can be selected. must quote name as '"name"'
- 
+  
 # get user selected field for calculation
 calculationColumnName = '"slope"'
- 
+  
 #===== process field
 # warn user process may take several minutes
 message = "Calculating column %s may take several minutes" % (calculationColumnName)
 utils.communicateWithUserInQgis(message,messageExistanceDuration=10)
- 
+  
 headers, results = db.calculateField(slcIds, dbSlcKey=dbSlcIdKey, tableName=calculationTableName, columnName=calculationColumnName, dbPercentKey=dbPercentKey)
 io.writeCsvFile(calculationColumnName, headers, results, outDirectory, csvFilePrefixName=csvFilePrefix)
- 
- 
+  
+  
 # inform user processing finished
 msg = "Finished processing column %s. Find output CSV in directory %s" %(calculationColumnName, outDirectory)
 utils.communicateWithUserInQgis(msg, messageExistanceDuration=10)
- 
-     
-     
- 
+  
+      
+      
+  
 print "========= done ========"
 # clean up
 # utils.cleanUp(db.conn)
- 
+  
 #TODO: remove -- when plugin built. no longer required to clean up system path
 sys.path.pop()
