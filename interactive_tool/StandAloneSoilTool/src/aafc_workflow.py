@@ -35,95 +35,74 @@ import aafc_gui as gui
 
 #TODO: error checking --- ensure it;'s robust and places where failure could occur delat with
 
+def configDefaultFileSettings():
+    """
+    purpose:
+    provide default config file settings if config missing
+    
+    returns:
+    dict of key value pairs to be written to disk
+    """
+    
+    configSettings = {}
+    
+    # dbf paths
+    configSettings["cmpDbfPath"] = "user supplied"
+    configSettings["snfDbfPath"] = "user supplied"
+    configSettings["slfDbfPath"] = "user supplied"
+    
+    # db 
+    configSettings["sqliteDbName"] = "soilDb"
+    configSettings["sqliteDbPath"] = "user supplied"
+    
+    configSettings["useExistingDb"] = False
+    configSettings["existingDbPath"] = "user supplied"
+    
+    # clean up
+    configSettings["removeCurrentCsvs"] = True
+    
+    #= db key column fields. used for joining and supporting queries 
+    # slc id key in cmp table
+    configSettings["dbSlcIdKey"] = "sl"
+    # soil key or soil map key used to link tables
+    configSettings["dbSoilKey"] = "soilkey"
+    # cmp percent column
+    configSettings["dbPercentKey"] = "percent"
+    # cmp column representing the individual component fields within an slc id
+    configSettings["dbCmpKey"] = "cmp"
+    # slf column representing layer number
+    configSettings["dbLayerNumberKey"] = "layer_no"
+    
+    #= csv
+    # write directory
+    configSettings["outDirectory"] = "user supplied"
+    # prefix for files. user determined
+    configSettings["csvFilePrefix"] = "calculated"
+    
+    #= soil preferences
+    # snf land use type. either A/N; agriculture or non-argiculture
+    configSettings["userLandusePreference"] = "A"
+    # slf layer number
+    configSettings["userLayerNumber"] = 4
+    
+    
+    return configSettings
+
+# check if config file exists. will be found in plugin script directory
+
+
+
 #TODO: config file --- check if file exists, if not then write initial config using stored default key/values
 #TODO: config file --- write dict to store all keys with default values where applicable
 
 # ========= inputs to be set via pyqt4 gui
-"""
-will be passed via pyqt4 gui
-"""
-# == input paths to dbf's
-# cmp dbf to be converted. * must always be passed if not then quit!
-cmpDbfPath = r"/Users/drownedfrog/Projects/Contracts/AAFC/dec2013_mar2014_tool_dev/data/Soil/SLC-fordistribution/cmp32.dbf"
-# snf dbf. landuse table.
-snfDbfPath = r"/Users/drownedfrog/Projects/Contracts/AAFC/dec2013_mar2014_tool_dev/data/Soil/SLC-fordistribution/snf32.dbf"
-# slf dbf. layer table.
-slfDbfPath = r"/Users/drownedfrog/Projects/Contracts/AAFC/dec2013_mar2014_tool_dev/data/Soil/SLC-fordistribution/slf32.dbf"
-
-# == output main db name & path
-"""
-single spatialite db from cmp dbf; this table is primary table.
-then add additional dbf's as new tables.
-"""
-# output spatialite db. ogr will add extension.
-sqliteDbName = "soilDb"
-sqliteDbPath = "/Users/drownedfrog/Projects/Contracts/AAFC/dec2013_mar2014_tool_dev/data/test/"
 
 
-# =========== configuration options.
-"""
-options user can set and then use run to run.
-ie. overwrite files, primary key of tables, default name of csv etc
-"""
-# == use existing db
-useExistingDb = False
-existingDbPath = "/Users/drownedfrog/Projects/Contracts/AAFC/dec2013_mar2014_tool_dev/data/test/soilDb.sqlite"
 
-# == delete csv's in directory
 # TODO: config file --- implement user option to delete all csv's in output directory
 
 
-# == db fields
-"""
-field names used for linking; primary/foreign key names
-"""
-# what is field name in cmp table to define slc id
-dbSlcIdKey = "sl"
 
-# what field defines soilkey
-dbSoilKey = "soilkey"
-
-# what field reflects percent in cmp
-dbPercentKey = "percent"
-
-# what field in cmp table is cmp field. integer field listing unique id
-dbCmpKey = "cmp"
-
-# what field in snl table is layer_no field.
-dbLayerNumberKey = "layer_no"
-
-
-
-# == output directory for csv
-"""
-could be different than where db is placed
-"""
-outDirectory = "/Users/drownedfrog/Projects/Contracts/AAFC/dec2013_mar2014_tool_dev/data/test/"
-
-
-# == csv prefix name for file to be created
-"""
-default will be calculated
-csv name will be prefixed by user supplied name. remainder of name derived from column
-"""
-csvFilePrefix = "calculated"
-
-# == snf landuse preference
-"""
-either N or A
-default if not A is N
-"""
-userLandusePreference = "A"
-
-# == slf layer number
-userLayerNumber = 4
-
-
-# == slc ids
-# sl from cmp to look at
-# 974040 -- exact tie
-# 972018 -- 3 values
-# 615009 -- 4 unique values + A/N options
 
 slcIds = [974040, 972018, 615009, 242025, 376001, 242021]
 
