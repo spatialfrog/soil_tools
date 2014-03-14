@@ -33,8 +33,24 @@ import aafc_database as database
 import aafc_gui as gui
 
 
+# slc ids to process
+slcIds = [974040, 972018, 615009, 242025, 376001, 242021]
+# name of table for calculating numeric/categorical
+calculationTableName = ""
+calculationColumnName = ""
+
+# config file name
+configFileName = "config.txt"
+
+# script launch directory
+scriptDirectory = os.path.dirname((os.path.realpath(sys.argv[0])))
+
 #TODO: error checking --- ensure it;'s robust and places where failure could occur delat with
 
+# create utility class instance
+utils = utilities.Utils(iface)
+
+# default configuration settings
 def configDefaultFileSettings():
     """
     purpose:
@@ -88,6 +104,7 @@ def configDefaultFileSettings():
     
     return configSettings
 
+print "wow"
 # check if config file exists. will be found in plugin script directory
 
 
@@ -96,29 +113,27 @@ def configDefaultFileSettings():
 #TODO: config file --- write dict to store all keys with default values where applicable
 
 # ========= inputs to be set via pyqt4 gui
+configFileStatus = utils.checkFileExits(os.path.join(scriptDirectory,configFileName))
 
+# check if configuration file present in root of python script
+if not configFileStatus:
+    # missing file
+    # write new config file
+    defaultConfig = configDefaultFileSettings()
+    inout.Io.writeConfigFile(scriptDirectory, defaultConfig)
+
+# read configuration file found
+configFileParameters = inout.Io.readConfigFile(scriptDirectory, configFileName)
 
 
 # TODO: config file --- implement user option to delete all csv's in output directory
 
 
-
-
-slcIds = [974040, 972018, 615009, 242025, 376001, 242021]
-
-
 # ========= set high level variables
 # full path to spatialite db
-inSoilDbPath = os.path.join(sqliteDbPath, sqliteDbName + ".sqlite")
-
-# name of table for calculating numeric/categorical
-calculationTableName = ""
-calculationColumnName = ""
+inSoilDbPath = os.path.join(sqliteDbPath=sqliteDbPath, sqliteDbName=sqliteDbName + ".sqlite")
 
 # ========== create class instances
-# create utility class instance
-utils = utilities.Utils(iface)
-
 # get path to temp directory
 tempSystemDirectoryPath = utils.determineSystemTempDirectory()
 
