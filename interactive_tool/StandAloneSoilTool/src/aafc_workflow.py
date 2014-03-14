@@ -63,16 +63,16 @@ def configDefaultFileSettings():
     configSettings = {}
     
     # dbf paths
-    configSettings["cmpDbfPath"] = "user supplied"
-    configSettings["snfDbfPath"] = "user supplied"
-    configSettings["slfDbfPath"] = "user supplied"
+    configSettings["cmpDbfPath"] = None
+    configSettings["snfDbfPath"] = None
+    configSettings["slfDbfPath"] = None
     
     # db 
     configSettings["sqliteDbName"] = "soilDb"
-    configSettings["sqliteDbPath"] = "user supplied"
+    configSettings["sqliteDbPath"] = None
     
     configSettings["useExistingDb"] = False
-    configSettings["existingDbPath"] = "user supplied"
+    configSettings["existingDbPath"] = None
     
     # clean up
     configSettings["removeCurrentCsvs"] = True
@@ -91,7 +91,7 @@ def configDefaultFileSettings():
     
     #= csv
     # write directory
-    configSettings["outDirectory"] = "user supplied"
+    configSettings["outDirectory"] = None
     # prefix for files. user determined
     configSettings["csvFilePrefix"] = "calculated"
     
@@ -126,6 +126,82 @@ if not configFileStatus:
 configFileParameters = inout.Io.readConfigFile(scriptDirectory, configFileName)
 
 #TODO: config file --- critical -- check config file for correct values and if missing. must stop if issue and inform user
+
+# extract config parameter values
+cmpDbfPath = configFileParameters.get("cmpDbfPath")
+snfDbfPath = configFileParameters.get("snfDbfPath")
+# slf dbf. layer table.
+slfDbfPath = r"/Users/drownedfrog/Projects/Contracts/AAFC/dec2013_mar2014_tool_dev/data/Soil/SLC-fordistribution/slf32.dbf"
+
+# == output main db name & path
+"""
+single spatialite db from cmp dbf; this table is primary table.
+then add additional dbf's as new tables.
+"""
+# output spatialite db. ogr will add extension.
+sqliteDbName = "soilDb"
+sqliteDbPath = "/Users/drownedfrog/Projects/Contracts/AAFC/dec2013_mar2014_tool_dev/data/test/"
+
+# =========== configuration options.
+"""
+options user can set and then use run to run.
+ie. overwrite files, primary key of tables, default name of csv etc
+"""
+# == use existing db
+useExistingDb = False
+existingDbPath = "/Users/drownedfrog/Projects/Contracts/AAFC/dec2013_mar2014_tool_dev/data/test/soilDb.sqlite"
+
+# == delete csv's in directory
+# TODO: config file --- implement user option to delete all csv's in output directory
+
+
+# == db fields
+"""
+field names used for linking; primary/foreign key names
+"""
+# what is field name in cmp table to define slc id
+dbSlcIdKey = "sl"
+
+# what field defines soilkey
+dbSoilKey = "soilkey"
+
+# what field reflects percent in cmp
+dbPercentKey = "percent"
+
+# what field in cmp table is cmp field. integer field listing unique id
+dbCmpKey = "cmp"
+
+# what field in snl table is layer_no field.
+dbLayerNumberKey = "layer_no"
+
+
+
+# == output directory for csv
+"""
+could be different than where db is placed
+"""
+outDirectory = "/Users/drownedfrog/Projects/Contracts/AAFC/dec2013_mar2014_tool_dev/data/test/"
+
+
+# == csv prefix name for file to be created
+"""
+default will be calculated
+csv name will be prefixed by user supplied name. remainder of name derived from column
+"""
+csvFilePrefix = "calculated"
+
+# == snf landuse preference
+"""
+either N or A
+default if not A is N
+"""
+userLandusePreference = "A"
+
+# == slf layer number
+userLayerNumber = 4
+
+
+
 
 # TODO: config file --- implement user option to delete all csv's in output directory
 
