@@ -301,6 +301,13 @@ class Io:
             for row in rows:
                 # remove eol/whitespace ad split on colon
                 k,v = row.strip().split(":")
+                # test and convert types
+                if v == "True":
+                    v = True
+                elif v == "False":
+                    v = False
+                elif v.isdigit():
+                    v = int(v)
                 # add to mapping
                 configData[k] = v
         
