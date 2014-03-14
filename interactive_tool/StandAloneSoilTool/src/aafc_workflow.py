@@ -102,6 +102,8 @@ def configDefaultFileSettings():
     # slf layer number
     configSettings["userLayerNumber"] = 4
     
+    #= table(s) to be use. default is cmp
+    configSettings["userTableSelection"] = 0
     
     return configSettings
 
@@ -145,7 +147,7 @@ outDirectory = configFileParameters.get("outDirectory", None)
 csvFilePrefix = configFileParameters.get("csvFilePrefix", None)
 userLandusePreference = configFileParameters.get("userLandusePreference", None)
 userLayerNumber = configFileParameters.get("userLayerNumber", None)
-
+userTableSelection = configFileParameters.get("userTableSelection", None)
 
 print configFileParameters
 
