@@ -223,8 +223,7 @@ class Utils:
             elif "slf" in name.lower():
                 tableOptions[2] = "cmp - snf - slf"
         
-        return tableOptions 
-        
+        return tableOptions  
         
             
     
