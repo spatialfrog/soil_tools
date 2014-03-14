@@ -276,7 +276,7 @@ class Io:
         with open(filePath,"w") as file_open:
             for k,v in data.items():
                 writeRow = "%s:%s\n" %(k,v)
-                file_open.writeline(writeRow)
+                file_open.write(writeRow)
         
     
     def readConfigFile(self, scriptDirectory, name):
