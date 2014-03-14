@@ -125,6 +125,7 @@ if not configFileStatus:
 # read configuration file found
 configFileParameters = inout.Io.readConfigFile(scriptDirectory, configFileName)
 
+#TODO: config file --- critical -- check config file for correct values and if missing. must stop if issue and inform user
 
 # TODO: config file --- implement user option to delete all csv's in output directory
 
