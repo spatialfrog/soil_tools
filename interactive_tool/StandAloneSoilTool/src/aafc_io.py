@@ -14,13 +14,13 @@ class Io:
     """
     handles all io
     """
-
-    def __init__(self, sqliteDbPath, tmpSystemDirectory):
+    
+    def __init__(self, **kwargs):
         # db path
-        self.sqliteDbPath = sqliteDbPath
+        self.sqliteDbPath = kwargs.get("sqliteDbPath", None)
 
         # temp system directory
-        self.tmpDirectory = tmpSystemDirectory
+        self.tmpDirectory = kwargs.get("tmpSystemDirectory", None)
 
 
     def createNewDb(self, namesToPaths):
