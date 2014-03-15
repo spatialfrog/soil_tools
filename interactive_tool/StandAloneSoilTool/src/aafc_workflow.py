@@ -176,7 +176,8 @@ if useExistingDb:
       
 else:
     # create new db
-      
+    
+    #TODO: validate -- check return status and inform user/quite script without killing qgis in process  
     # validate user input
     utils.validateUserInput(cmpDbfPath, snfDbfPath, slfDbfPath)
       
