@@ -16,11 +16,15 @@ class Io:
     """
     
     def __init__(self, **kwargs):
+        
+        print "Io kwargs ", kwargs
         # db path
-        self.sqliteDbPath = kwargs.get("sqliteDbPath", None)
+        self.sqliteDbPath = kwargs.get("inSoilDbPath", None)
 
         # temp system directory
-        self.tmpDirectory = kwargs.get("tmpSystemDirectory", None)
+        self.tmpDirectory = kwargs.get("tempSystemDirectoryPath", None)
+        
+        print "Io class: dbPath is ", self.sqliteDbPath
 
 
     def createNewDb(self, namesToPaths):
