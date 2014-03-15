@@ -146,9 +146,6 @@ csvFilePrefix = configFileParameters.get("csvFilePrefix", None)
 userLandusePreference = configFileParameters.get("userLandusePreference", None)
 userLayerNumber = configFileParameters.get("userLayerNumber", None)
 userTableSelection = configFileParameters.get("userTableSelection", None)
-
-
-#TODO: config file --- implement user option to delete all csv's in output directory
  
  
 # ========= set high level variables
