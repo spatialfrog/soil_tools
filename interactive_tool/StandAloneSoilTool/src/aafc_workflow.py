@@ -107,6 +107,10 @@ def configDefaultFileSettings():
     
     return configSettings
 
+print "wow"
+# check if config file exists. will be found in plugin script directory
+
+
 
 #TODO: config file --- check if file exists, if not then write initial config using stored default key/values
 #TODO: config file --- write dict to store all keys with default values where applicable
