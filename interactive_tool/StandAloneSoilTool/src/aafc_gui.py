@@ -11,9 +11,17 @@ from qgis.utils import *
 
 def getFilePathDialog(searchDirectory, filter="dBASE (*.dbf)"):
         """
-        present standard qt file dialog. user selects single file.
-
-        returns full file path.
+        purpose:
+        allow user to select file from computer for use in script
+        
+        how:
+        pyqt4
+        
+        notes:
+        filter is used by script to modify what user may search for
+        
+        returns:
+        full path to file
         """
 
         # TODO: gui -- provide enumeration similar to communicateWithUserInQgis for filter type. only permit dbf & shp
@@ -37,7 +45,7 @@ def getUserSettings():
     pass
 
 
-filePath = getFilePathDialog("/Users/drownedfrog/tmp")
+filePath = getFilePathDialog("/Users/drownedfrog/Projects/Contracts/AAFC/dec2013_mar2014_tool_dev/data/test", filter="Document (*.sqlite)")
 
 if not filePath:
     print "error"
