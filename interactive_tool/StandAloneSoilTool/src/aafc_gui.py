@@ -24,8 +24,6 @@ def getFilePathDialog(searchDirectory, filter="dBASE (*.dbf)"):
         full path to file
         """
 
-        # TODO: gui -- provide enumeration similar to communicateWithUserInQgis for filter type. only permit dbf & shp
-
         # get full path to file
         filepath = QFileDialog.getOpenFileNameAndFilter(iface.mainWindow(),"Please choose a file to open...", searchDirectory, filter, "Filter list for selecting files from a dialog box")
 
