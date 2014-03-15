@@ -9,7 +9,7 @@ from qgis.gui import *
 from qgis.utils import *
 
 
-def getFilePathDialog(searchDirectory, filter="dBASE (*.dbf)"):
+def getFilePathFromDialog(searchDirectory, filter="dBASE (*.dbf)"):
         """
         purpose:
         allow user to select file from computer for use in script
@@ -43,7 +43,7 @@ def getUserSettings():
     pass
 
 
-filePath = getFilePathDialog("/Users/drownedfrog/Projects/Contracts/AAFC/dec2013_mar2014_tool_dev/data/test", filter="Document (*.sqlite)")
+filePath = getFilePathFromDialog("/Users/drownedfrog/Projects/Contracts/AAFC/dec2013_mar2014_tool_dev/data/test", filter="Document (*.sqlite)")
 
 if not filePath:
     print "error"
