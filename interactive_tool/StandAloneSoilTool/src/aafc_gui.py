@@ -1,5 +1,7 @@
 """
+#TODO: gui -- update doc string
 gui related tasks.
+
 """
 
 from PyQt4.QtCore import *
