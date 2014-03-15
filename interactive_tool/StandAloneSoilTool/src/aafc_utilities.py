@@ -187,6 +187,9 @@ class Utils:
         for soilName in soilNames:
             # process supplied file paths
             for path in params:
+                # skip None
+                if path == None:
+                    continue
                 # get file name
                 fileName = os.path.basename(path)
                 if soilName in fileName.lower():
