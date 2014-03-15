@@ -157,7 +157,7 @@ print configFileParameters
 # ========= set high level variables
 # full path to spatialite db
 inSoilDbPath = os.path.join(sqliteDbPath, sqliteDbName + ".sqlite")
-
+print "inSoilDbPath is ", inSoilDbPath
  
 # ========== create class instances
 # get path to temp directory
@@ -188,6 +188,7 @@ else:
       
     # get mapping of soil names to use for db from dbf file name paths
     tableNamesToDbfPaths = utils.getTableNamesToPathFromDbfPaths(cmpDbfPath, snfDbfPath, slfDbfPath)
+    print "tableNamesTpDbfPaths is ", tableNamesToDbfPaths
       
     # inform user that db creation is about to start
     utils.communicateWithUserInQgis("Creating new db...",level="INFO", messageExistanceDuration=4)    
@@ -198,6 +199,7 @@ else:
     #=== create db and load with passed dbf paths
     # create new db
     loadStatus = io.createNewDb(tableNamesToDbfPaths)
+    print "load status is ", loadStatus
     if not loadStatus:
         # issue loading layers qith qgis api
         utils.communicateWithUserInQgis("Problem loading/processing user dbf files into spatialdb. Is dbf okay? Stopping processing!", level="CRITICAL", messageExistanceDuration=10)
