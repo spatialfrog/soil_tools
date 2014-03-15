@@ -107,9 +107,6 @@ def configDefaultFileSettings():
     
     return configSettings
 
-print "wow"
-# check if config file exists. will be found in plugin script directory
-
 
 
 #TODO: config file --- check if file exists, if not then write initial config using stored default key/values
@@ -117,6 +114,7 @@ print "wow"
 
 # ========= inputs to be set via pyqt4 gui
 configFileStatus = utils.checkFileExits(os.path.join(scriptDirectory,configFileName))
+print "configFileStatus ", configFileStatus
 
 # check if configuration file present in root of python script
 if not configFileStatus:
@@ -133,7 +131,7 @@ configFileParameters = inout.Io().readConfigFile(scriptDirectory, configFileName
 # ========== extract config parameter values
 cmpDbfPath = configFileParameters.get("cmpDbfPath", None)
 snfDbfPath = configFileParameters.get("snfDbfPath", None)
-slfDbfPath = configFileParameters.get("slfDbPath", None)
+slfDbfPath = configFileParameters.get("slfDbfPath", None)
 sqliteDbName = configFileParameters.get("sqliteDbName", None)
 sqliteDbPath = configFileParameters.get("sqliteDbPath", None)
 useExistingDb = configFileParameters.get("useExistingDb", None)
@@ -149,7 +147,6 @@ userLandusePreference = configFileParameters.get("userLandusePreference", None)
 userLayerNumber = configFileParameters.get("userLayerNumber", None)
 userTableSelection = configFileParameters.get("userTableSelection", None)
 
-print configFileParameters
 
 #TODO: config file --- implement user option to delete all csv's in output directory
  
@@ -157,15 +154,12 @@ print configFileParameters
 # ========= set high level variables
 # full path to spatialite db
 inSoilDbPath = os.path.join(sqliteDbPath, sqliteDbName + ".sqlite")
-print "inSoilDbPath is ", inSoilDbPath
  
 # ========== create class instances
 # get path to temp directory
 tempSystemDirectoryPath = utils.determineSystemTempDirectory()
  
 # class instance of io
-print inSoilDbPath
-print tempSystemDirectoryPath
 io = inout.Io(inSoilDbPath=inSoilDbPath, tempSystemDirectoryPath=tempSystemDirectoryPath)
  
 #========== create or use existing soil db
@@ -188,7 +182,6 @@ else:
       
     # get mapping of soil names to use for db from dbf file name paths
     tableNamesToDbfPaths = utils.getTableNamesToPathFromDbfPaths(cmpDbfPath, snfDbfPath, slfDbfPath)
-    print "tableNamesTpDbfPaths is ", tableNamesToDbfPaths
       
     # inform user that db creation is about to start
     utils.communicateWithUserInQgis("Creating new db...",level="INFO", messageExistanceDuration=4)    
@@ -199,7 +192,6 @@ else:
     #=== create db and load with passed dbf paths
     # create new db
     loadStatus = io.createNewDb(tableNamesToDbfPaths)
-    print "load status is ", loadStatus
     if not loadStatus:
         # issue loading layers qith qgis api
         utils.communicateWithUserInQgis("Problem loading/processing user dbf files into spatialdb. Is dbf okay? Stopping processing!", level="CRITICAL", messageExistanceDuration=10)
