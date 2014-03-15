@@ -123,7 +123,17 @@ class Utils:
         returns
         tuple consisting of message and status of True/False
         """
-            
+        
+        #TODO: validate -- input further from config file
+        
+        # only chek what is passed
+        # check type of table join required; this will drive everything thing else. must have certain fields if 2 table join
+        # extension dbf present in paths
+        # values present for keys required
+        # no odd characters in filenames
+        # pass back first error and we stop in return code
+        #?? sub methods for each type of table config?
+        
         cmpDbfPresent = False
         
         # process all passed parameters
