@@ -220,9 +220,6 @@ tableOptionsForProcessing = utils.getTableProcessingOptions(soilTablesPresent)
   
 #TODO: gui -- show user avaiable table options to select
   
-# user selection from gui for table(s) to work with
-userTableSelection = 0
-  
 # user selection for table to use for column calculation
 if userTableSelection == 0:
     # no join. cmp table
