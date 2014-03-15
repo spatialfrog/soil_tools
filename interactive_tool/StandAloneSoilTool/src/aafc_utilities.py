@@ -184,18 +184,24 @@ class Utils:
         # mapping of found soil names to full dbf path
         nameToFilePath = {}
         
+        print "*** utilise params is ", params
+        
         for soilName in soilNames:
             # process supplied file paths
             for path in params:
+                print "utilities: getTableNames: processing soil name %s: params %s " %(soilName, path)
                 # skip None
                 if path == None:
                     continue
                 # get file name
                 fileName = os.path.basename(path)
+                print "filename is ", fileName
                 if soilName in fileName.lower():
                     # match found
+                    print "match found"
                     nameToFilePath[soilName] = path
         
+        print "utilities: getTableNames: returning mapping containing ", nameToFilePath
         return nameToFilePath
     
     
