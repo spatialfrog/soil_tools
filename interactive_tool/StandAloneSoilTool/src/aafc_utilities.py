@@ -128,6 +128,9 @@ class Utils:
         
         # process all passed parameters
         for item in params:
+            # do not process None
+            if item == None:
+                continue
             # is file path
             if os.path.isfile(item):
                 # check valid path
