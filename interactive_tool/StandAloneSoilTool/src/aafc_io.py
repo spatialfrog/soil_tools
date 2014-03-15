@@ -308,6 +308,8 @@ class Io:
                     v = False
                 elif v.isdigit():
                     v = int(v)
+                elif v == "None":
+                    v = None
                 # add to mapping
                 configData[k] = v
         
