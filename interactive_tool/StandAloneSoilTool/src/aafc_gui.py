@@ -19,14 +19,14 @@ def getFilePathDialog(searchDirectory, filter="dBASE (*.dbf)"):
         # TODO: gui -- provide enumeration similar to communicateWithUserInQgis for filter type. only permit dbf & shp
 
         # get full path to file
-        filepath,filter = QFileDialog.getOpenFileNameAndFilter(iface.mainWindow(),"Please choose a file to open...", searchDirectory, filter, "Filter list for selecting files from a dialog box")
+        filepath = QFileDialog.getOpenFileNameAndFilter(iface.mainWindow(),"Please choose a file to open...", searchDirectory, filter, "Filter list for selecting files from a dialog box")
 
-        if len(filepath) == 0:
-            return None
+        if not len(filepath) == 0:
+            # QFileDialog returns tuple of path, filter used
+            # only need file path
+            return filepath[0]
         else:
-            print "error"
-            #self.communicateWithUserInQgis(filepath)
-            return filepath
+            return None
 
 
 def getUserSettings():
@@ -37,4 +37,9 @@ def getUserSettings():
     pass
 
 
-getFilePathDialog("/Users/drownedfrog/tmp")
+filePath = getFilePathDialog("/Users/drownedfrog/tmp")
+
+if not filePath:
+    print "error"
+else:
+    print filePath
