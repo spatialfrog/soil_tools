@@ -6,8 +6,8 @@
 ##sqlite_database_name=string soilDb
 ##sqlite_database_folder=folder
 ##cmp_dbf_path=file
-##slf_dbf_path=file
 ##snf_dbf_path=file
+##slf_dbf_path=file
 #===========
 
 from PyQt4.QtCore import *
@@ -55,7 +55,7 @@ io = inout.Io(inSoilDbPath=inSoilDbPath, tempSystemDirectoryPath=tempSystemDirec
 utils.validateUserInput(cmp_dbf_path, snf_dbf_path, slf_dbf_path)
   
 # get mapping of soil names to use for db from dbf file name paths
-tableNamesToDbfPaths = utils.getTableNamesToPathFromDbfPaths(cmpDbfPath, snfDbfPath, slfDbfPath)
+tableNamesToDbfPaths = utils.getTableNamesToPathFromDbfPaths(cmp_dbf_path, snf_dbf_path, slf_dbf_path)
   
 # inform user that db creation is about to start
 utils.communicateWithUserInQgis("Creating new db...",level="INFO", messageExistanceDuration=4)    
