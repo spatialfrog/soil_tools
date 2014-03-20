@@ -145,7 +145,8 @@ class Utils:
             if os.path.isfile(item):
                 # check valid path
                 if not os.path.exists(item):
-                    return ("invalid path supplied", False)
+                    msg = "invalid file path supplied for: %s" %(item)
+                    return (msg, False)
                 
                 fileName = os.path.basename(item)
                 # check if cmp supplied
@@ -154,7 +155,8 @@ class Utils:
             
             # path exits
             if not os.path.exists(item):
-                return ("invalid path supplied", False)
+                msg = "invalid directory path for: %s" %(item)
+                return (msg, False)
             
             else:
                 pass
