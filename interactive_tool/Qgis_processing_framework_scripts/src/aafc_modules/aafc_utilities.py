@@ -165,7 +165,7 @@ class Utils:
         
         if not cmpDbfPresent:
             # cmp dbf table absent
-            return ("cmp dbf missing", False)
+            return ("cmp dbf path incorrect", False)
         
         return ("user input ok", True)
 
