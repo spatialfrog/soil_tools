@@ -159,27 +159,37 @@ class Db:
         returns:
         nothing
         """
-        
+
         # user options table name
         userOptionsTable = "permittedOperations"
-        
-        # get dict values options
-        userOptions = tableOptions.values()
         
         # drop table if present
         sql = "drop table if exists %s" %(userOptionsTable)
         self.executeSql(sql)
         
-        # create new table
-        sql = "create table %s(user_options TEXT)" %(userOptionsTable)
-        self.executeSql(sql)
-        
-        # insert values into table
-        for item in userOptions:
-            sql = """insert into %s(user_options) values('%s')""" %(userOptionsTable, item)
+        # check for highest key order to create table and insert statement
+        if tableOptions.get(2,None):
+            print "processing"
+            sql = "create table %s('cmp' INTEGER, 'cmp-snf' INTEGER, 'cmp-snf-slf' INTEGER)" %(userOptionsTable)
             self.executeSql(sql)
-        self.conn.commit()
-
+            sql = "insert into %s('cmp', 'cmp-snf', 'cmp-snf-slf') values(0, 1, 2)" %(userOptionsTable)
+            self.executeSql(sql)
+            self.conn.commit()
+        elif tableOptions.get(1,None):
+            print "processing"
+            sql = "create table %s('cmp' INTEGER, 'cmp-snf' INTEGER)" %(userOptionsTable)
+            self.executeSql(sql)
+            sql = "insert into %s('cmp', 'cmp-snf') values(0, 1)" %(userOptionsTable)
+            self.executeSql(sql)
+            self.conn.commit()
+        elif tableOptions.get(0,None):
+            print "processing"
+            sql = "create table %s('cmp' INTEGER)" %(userOptionsTable)
+            self.executeSql(sql)
+            sql = "insert into %s('cmp') values(0)" %(userOptionsTable)
+            self.executeSql(sql)
+            self.conn.commit()
+          
     
     # ========== soil queries between tables
     """
