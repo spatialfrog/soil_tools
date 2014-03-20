@@ -138,6 +138,9 @@ class Utils:
         
         # process all passed parameters
         for item in params:
+            # do not process blank entries ie qgis processing framework optional value provides ""
+            if item =="":
+                continue
             # do not process None
             if item == None:
                 continue
@@ -152,14 +155,13 @@ class Utils:
                 # check if cmp is in filename
                 if "cmp" in fileName.lower():
                     cmpDbfPresent = True
-                    continue
-            
+                
             # directory path exits
-            if not os.path.exists(item):
+            if os.path.exists(item):
+                continue
+            else:
                 msg = "invalid directory path for: %s" %(item)
                 return (msg, False)
-            else:
-                pass
         
         if not cmpDbfPresent:
             # cmp dbf table absent
