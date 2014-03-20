@@ -66,36 +66,36 @@ import aafc_database as database
 # create utility class instance. pass qgis supplied iface
 utils = utilities.Utils(iface)
 
+
 # ========= set high level variables
 # full path to spatialite db
 inSoilDbPath = os.path.join(sqlite_database_folder, sqlite_database_name + ".sqlite")
- 
+  
 # ========== create class instances
 # get path to temp directory
 tempSystemDirectoryPath = utils.determineSystemTempDirectory()
- 
+  
 # class instance of io
 io = inout.Io(inSoilDbPath=inSoilDbPath, tempSystemDirectoryPath=tempSystemDirectoryPath)
-
-
+ 
+ 
 #========== create new db 
 # validate user input. returns (message, boolean)
-msg, status = utils.validateUserInput(cmp_dbf_path, snf_dbf_path, slf_dbf_path)
+msg, status = utils.validateUserInput(cmp_dbf_path, snf_dbf_path, slf_dbf_path, sqlite_database_folder)
 if not status:
     # problem with data provided
-    utils.communicateWithUserInQgis(str(msg))
-    #utils.communicateWithUserInQgis("Problem with dbf paths or generic names cmp/snf/slf missing from filenames. Stopping.",level="CRITICAL", messageExistanceDuration=15)
+    utils.communicateWithUserInQgis("Problem with either: directory path, dbf paths or generic names cmp/snf/slf missing from filenames. Stopping.",level="CRITICAL", messageExistanceDuration=15)
     raise Exception(msg)
-
+ 
 # get mapping of soil names to use for db from dbf file name paths
 tableNamesToDbfPaths = utils.getTableNamesToPathFromDbfPaths(cmp_dbf_path, snf_dbf_path, slf_dbf_path)
-  
+   
 # inform user that db creation is about to start
 utils.communicateWithUserInQgis("Creating new db...",level="INFO", messageExistanceDuration=4)    
-  
+   
 # remove existing db if user provides same name
 utils.deleteFile(os.path.join(sqlite_database_folder, sqlite_database_name))
-
+ 
 #========== create db and load with passed dbf paths
 # create new db
 loadStatus = io.createNewDb(tableNamesToDbfPaths)
@@ -103,19 +103,19 @@ if not loadStatus:
     # issue loading layers qith qgis api
     utils.communicateWithUserInQgis("Problem loading/processing user dbf files into db. Are dbf's okay? Stopping.", level="CRITICAL", messageExistanceDuration=10)
     raise Exception("Problem loading dbf's into db")
-  
+   
 # create database class instance
 # db must exist before sqlite connection can exit
 db = database.Db(inSoilDbPath, tempSystemDirectoryPath)
-
+ 
 # change initial loaded cmp table name from db name to "cmp"
 db.updateDbTableName("cmp")
-
+ 
 # report db creation success
 msg = "Db successfully created. Find in directory %s" %(sqlite_database_folder)
 utils.communicateWithUserInQgis(msg, messageExistanceDuration=10)
-
-
+ 
+ 
 #========== clean up
 # remove added aafc soil module from python path
 sys.path.pop()
