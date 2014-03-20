@@ -48,6 +48,7 @@ import os
 import sys
 import sqlite3
 
+
 # aafc module name containing submodules for soil db work
 aafcModuleName = "aafc_modules"
 
@@ -80,9 +81,13 @@ io = inout.Io(inSoilDbPath=inSoilDbPath, tempSystemDirectoryPath=tempSystemDirec
 #========== create new db
     
 #TODO: validate -- check return status and inform user/quite script without killing qgis in process  
-# validate user input
-utils.validateUserInput(cmp_dbf_path, snf_dbf_path, slf_dbf_path)
-  
+# validate user input. returns (message, boolean)
+status = utils.validateUserInput(cmp_dbf_path, snf_dbf_path, slf_dbf_path)
+if not status[1]:
+    # problem with path provided
+    utils.communicateWithUserInQgis("Problem with dbf paths or generic names cmp/snf/slf missing from filenames. Stopping",level="CRITICAL", messageExistanceDuration=15)
+    raise Exception
+
 # get mapping of soil names to use for db from dbf file name paths
 tableNamesToDbfPaths = utils.getTableNamesToPathFromDbfPaths(cmp_dbf_path, snf_dbf_path, slf_dbf_path)
   
