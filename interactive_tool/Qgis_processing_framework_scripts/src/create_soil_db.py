@@ -78,9 +78,7 @@ tempSystemDirectoryPath = utils.determineSystemTempDirectory()
 io = inout.Io(inSoilDbPath=inSoilDbPath, tempSystemDirectoryPath=tempSystemDirectoryPath)
 
 
-#========== create new db
-    
-#TODO: validate -- check return status and inform user/quite script without killing qgis in process  
+#========== create new db 
 # validate user input. returns (message, boolean)
 status = utils.validateUserInput(cmp_dbf_path, snf_dbf_path, slf_dbf_path)
 if not status[1]:
