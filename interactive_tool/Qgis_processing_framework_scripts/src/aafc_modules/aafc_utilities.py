@@ -149,15 +149,15 @@ class Utils:
                     return (msg, False)
                 
                 fileName = os.path.basename(item)
-                # check if cmp supplied
+                # check if cmp is in filename
                 if "cmp" in fileName.lower():
                     cmpDbfPresent = True
+                    continue
             
-            # path exits
+            # directory path exits
             if not os.path.exists(item):
                 msg = "invalid directory path for: %s" %(item)
                 return (msg, False)
-            
             else:
                 pass
         
