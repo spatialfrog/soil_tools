@@ -5,7 +5,7 @@ creates new spatialite database with tables that match user supplied soil dbf's
 notes:
 - designed to load upto 3 user supplied soil dbf's; cmp/snf/slf. the corresponding spatialite db will contain these tables with generic names of cmp/snf/slf if
 corresponding dbf's passed in
-- database is required to perform soil calculations provided by other python scripts
+- the cmp table is required at a minimum. cmp table is converted via qgis api to spatialite db. other dbf's exported as csv and loaded into new db.
 
 requirements:
 - designed to use QGIS 2.2 Valmeria
@@ -17,6 +17,7 @@ input:
 
 output:
 - spatialite database
+- database is required to perform soil calculations provided by other python scripts
 
 """
 
