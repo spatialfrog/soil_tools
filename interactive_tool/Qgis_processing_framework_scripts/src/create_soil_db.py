@@ -80,11 +80,12 @@ io = inout.Io(inSoilDbPath=inSoilDbPath, tempSystemDirectoryPath=tempSystemDirec
 
 #========== create new db 
 # validate user input. returns (message, boolean)
-status = utils.validateUserInput(cmp_dbf_path, snf_dbf_path, slf_dbf_path)
-if not status[1]:
-    # problem with path provided
-    utils.communicateWithUserInQgis("Problem with dbf paths or generic names cmp/snf/slf missing from filenames. Stopping.",level="CRITICAL", messageExistanceDuration=15)
-    raise Exception("Dbf data paths invalid")
+msg, status = utils.validateUserInput(cmp_dbf_path, snf_dbf_path, slf_dbf_path)
+if not status:
+    # problem with data provided
+    utils.communicateWithUserInQgis(str(msg))
+    #utils.communicateWithUserInQgis("Problem with dbf paths or generic names cmp/snf/slf missing from filenames. Stopping.",level="CRITICAL", messageExistanceDuration=15)
+    raise Exception(msg)
 
 # get mapping of soil names to use for db from dbf file name paths
 tableNamesToDbfPaths = utils.getTableNamesToPathFromDbfPaths(cmp_dbf_path, snf_dbf_path, slf_dbf_path)
