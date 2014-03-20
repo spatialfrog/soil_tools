@@ -107,10 +107,21 @@ if not loadStatus:
 # create database class instance
 # db must exist before sqlite connection can exit
 db = database.Db(inSoilDbPath, tempSystemDirectoryPath)
- 
+
+#========== db maintaince 
 # change initial loaded cmp table name from db name to "cmp"
 db.updateDbTableName("cmp")
- 
+
+# list of soil tables present in db
+soilTablesPresent = db.getSoilTablesListing()
+  
+# user determines what tables they want to work with
+tableOptionsForProcessing = utils.getTableProcessingOptions(soilTablesPresent)
+
+# create new table table to hold user options for processing. user can only work with cmp or cmp-snf or cmp-snf-slf
+# table is used when user is determining how to set up joins if requested for processing
+db.createUserTableProcessingOptions(tableOptionsForProcessing)
+
 # report db creation success
 msg = "Db successfully created. Find in directory %s" %(sqlite_database_folder)
 utils.communicateWithUserInQgis(msg, messageExistanceDuration=10)
