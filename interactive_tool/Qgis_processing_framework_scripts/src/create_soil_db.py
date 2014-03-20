@@ -19,6 +19,11 @@ output:
 - spatialite database
 - database is required to perform soil calculations provided by other python scripts
 
+by:
+richard burcher
+richardburcher@gmail.com
+2014
+
 """
 
 #==========
