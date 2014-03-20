@@ -50,6 +50,7 @@ class Db:
             # only return data
             return self.curs.fetchall()
 
+
     def convertDbResults2SimpleList(self,data, columnIndex=0):
         """
         convert db query data from list of tuples into simple list
@@ -145,6 +146,40 @@ class Db:
         
         return cleanedResults
         
+    
+    def createUserTableProcessingOptions(self, tableOptions):
+        """
+        purpose:
+        - create new table that will be used in downstream qgis script for user to select
+        what tables to use for joining
+        
+        how:
+        passed in dict values contains table formated options ie cmp, cmp-snf or cmp-snf-slf
+        
+        returns:
+        nothing
+        """
+        
+        # user options table name
+        userOptionsTable = "permittedOperations"
+        
+        # get dict values options
+        userOptions = tableOptions.values()
+        
+        # drop table if present
+        sql = "drop table if exists %s" %(userOptionsTable)
+        self.executeSql(sql)
+        
+        # create new table
+        sql = "create table %s(user_options TEXT)" %(userOptionsTable)
+        self.executeSql(sql)
+        
+        # insert values into table
+        for item in userOptions:
+            sql = """insert into %s(user_options) values('%s')""" %(userOptionsTable, item)
+            self.executeSql(sql)
+        self.conn.commit()
+
     
     # ========== soil queries between tables
     """
