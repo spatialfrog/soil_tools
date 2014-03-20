@@ -84,7 +84,7 @@ status = utils.validateUserInput(cmp_dbf_path, snf_dbf_path, slf_dbf_path)
 if not status[1]:
     # problem with path provided
     utils.communicateWithUserInQgis("Problem with dbf paths or generic names cmp/snf/slf missing from filenames. Stopping.",level="CRITICAL", messageExistanceDuration=15)
-    raise Exception
+    raise Exception("Dbf data paths invalid")
 
 # get mapping of soil names to use for db from dbf file name paths
 tableNamesToDbfPaths = utils.getTableNamesToPathFromDbfPaths(cmp_dbf_path, snf_dbf_path, slf_dbf_path)
@@ -101,7 +101,7 @@ loadStatus = io.createNewDb(tableNamesToDbfPaths)
 if not loadStatus:
     # issue loading layers qith qgis api
     utils.communicateWithUserInQgis("Problem loading/processing user dbf files into db. Are dbf's okay? Stopping.", level="CRITICAL", messageExistanceDuration=10)
-    raise Exception()
+    raise Exception("Problem loading dbf's into db")
   
 # create database class instance
 # db must exist before sqlite connection can exit
