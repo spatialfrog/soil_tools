@@ -83,7 +83,7 @@ io = inout.Io(inSoilDbPath=inSoilDbPath, tempSystemDirectoryPath=tempSystemDirec
 status = utils.validateUserInput(cmp_dbf_path, snf_dbf_path, slf_dbf_path)
 if not status[1]:
     # problem with path provided
-    utils.communicateWithUserInQgis("Problem with dbf paths or generic names cmp/snf/slf missing from filenames. Stopping",level="CRITICAL", messageExistanceDuration=15)
+    utils.communicateWithUserInQgis("Problem with dbf paths or generic names cmp/snf/slf missing from filenames. Stopping.",level="CRITICAL", messageExistanceDuration=15)
     raise Exception
 
 # get mapping of soil names to use for db from dbf file name paths
@@ -100,7 +100,7 @@ utils.deleteFile(os.path.join(sqlite_database_folder, sqlite_database_name))
 loadStatus = io.createNewDb(tableNamesToDbfPaths)
 if not loadStatus:
     # issue loading layers qith qgis api
-    utils.communicateWithUserInQgis("Problem loading/processing user dbf files into spatialdb. Is dbf okay? Stopping processing!", level="CRITICAL", messageExistanceDuration=10)
+    utils.communicateWithUserInQgis("Problem loading/processing user dbf files into db. Are dbf's okay? Stopping.", level="CRITICAL", messageExistanceDuration=10)
     raise Exception()
   
 # create database class instance
