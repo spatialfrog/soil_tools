@@ -103,9 +103,7 @@ loadStatus = io.createNewDb(tableNamesToDbfPaths)
 if not loadStatus:
     # issue loading layers qith qgis api
     utils.communicateWithUserInQgis("Problem loading/processing user dbf files into spatialdb. Is dbf okay? Stopping processing!", level="CRITICAL", messageExistanceDuration=10)
-    print "----- issue"
-    #TODO: how to exit gracefully without killing qgis
-    #sys.exit()
+    raise Exception()
   
 # create database class instance
 # db must exist before sqlite connection can exit
