@@ -1,4 +1,24 @@
-#TODO: add doc string
+"""
+purpose:
+creates new spatialite database with tables that match user supplied soil dbf's
+
+notes:
+- designed to load upto 3 user supplied soil dbf's; cmp/snf/slf. the corresponding spatialite db will contain these tables with generic names of cmp/snf/slf if
+corresponding dbf's passed in
+- database is required to perform soil calculations provided by other python scripts
+
+requirements:
+- designed to use QGIS 2.2 Valmeria
+- install soil package to .qgis2/processing directory. on windows this is usually under the user
+
+input:
+- soil dbf's
+- filename must contain the word cmp/snf or slf for the script to identify how to name the db table
+
+output:
+- spatialite database
+
+"""
 
 #==========
 # sets up gui in qgis processing framework
