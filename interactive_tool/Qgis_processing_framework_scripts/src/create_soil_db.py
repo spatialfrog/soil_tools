@@ -19,6 +19,9 @@ output:
 - spatialite database
 - database is required to perform soil calculations provided by other python scripts
 
+license:
+- gpl3
+
 by:
 richard burcher
 richardburcher@gmail.com
