@@ -115,5 +115,6 @@ msg = "Db successfully created. Find in directory %s" %(sqlite_database_folder)
 utils.communicateWithUserInQgis(msg, messageExistanceDuration=10)
 
 
+#========== clean up
 # remove added aafc soil module from python path
 sys.path.pop()
