@@ -277,14 +277,60 @@ class Utils:
             elif "slf" in name.lower():
                 tableOptions[2] = "cmp - snf - slf"
         
-        return tableOptions  
+        return tableOptions
+    
+    
+    def getQgisTableLayerFilePath(self, tableName):
+        """
+        purpose:
+        return file path to qgis db table
         
-            
+        returns:
+        file path
+        """
+        
+        # convert attribute name to qgis object using processing convience method
+        inputLayer = processing.getObject(tableName)
+
+        # get qgis data provider for layer
+        provider = inputLayer.dataProvider()
+        # get full url connection path ie dbname="some/file/db.sqlite table=some_table"
+        url = provider.dataSourceUri()
+        # split on space 
+        dbFilePath = url.split(" ")
+        # second split on '='
+        dbFilePath = dbFilePath[0]
+        # connection path
+        dbFilePath = dbFilePath.split("=")[1] 
+        
+        return dbFilePath
     
     
+    def getVectorLayerFieldValues(self,vectorLayer, fieldName):
+        """
+        purpose:
+        return all field values for vector layer using qgis processing conveince function
+        
+        notes:
+        takes into account feature selection
+        
+        returns:
+        tuple of (message, list of values, boolean status)
+        """
+        
+        # convert attribute name to qgis object using processing convience method
+        inputLayer = processing.getObject(vectorLayer)
+        
+        # get field values
+        fieldValues = processing.values(inputLayer, fieldName)
+        
+        # convert from dict to list
+        values = fieldValues.values()
+        
+        # check values present
+        if len(values) == 0:
+            return ("no values for vector layer fieldname provided", None, False)
+        else:
+            return ("values present", values, True)
+        
     
-    
-
-
-
-
