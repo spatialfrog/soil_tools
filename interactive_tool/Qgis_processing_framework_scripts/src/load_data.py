@@ -60,11 +60,12 @@ userOptionsTable = "permittedOperations"
 
 #========= validate user input
 # returns (message, boolean)
-msg, status = utils.validateUserInput(soil_database, slc_shapefile)
-if not status:
-    # problem with data provided
-    utils.communicateWithUserInQgis("Problem with either: paths or type of data passed in. Stopping.",level="CRITICAL", messageExistanceDuration=15)
-    raise Exception(msg)
+#TODO: validate data
+# msg, status = utils.validateUserInput(soil_database, slc_shapefile)
+# if not status:
+#     # problem with data provided
+#     utils.communicateWithUserInQgis("Problem with either: paths or type of data passed in. Stopping.",level="CRITICAL", messageExistanceDuration=15)
+#     raise Exception(msg)
 
 #========== load layers
 # load soil db table "permittedOperations" into canvas
