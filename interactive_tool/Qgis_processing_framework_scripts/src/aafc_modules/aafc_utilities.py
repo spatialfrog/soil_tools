@@ -53,7 +53,40 @@ class Utils:
         else:
             msg = "Issue loading db layer. Check connection url ", connectionUrl
             return (msg, False)
-
+    
+    
+    def loadVectorLayerIntoQgis(self, filePath, provider="ogr"):
+        """
+        purpose:
+        load vector layer into qgis
+        
+        how:
+        uses qgis api
+        loaded layer name in qgis toc is filename minus extension
+        
+        notes:
+        default provider is ogr
+        
+        returns:
+        tuple containing (msg, boolean status)
+        """
+        
+        # name provider for loaded vector in qgis toc. just filename minus extension
+        layerName = os.path.splitext(os.path.basename(filePath))[0]
+        
+        # load vector layer
+        addedVector = QgsVectorLayer(filePath, layerName, provider)
+        
+        # check if valid layer
+        if addedVector.isValid():
+            # valid qgis vector layer
+            # register layer to display within qgis
+            QgsMapLayerRegistry.instance().addMapLayer(dbTableToLoadAsVectorLayer)
+            return ("Successfully loaded", True)
+        else:
+            msg = "Issue loading vector layer. Check valid vector layer ", filePath
+            return (msg, False)
+    
 
     def communicateWithUserInQgis(self, message,level="INFO", messageExistanceDuration=5):
         """
