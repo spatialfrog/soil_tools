@@ -69,7 +69,11 @@ if not status:
 #========== load layers
 # load soil db table "permittedOperations" into canvas
 #TODO: should check in input validation
-if not soil_database == "":
+if soil_database == "":
+    # user must supply this!
+    utils.communicateWithUserInQgis("Must supply soil datbase path. Stopping.",level="CRITICAL", messageExistanceDuration=15)
+    raise Exception("Must supply soil datbase path. Stopping.")
+else:
     # user supplied path
     msg, status = utils.loadDbTableAsLayerIntoQgis(soil_database, userOptionsTable)
     if not status:
