@@ -38,6 +38,9 @@ class Db:
         returns 2 objects, list of fieldnames and list of tuple results. if fieldname not selected; returns None.
         """
         
+        messageBar = iface.messageBar()
+        messageBar.pushMessage(str(sqlString))
+        
         # execute sql
         self.curs.execute(sqlString)
         
