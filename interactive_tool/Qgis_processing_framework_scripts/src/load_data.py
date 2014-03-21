@@ -5,7 +5,7 @@ loads the database table "permittedOperations" and slc shapefile
 notes:
 - loads "permittedOperations" table into qgis toc. becomes drop down in processing framework for next script. will allows user to specific what tables
 they wish to use and if a join operation is required
-- loading the slc shapefile is optional. user could load via standard qgis interface tools
+- loading the slc shapefile is required. user could load via standard qgis interface tools
 
 input:
 db must have been created
