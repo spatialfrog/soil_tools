@@ -32,8 +32,8 @@ richardburcher@gmail.com
 #==========
 # sets up gui in qgis processing framework
 ##[AAFC Soil Tools]=group
-##sqlite_database_name=string soilDb
-##sqlite_database_folder=folder
+##soil_database_name=string soilDb
+##soil_database_folder=folder
 ##cmp_dbf_path=file
 ##snf_dbf_path=file
 ##slf_dbf_path=file
@@ -69,7 +69,7 @@ utils = utilities.Utils(iface)
 
 # ========= set high level variables
 # full path to spatialite db
-inSoilDbPath = os.path.join(sqlite_database_folder, sqlite_database_name + ".sqlite")
+inSoilDbPath = os.path.join(soil_database_folder, soil_database_name + ".sqlite")
   
 # ========== create class instances
 # get path to temp directory
@@ -81,7 +81,7 @@ io = inout.Io(inSoilDbPath=inSoilDbPath, tempSystemDirectoryPath=tempSystemDirec
  
 #========== create new db 
 # validate user input. returns (message, boolean)
-msg, status = utils.validateUserInput(cmp_dbf_path, snf_dbf_path, slf_dbf_path, sqlite_database_folder)
+msg, status = utils.validateUserInput(cmp_dbf_path, snf_dbf_path, slf_dbf_path, soil_database_folder)
 if not status:
     # problem with data provided
     utils.communicateWithUserInQgis("Problem with either: directory path, dbf paths or generic names cmp/snf/slf missing from filenames. Stopping.",level="CRITICAL", messageExistanceDuration=15)
@@ -94,7 +94,7 @@ tableNamesToDbfPaths = utils.getTableNamesToPathFromDbfPaths(cmp_dbf_path, snf_d
 utils.communicateWithUserInQgis("Creating new db...",level="INFO", messageExistanceDuration=4)    
    
 # remove existing db if user provides same name
-utils.deleteFile(os.path.join(sqlite_database_folder, sqlite_database_name))
+utils.deleteFile(os.path.join(soil_database_folder, soil_database_name))
  
 #========== create db and load with passed dbf paths
 # create new db
@@ -123,7 +123,7 @@ tableOptionsForProcessing = utils.getTableProcessingOptions(soilTablesPresent)
 db.createUserTableProcessingOptions(tableOptionsForProcessing)
 
 # report db creation success
-msg = "Db successfully created. Find in directory %s" %(sqlite_database_folder)
+msg = "Db successfully created. Find in directory %s" %(soil_database_folder)
 utils.communicateWithUserInQgis(msg, messageExistanceDuration=10)
  
  
