@@ -1,11 +1,12 @@
 """
 purpose:
-loads the database table "permittedOperations" and slc shapefile
+loads the database table "permittedOperations", cmp table if selected and slc shapefile
 
 notes:
 - loads "permittedOperations" table into qgis toc. becomes drop down in processing framework for next script. will allows user to specific what tables
 they wish to use and if a join operation is required
 - loading the slc shapefile is required. user could load via standard qgis interface tools
+- user can select to load cmp table if this is the table they wish to work with
 
 input:
 db must have been created
@@ -27,6 +28,7 @@ richardburcher@gmail.com
 ##[AAFC Soil Tools]=group
 ##soil_database=file
 ##slc_shapefile=vector
+##soil_calculation_from_cmp_table=boolean True
 #===========
 
 from PyQt4.QtCore import *
@@ -91,6 +93,13 @@ if not slc_shapefile =="":
         utils.communicateWithUserInQgis("Problem with vector layer provided. Stopping.",level="CRITICAL", messageExistanceDuration=15)
         raise Exception(msg)
 
+# load cmp table
+if soil_calculation_from_cmp:
+    msg, status = utils.loadDbTableAsLayerIntoQgis(soil_database, "cmp")
+    if not status:
+        # problem loading table
+        utils.communicateWithUserInQgis("Problem with either: paths or type of data passed in. Stopping.",level="CRITICAL", messageExistanceDuration=15)
+        raise Exception(msg)
 
 #========== clean up
 # remove added aafc soil module from python path
