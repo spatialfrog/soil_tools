@@ -94,7 +94,7 @@ if not slc_shapefile =="":
         raise Exception(msg)
 
 # load cmp table
-if soil_calculation_from_cmp:
+if soil_calculation_from_cmp_table:
     msg, status = utils.loadDbTableAsLayerIntoQgis(soil_database, "cmp")
     if not status:
         # problem loading table
