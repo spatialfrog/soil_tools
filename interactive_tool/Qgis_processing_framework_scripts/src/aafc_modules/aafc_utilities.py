@@ -329,7 +329,7 @@ class Utils:
         fieldValues = processing.values(inputLayer, fieldName)
         
         # convert from dict to list
-        values = fieldValues.values()
+        values = fieldValues[fieldName]
         
         # check values present
         if len(values) == 0:
