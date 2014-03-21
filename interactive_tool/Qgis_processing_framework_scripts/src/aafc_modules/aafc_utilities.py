@@ -316,7 +316,7 @@ class Utils:
             return dbFilePath
         else:
             # second split on '='
-            dbFilePath = dbFilePath[0]
+            dbFilePath = dbFilePath[1]
             # connection path
             # get db table name
             dbFilePath = dbFilePath.split("=")[1]
