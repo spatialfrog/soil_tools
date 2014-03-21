@@ -80,7 +80,7 @@ class Utils:
         if addedVector.isValid():
             # valid qgis vector layer
             # register layer to display within qgis
-            QgsMapLayerRegistry.instance().addMapLayer(dbTableToLoadAsVectorLayer)
+            QgsMapLayerRegistry.instance().addMapLayer(addedVector)
             return ("Successfully loaded", True)
         else:
             msg = "Issue loading vector layer. Check valid vector layer ", filePath
