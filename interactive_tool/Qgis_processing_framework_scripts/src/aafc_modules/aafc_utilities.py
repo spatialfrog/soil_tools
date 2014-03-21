@@ -49,8 +49,10 @@ class Utils:
         if dbTableToLoadAsVectorLayer.isValid():
             # register layer to display within qgis
             QgsMapLayerRegistry.instance().addMapLayer(dbTableToLoadAsVectorLayer)
+            return ("Successfully loaded", True)
         else:
-            return "Issue loading db layer. Check connection url ", connectionUrl
+            msg = "Issue loading db layer. Check connection url ", connectionUrl
+            return (msg, False)
 
 
     def communicateWithUserInQgis(self, message,level="INFO", messageExistanceDuration=5):
