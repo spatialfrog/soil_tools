@@ -284,13 +284,17 @@ class Utils:
         return tableOptions
     
     
-    def getQgisTableLayerFilePath(self, tableName):
+    def getQgisTableLayerFilePathInfo(self, tableName, pathKey="dbname"):
         """
         purpose:
-        return file path to qgis db table
+        return user requested file path connection details based on key provided
+        
+        notes:
+        returns value based on user supplied key
+        key is either "dbname" or "table"
         
         returns:
-        file path
+        string
         """
         
         # convert attribute name to qgis object using processing convience method
@@ -302,12 +306,21 @@ class Utils:
         url = provider.dataSourceUri()
         # split on space 
         dbFilePath = url.split(" ")
-        # second split on '='
-        dbFilePath = dbFilePath[0]
-        # connection path
-        dbFilePath = dbFilePath.split("=")[1] 
         
-        return dbFilePath
+        if pathKey == "dbname":
+            # second split on '='
+            dbFilePath = dbFilePath[0]
+            # connection path
+            # get db file path
+            dbFilePath = dbFilePath.split("=")[1]
+            return dbFilePath
+        else:
+            # second split on '='
+            dbFilePath = dbFilePath[0]
+            # connection path
+            # get db table name
+            dbFilePath = dbFilePath.split("=")[1]
+            return dbFilePath
     
     
     def getVectorLayerFieldValues(self,vectorLayer, fieldName):
