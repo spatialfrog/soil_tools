@@ -8,8 +8,12 @@ Created on Mon Feb 24 15:22:00 2014
 from qgis.core import *
 from qgis.gui import *
 from qgis.utils import *
+# qgis processing framework
+import processing
+
 import os
 import tempfile
+
 
 
 class Utils:
