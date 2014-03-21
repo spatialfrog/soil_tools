@@ -27,23 +27,22 @@ class Utils:
 
     def loadDbTableAsLayerIntoQgis(self, filePath, tableName, provider="spatialite"):
         """
-        load single db layer from spatialite into qgis toc as vector layer.
-        connection string created to load.
-
-        must provide full path including extension.
-
-        returns message if issue with loading layer.
+        purpose:
+        load single db layer from spatialite into qgis toc as vector layer
+        
+        notes:
+        must provide full path including extension
+        
+        returns:
+        tuple containing (msg, boolean status)
         """
 
-        ## orginial load
-        ##self.iface.addVectorLayer(filename,file_name,provider)
-
         # parameterize connection string
-        connectionUrl = 'dbname=%s table=%s, %s, %s' %(filePath, tableName, tableName, provider)
+        connectionUrl = 'dbname=%s table=%s' %(filePath, tableName)
 
         # create qgis vector layer. connection url to single db table
         ### QgsVectorLayer('dbname="/Users/drownedfrog/Projects/Contracts/AAFC/dec2013_mar2014_tool_dev/data/test/cmp32.sqlite" table="cmp32"', 'cmp32_db', 'spatialite')
-        dbTableToLoadAsVectorLayer = QgsVectorLayer(connectionUrl)
+        dbTableToLoadAsVectorLayer = QgsVectorLayer(connectionUrl, tableName, provider)
 
         # check if layer is valid
         if dbTableToLoadAsVectorLayer.isValid():
