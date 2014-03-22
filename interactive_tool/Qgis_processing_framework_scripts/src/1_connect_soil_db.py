@@ -1,6 +1,6 @@
 """
 purpose:
-loads the database table "permittedOperations", cmp table if selected and slc shapefile
+loads the database table "availableSoilTableJoins", cmp table if selected and slc shapefile
 
 notes:
 - loads "permittedOperations" table into qgis toc. becomes drop down in processing framework for next script. will allows user to specific what tables
@@ -12,7 +12,7 @@ input:
 db must have been created
 
 output:
-loads db table "permittedOperations" into qgis canvas
+loads db table "availableSoilTableJoins" into qgis canvas
 
 license:
 - gpl3

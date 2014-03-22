@@ -17,7 +17,7 @@ can either select cmp, cmp-snf or cmp-snf-slf
 
 input:
 -slc shapefile field defining the slc ids
--join option provided by "permittedOperations"
+-join option provided by "availableSoilTableJoins"
 
 output:
 -added table to soil db named "joinedResults"
