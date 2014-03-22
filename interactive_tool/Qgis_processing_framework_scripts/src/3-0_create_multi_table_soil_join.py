@@ -107,7 +107,7 @@ if soil_tables_to_join == "cmp-snf":
       
 elif soil_tables_to_join == "cmp-snf-slf":
     # 3 table join -- cmp - snf - slf
-    db.resultsTableJoiningCmpSnfSlfBySoilkey(slcIds, dbSlcKey=option_soil_cmp_table_slc_id_column, dbCmpKey=option_soil_cmp_table_cmp_column, dbSoilKey=option_soil_tables_soil_key_column, dbLayerNumberKey=dbLayerNumberKey, cmpTableName="cmp", snfTableName="snf", slfTableName="slf", landuse=user_preference_snf_table_land_use, layerNumber=user_preference_slf_table_layer_number)
+    db.resultsTableJoiningCmpSnfSlfBySoilkey(slcIds, dbSlcKey=option_soil_cmp_table_slc_id_column, dbCmpKey=option_soil_cmp_table_cmp_column, dbSoilKey=option_soil_tables_soil_key_column, dbLayerNumberKey=option_soil_slf_table_layer_number_column, cmpTableName="cmp", snfTableName="snf", slfTableName="slf", landuse=user_preference_snf_table_land_use, layerNumber=user_preference_slf_table_layer_number)
     calculationTableName = db.joinTableName  
 
 # remove existing join table if present
