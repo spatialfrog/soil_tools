@@ -58,7 +58,7 @@ utils = utilities.Utils(iface)
 
 # user options table name
 #TODO: should be global parameter
-userOptionsTable = "permittedOperations"
+userOptionsTable = "availableSoilTableJoins"
 
 #========= validate user input
 # returns (message, boolean)

@@ -164,7 +164,7 @@ class Db:
         """
 
         # user options table name
-        userOptionsTable = "permittedOperations"
+        userOptionsTable = "availableSoilTableJoins"
         
         # drop table if present
         sql = "drop table if exists %s" %(userOptionsTable)
