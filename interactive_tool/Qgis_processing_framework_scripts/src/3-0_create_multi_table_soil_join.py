@@ -36,12 +36,16 @@ richardburcher@gmail.com
 #==========
 # sets up gui in qgis processing framework
 ##[AAFC Soil Tools]=group
-##cmp_soil_table=table
-##cmp_soil_column_to_calculate=field cmp_soil_table
+##available_soil_table_joins=table
+##soil_tables_to_join=field available_soil_table_joins
 ##slc_shapefile=vector
 ##slc_shapefile_polygon_id_column=field slc_shapefile
+##user_preference_snf_table_land_use=string A
+##user_preference_slf_table_layer_number=numeric 4
+##option_soil_tables_soil_key_column=string soilkey
 ##option_soil_cmp_table_slc_id_column=string sl
 ##option_soil_cmp_table_percent_column=string percent
+##option_soil_slf_table_layer_number_column=string layer_no
 ##option_csv_load_file_into_qgis=boolean True
 ##option_csv_output_directory=folder
 ##option_csv_file_prefix=string calculation
