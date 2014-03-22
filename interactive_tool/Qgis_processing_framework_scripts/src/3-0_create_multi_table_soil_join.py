@@ -96,19 +96,17 @@ if not status:
 
 #TODO: check if vector layer slc ids found in cmp table
 
-
 #========== join soil tables together
-
-
-if userTableSelection == 1:
+#TODO: should extract column number inplace of using text
+if userTableSelection == "cmp-snf":
     # join requested
     # 2 table join -- cmp - snf tables
-    db.resultsTableJoiningCmpSnfBySoilkey(slcIds, dbSlcKey=dbSlcIdKey, dbCmpKey=dbCmpKey, dbSoilKey=dbSoilKey, cmpTableName="cmp", snfTableName="snf", landuse=userLandusePreference, writeTestCsv=False, writeTestCsvDirectory=None)
+    db.resultsTableJoiningCmpSnfBySoilkey(slcIds, dbSlcKey=option_soil_cmp_table_slc_id_column, dbCmpKey=option_soil_cmp_table_cmp_column, dbSoilKey=option_soil_tables_soil_key_column, cmpTableName="cmp", snfTableName="snf", landuse=user_preference_snf_table_land_use, writeTestCsv=False, writeTestCsvDirectory=None)
     calculationTableName = db.joinTableName
       
-elif userTableSelection == 2:
+elif userTableSelection == "cmp-snf-slf":
     # 3 table join -- cmp - snf - slf
-    db.resultsTableJoiningCmpSnfSlfBySoilkey(slcIds, dbSlcKey=dbSlcIdKey, dbCmpKey=dbCmpKey, dbSoilKey=dbSoilKey, dbLayerNumberKey=dbLayerNumberKey, cmpTableName="cmp", snfTableName="snf", slfTableName="slf", landuse=userLandusePreference, layerNumber=userLayerNumber)
+    db.resultsTableJoiningCmpSnfSlfBySoilkey(slcIds, dbSlcKey=option_soil_cmp_table_slc_id_column, dbCmpKey=option_soil_cmp_table_cmp_column, dbSoilKey=option_soil_tables_soil_key_column, dbLayerNumberKey=dbLayerNumberKey, cmpTableName="cmp", snfTableName="snf", slfTableName="slf", landuse=user_preference_snf_table_land_use, layerNumber=user_preference_slf_table_layer_number)
     calculationTableName = db.joinTableName  
 
 
