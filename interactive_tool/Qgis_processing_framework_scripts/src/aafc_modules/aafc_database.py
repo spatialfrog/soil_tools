@@ -6,6 +6,17 @@ how:
 python sqlite3 module
 
 notes:
+cmp32 is base table for all quieries. must go in order of cmp32 -- snf32 -- slf32.
+soilkey is pk in cmp and fk in other 2 tables.
+
+** for a single SLC polygon, we join all soilkeys from cmp table to the other tables.
+
+if snf, must choose either landuse of A or N; if A absent then assume N. 1:2 relationship possible between cmp soilkey.
+* strip the N/A off cmp soilkey and search snf soilkey with N/A also stripped. if user specified N/A found;
+  join on that; else default to the avaiable landuse N/A soilkey.
+
+if slf, user can only select 1 layer number. 1:many between soilkey.
+slf layer_no appears to be layer number.
 
 license:
 gpl3
@@ -26,7 +37,11 @@ import sqlite3
 
 class Db:
     """
-    handles all db activities.
+    purpose:
+    handles all db activities
+    
+    notes:
+    -there is only one method that executes sql "self.executeSql()"
     """
 
     def __init__(self, sqliteDbPath, tmpSystemDirectory):
@@ -46,9 +61,11 @@ class Db:
     
     def executeSql(self,sqlString, fieldNames=False):
         """
-        calculate sql statement.
+        purpose:
+        main point of sql interaction with db
         
-        returns 2 objects, list of fieldnames and list of tuple results. if fieldname not selected; returns None.
+        returns:
+        either data only list of tuples; default or a list of fieldnames and list of tuple results
         """
         
         messageBar = iface.messageBar()
@@ -69,8 +86,10 @@ class Db:
 
     def convertDbResults2SimpleList(self,data, columnIndex=0):
         """
+        purpose:
         convert db query data from list of tuples into simple list
         
+        returns:
         returns list
         """
         
@@ -81,12 +100,17 @@ class Db:
         
         return results
 
+
     def updateDbTableName(self,tableName):
         """
-        perhaps better way?
-
-        sql update name of initial loaded cmp table. when db created, table name
-        is set to db file name. set this to the dbf name.
+        purpose:
+        sql update name of initial loaded cmp table
+        
+        notes:
+        when db created, table name is set to db file name. set this to the passed in table name.
+        
+        returns:
+        nothing
         """
 
         # get basename of db path minus extension
@@ -98,15 +122,22 @@ class Db:
         sql = "alter table %s rename to %s" % (baseDbName,tableName)
         results = self.executeSql(sql)
     
+    
     def dropTable(self,tableName):
         """
-        convience method
+        purpose:
+        db convience method to drop table
         
+        notes:
         drops table name from user supplied table name
+        
+        returns:
+        nothing
         """
         
         sql = "drop table if exists %s" %(tableName)
         self.executeSql(sql)
+    
     
     def getSoilTablesListing(self):
         """
@@ -141,6 +172,7 @@ class Db:
         
         return soilTablesPresent 
 
+
     def getTableFieldNames(self, tableName):
         """
         purpose:
@@ -166,8 +198,7 @@ class Db:
     def createUserTableProcessingOptions(self, tableOptions):
         """
         purpose:
-        - create new table that will be used in downstream qgis script for user to select
-        what tables to use for joining
+        create new table that will be used in downstream qgis script for user to select what tables to use for joining
         
         how:
         passed in dict values contains table formated options ie cmp, cmp-snf or cmp-snf-slf
@@ -198,31 +229,21 @@ class Db:
             sql = "insert into %s('cmp-snf') values(1)" %(userOptionsTable)
             self.executeSql(sql)
             self.conn.commit()
-        
-          
     
-    # ========== soil queries between tables
-    """
-    cmp32 is base table for all quieries. must go in order of cmp32 -- snf32 -- slf32.
-    soilkey is pk in cmp and fk in other 2 tables.
-
-    ** for a single SLC polygon, we join all soilkeys from cmp table to the other tables.
-
-    if snf, must choose either landuse of A or N; if A absent then assume N. 1:2 relationship possible between cmp soilkey.
-    * strip the N/A off cmp soilkey and search snf soilkey with N/A also stripped. if user specified N/A found;
-      join on that; else default to the avaiable landuse N/A soilkey.
-
-    if slf, user can only select 1 layer number. 1:many between soilkey.
-    slf layer_no appears to be layer number.
-    """
-
+    
+    #//////////////////// table joins    
+    
     def resultsTableJoiningCmpSnfBySoilkey(self,slcIds, dbSlcKey, dbCmpKey, dbSoilKey, cmpTableName, snfTableName, landuse, writeTestCsv=False, writeTestCsvDirectory=None):
         """
-        provide cmp soilkey to match landuse on.
-
-        strip soilkey of last character. search snf table for all matches.
-        if landuse character present in table soilkey; return soilkey; else
-        return avaibale soilkey.
+        purpose:
+        create join between cmp and snf soil tables
+        
+        notes:
+        -join is based on slc ids supplied and soilkey
+        -strip soilkey of last character. search snf table for all matches. if landuse character present in table soilkey; return soilkey; else return avaibale soilkey
+        
+        returns:
+        nothing
         """
         
         #TODO: nice to do -- refactor 2 table & 3 table join methods into single method
@@ -337,9 +358,15 @@ class Db:
     
     def resultsTableJoiningCmpSnfSlfBySoilkey(self,slcIds, dbSlcKey, dbCmpKey, dbSoilKey, dbLayerNumberKey, cmpTableName, snfTableName, slfTableName, landuse, layerNumber, writeTestCsv=False, writeTestCsvDirectory=None):
         """
-        joins all 3 soil tables, cmp -- snf -- slf table together based on single distinct sl from cmp with common soilkey and single slf layer number.
+        purpose:
+        create 3 table join between cmp/snf/slf soil tables
         
-        if slf layer number not present for row being evaluated, that row is dropped from resultant table.
+        notes:
+        -join based on single distinct sl from cmp with common soilkey and single slf layer number
+        -if slf layer number not present for row being evaluated, that row is dropped from resultant table
+        
+        returns:
+        nothing
         """
     
         ##-- sql example -- join all three tables
@@ -476,12 +503,7 @@ class Db:
                     file_open.write("\n")
     
     
-    # ========== categorical and numeric calculation methods
-    """
-    ** these methods must be generic enough to process single sl or the
-    entire table of unique sl id's
-    """
-
+    # //////////////////// categorical and numeric column calculations
     def calculateField(self, slcIds, dbSlcKey, tableName, columnName, dbPercentKey):
         """
         purpose:
