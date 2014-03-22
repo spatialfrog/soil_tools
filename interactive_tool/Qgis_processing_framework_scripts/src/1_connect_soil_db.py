@@ -28,7 +28,7 @@ richardburcher@gmail.com
 ##[AAFC Soil Tools]=group
 ##soil_database=file
 ##slc_shapefile=vector
-##soil_calculation_from_cmp_table=boolean True
+##soil_calculation_only_from_cmp_table=boolean True
 #===========
 
 from PyQt4.QtCore import *
@@ -94,7 +94,7 @@ if not slc_shapefile =="":
         raise Exception(msg)
 
 # load cmp table
-if soil_calculation_from_cmp_table:
+if soil_calculation_only_from_cmp_table:
     msg, status = utils.loadDbTableAsLayerIntoQgis(soil_database, "cmp")
     if not status:
         # problem loading table
