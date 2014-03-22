@@ -31,6 +31,7 @@ richardburcher@gmail.com
 ##slc_shapefile_slc_id_column=field slc_shapefile
 ##option_soil_cmp_table_slc_id_column=string sl
 ##option_soil_cmp_table_percent_column=string percent
+##option_csv_load_file_into_qgis=boolean True
 ##option_csv_output_directory=folder
 ##option_csv_file_prefix=string calculation
 #===========
@@ -96,11 +97,17 @@ message = "Calculating column %s may take several minutes" % (calculationColumnN
 utils.communicateWithUserInQgis(message,messageExistanceDuration=10)
    
 headers, results = db.calculateField(slcIds, dbSlcKey=option_soil_cmp_table_slc_id_column, tableName=tableName, columnName=calculationColumnName, dbPercentKey=option_soil_cmp_table_percent_column)
-io.writeCsvFile(calculationColumnName, headers, results, option_csv_output_directory, csvFilePrefixName=option_csv_file_prefix)
+outCsvFilePath = io.writeCsvFile(calculationColumnName, headers, results, option_csv_output_directory, csvFilePrefixName=option_csv_file_prefix)
 
 # inform user processing finished
 msg = "Finished processing column %s. Find output CSV in directory %s" %(calculationColumnName, option_csv_output_directory)
 utils.communicateWithUserInQgis(msg, messageExistanceDuration=10)
+
+
+# ========== load calculated csv into qgis
+if option_csv_load_file_into_qgis:
+    # load csv into qgis csv into toc as vector layer
+    utils.loadVectorLayerIntoQgis(outCsvFilePath)
 
 #========== clean up
 # remove added aafc soil module from python path
