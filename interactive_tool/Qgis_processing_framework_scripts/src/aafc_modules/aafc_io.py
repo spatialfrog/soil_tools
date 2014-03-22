@@ -228,7 +228,7 @@ class Io:
         base name of csv is column derived
         
         returns:
-        nothing
+        full path to output csv
         """
         
         # file name
@@ -249,6 +249,8 @@ class Io:
             for e in data:
                 # data contains 1:n list/tuples
                 f_writer.writerow(e)
+        
+        return writeCsvFilePath
 
     def writeConfigFile(self, scriptDirectory, data):
         """
