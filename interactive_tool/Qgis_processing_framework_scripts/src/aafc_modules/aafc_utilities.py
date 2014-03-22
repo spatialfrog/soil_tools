@@ -1,8 +1,20 @@
-# -*- coding: utf-8 -*-
 """
-Created on Mon Feb 24 15:22:00 2014
+purpose:
+utility class for repetitive tasks
 
-@author: drownedfrog
+notes:
+-handles many repetitive tasks such as loading/removing qgis layers/user data validation/getting paths etc
+
+how:
+mix of python and qgis python api
+
+license:
+gpl3
+
+developer:
+richard burcher
+richardburcher@gmail.com
+2014
 """
 
 from qgis.core import *
@@ -18,14 +30,11 @@ import tempfile
 
 class Utils:
     """
+    purpose:
     utility class
     """
 
     def __init__(self,iface):
-        """
-        constructor
-        """
-
         self.iface = iface
 
 
@@ -116,12 +125,16 @@ class Utils:
 
     def communicateWithUserInQgis(self, message,level="INFO", messageExistanceDuration=5):
         """
-        provides standardized way to communicate with user. qgis message bar
-        system is used.
-
-        user passes string to be displayed.
-        level refers to severity of message. 3 choices: WARNING/CRITICAL/INFO.
-        messageExistanceDuration is number of seconds qgis message bar is displayed.
+        purpose:
+        provides standardized way to communicate with user via qgis message bar
+        
+        notes:
+        -user passes string to be displayed
+        -level refers to severity of message. 3 choices: WARNING/CRITICAL/INFO
+        -messageExistanceDuration is number of seconds qgis message bar is displayed
+        
+        returns:
+        nothing
         """
 
         # get reference to qgis message bar
@@ -146,7 +159,13 @@ class Utils:
 
     def cleanUp(self, dbConnection):
         """
-        house cleaning prior to script ending.
+        purpose:
+        house cleaning prior to script ending
+        
+        notes:
+        
+        returns:
+        nothing
         """
 
         dbConnection.close()
@@ -154,7 +173,11 @@ class Utils:
 
     def checkFileExits(self, path):
         """
-        check path exists for full given path. return True/False.
+        purpose:
+        check path exists for full given path
+        
+        returns:
+        boolean
         """
 
         if os.path.exists(path):
@@ -165,7 +188,14 @@ class Utils:
 
     def deleteFile(self, path):
         """
-        checks path exists, then deletes.
+        purpose:
+        delete passed file
+        
+        notes:
+        checks if file exists
+        
+        returns:
+        nothing
         """
 
         if os.path.exists(path):
@@ -176,30 +206,28 @@ class Utils:
     def validateUserInput(self, *params):
         """
         purpose:
-        validate user inputs. primialarly concerned with file/directory path correct.
+        validate user inputs
         
         how:
         check each item passed
         
         returns
-        tuple consisting of message and status of True/False
+        tuple consisting of (msg, boolean status)
         """
         
-        #TODO: validate -- input further from config file
-        
+        #TODO: additional checks
         # only chek what is passed
         # check type of table join required; this will drive everything thing else. must have certain fields if 2 table join
         # extension dbf present in paths
         # values present for keys required
         # no odd characters in filenames
         # pass back first error and we stop in return code
-        #?? sub methods for each type of table config?
         
         cmpDbfPresent = False
         
         # process all passed parameters
         for item in params:
-            # do not process blank entries ie qgis processing framework optional value provides ""
+            # do not process blank entries ie qgis processing framework optional value provides
             if item =="":
                 continue
             # do not process None
@@ -233,7 +261,11 @@ class Utils:
 
     def determineSystemTempDirectory(self):
         """
-        return path of system temp directory
+        purpose:
+        determine system temp directory that is writeable
+        
+        return:
+        path of system temp directory
         """
 
         return tempfile.gettempdir()
@@ -242,12 +274,11 @@ class Utils:
     def getTableNamesToPathFromDbfPaths(self, *params):
         """
         purpose:
-        parse table names from user supplied dbf file paths. it is expected
-        that path will contain cmp/slf/snf in filename. * these become the
-        table names in db.
+        parse table names from user supplied dbf file paths
         
         how:
-        simple string match against cmp/snf/slf
+        -simple string match against cmp/snf/slf
+        -it is expected that dbf path will contain cmp/slf/snf in filename. these generic names become the table names in db.
         
         returns:
         mapping of cmp/slf/snf to dbf path for each if present
