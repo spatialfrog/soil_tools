@@ -58,6 +58,29 @@ class Utils:
             return (msg, False)
     
     
+    def removeLayerFromQgis(self, layerName):
+        """
+        purpose:
+        remove layer from qgis
+        
+        how:
+        get list of layers from qgis, search for user providers name in layers and then remove
+        
+        returns:
+        nothing
+        """
+        
+        # get listing of layers in qgis
+        mapLayerRegistry = QgsMapLayerRegistry.instance()
+        layersPresent = mapLayerRegistry.mapLayers()
+        
+        # check for user supplied name being in qgis layers
+        for layer in layersPresent.keys():
+            if layerName in layer:
+                # found match. remove layer
+                mapLayerRegistry.removeMapLayer(layer)
+        
+        
     def loadVectorLayerIntoQgis(self, filePath, provider="ogr"):
         """
         purpose:
