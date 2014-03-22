@@ -22,7 +22,6 @@ from qgis.utils import *
 
 import os
 import sqlite3
-##from aafc_workflow import dbCmpKey, dbLayerNumberKey
 
 
 class Db:
