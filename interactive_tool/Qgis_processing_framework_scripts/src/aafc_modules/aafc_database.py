@@ -173,16 +173,16 @@ class Db:
         # check for highest key order to create table and insert statement
         if tableOptions.get(2,None):
             print "processing"
-            sql = "create table %s(cmp-snf' INTEGER, 'cmp-snf-slf' INTEGER)" %(userOptionsTable)
+            sql = "create table %s('cmp-snf' INTEGER, 'cmp-snf-slf' INTEGER)" %(userOptionsTable)
             self.executeSql(sql)
-            sql = "insert into %s(cmp-snf', 'cmp-snf-slf') values(1, 2)" %(userOptionsTable)
+            sql = "insert into %s('cmp-snf', 'cmp-snf-slf') values(1, 2)" %(userOptionsTable)
             self.executeSql(sql)
             self.conn.commit()
         elif tableOptions.get(1,None):
             print "processing"
-            sql = "create table %s(cmp-snf' INTEGER)" %(userOptionsTable)
+            sql = "create table %s('cmp-snf' INTEGER)" %(userOptionsTable)
             self.executeSql(sql)
-            sql = "insert into %s(cmp-snf') values(1)" %(userOptionsTable)
+            sql = "insert into %s('cmp-snf') values(1)" %(userOptionsTable)
             self.executeSql(sql)
             self.conn.commit()
         
