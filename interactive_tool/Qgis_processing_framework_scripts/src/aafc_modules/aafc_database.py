@@ -28,7 +28,7 @@ class Db:
         self.tmpDirectory = tmpSystemDirectory
         
         # join table name. generic as you can only have 1 join table at a time
-        self.joinTableName = "joinedTable"
+        self.joinTableName = "joinedSoilTables"
         
     
     def executeSql(self,sqlString, fieldNames=False):
