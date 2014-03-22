@@ -14,6 +14,7 @@ import resources_rc
 from aafcqgissoiltooldialog import AafcQgisSoilToolDialog
 import os.path
 import sys
+import functools
 
 class Utils:
     """
@@ -26,26 +27,40 @@ class Utils:
         """
         
         self.iface = iface
-        
+        self.searchPath = "/Users/drownedfrog/Projects/Contracts/AAFC/dec2013_mar2014_tool_dev"
+        self.filter = "dBase (*.dbf)"
+        self.cmpDbfPath = ""
+        self.snfDbfPath = ""
+        self.slfDbfPath = ""
+        self.dbSoilName = ""
     
-    def getFilePath(self,searchDirectory,filter="dBASE (*.dbf)"):
+    
+    def getFilePathFromDialog(self):
         """
-        present standard qt file dialog. user selects single file.
+        purpose:
+        allow user to select file from computer for use in script
         
-        returns full file path.
+        how:
+        pyqt4
+        
+        notes:
+        filter is used by script to modify what user may search for
+        
+        returns:
+        full path to file
         """
-        
-        # TODO: provide enumeration similar to communicateWithUserInQgis for filter type. only permit dbf & shp
         
         # get full path to file
-        filepath,filter = QFileDialog.getOpenFileNameAndFilter(self.iface.mainWindow(),"Please choose a file to open...",
-                    searchDirectory,filter,"Filter list for selecting files from a dialog box")
-        
-        if len(filepath) == 0:
-            return None
+        filepath = QFileDialog.getOpenFileNameAndFilter(self.iface.mainWindow(),"Please choose a file to open...", self.searchPath, self.filter)
+
+        if not len(filepath) == 0:
+            # QFileDialog returns tuple of path, filter used
+            # only need file path
+            return filepath[0]
+            #self.communicateWithUserInQgis(filepath[0])
         else:
-            self.communicateWithUserInQgis(filepath)
-            return filepath
+            return None
+
     
     
     def loadVectorLayerQgis(self,filepath,filename="loaded_vector",provider="ogr"):
@@ -79,11 +94,9 @@ class Utils:
         messageBar.pushMessage(message,displayLevel,duration)
         
     
-    def retrieveDbfInformation(self,userDefinedId="SL"):
+    def retrieveConfigInformation(self):
         """
-        gets basic information about loaded dbf layer.
-        
-        returns headers, unique row id numbers as defined by user.   
+        repotr   
         """
         
         # headers
@@ -108,5 +121,91 @@ class Utils:
         # update layer
         self.layer = self.iface.activeLayer()
         
-        QMessageBox.information(self.iface.mainWindow(),"hello",str(self.layer.name()))  
-
+        QMessageBox.information(self.iface.mainWindow(),"hello",str(self.layer.name()))
+    
+    
+    def getCmpDbfPath(self):
+        """
+        purpose:
+        get cmp dbf path from user
+        
+        returns:
+        path
+        """
+        
+        # get dbf path from file dialog
+        self.cmpDbfPath = self.getFilePathFromDialog()
+        self.dlg.lineEdit_cmpDbfPath.setText(self.cmpDbfPath)
+        
+    
+    def getSnfDbfPath(self):
+        """
+        purpose:
+        get snf dbf path from user
+        
+        returns:
+        path
+        """
+        
+        # get dbf path from file dialog
+        self.snfDbfPath = self.getFilePathFromDialog()
+        self.dlg.lineEdit_snfDbfPath.setText(self.snfDbfPath)
+        
+    
+    def getSlfDbfPath(self):
+        """
+        purpose:
+        get slf dbf path from user
+        
+        returns:
+        path
+        """
+        
+        # get dbf path from file dialog
+        self.slfDbfPath = self.getFilePathFromDialog()
+        self.dlg.lineEdit_slfDbfPath.setText(self.slfDbfPath) 
+    
+    
+    def updateConfigDialog(self):
+        """
+        purpose:
+        update config file dialog with values
+        
+        returns:
+        nothing
+        """
+        
+        pass
+        
+        # update dbf paths
+        
+    
+    def openConfigurationDialog(self):
+        """
+        open configuration dialog for editing
+        """
+        
+        # Create the dialog (after translation) and keep reference
+        self.dlg = AafcQgisSoilToolDialog()
+        # show dialog
+        self.dlg.show()
+        
+        # get text value
+        self.dbSoilName = self.dlg.lineEdit_sqliteDbName.text()
+        
+        # get cmp dbf path
+        self.dlg.button_cmpDbfPath.clicked.connect(self.getCmpDbfPath)
+        
+        # get snf dbf path
+        self.dlg.button_snfDbfPath.clicked.connect(self.getSnfDbfPath)
+        
+        # get slf dbf path
+        self.dlg.button_slfDbfPath.clicked.connect(self.getSlfDbfPath)
+        
+        
+        result = self.dlg.exec_()
+        # See if OK was pressed
+        if result == 1:
+            # do something useful (delete the line containing pass and
+            # substitute with your code
+            pass

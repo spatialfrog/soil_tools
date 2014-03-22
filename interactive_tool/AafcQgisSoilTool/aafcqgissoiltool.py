@@ -70,9 +70,8 @@ class AafcQgisSoilTool:
         
         self.utils = Utils(iface)
         
-        # TODO: move to configuration settings later
-        self.directoryToSearch = "/Users/drownedfrog"
-
+        self.helloWorld ="helloWorld"
+        
 
     def initGui(self):
         """
@@ -80,26 +79,33 @@ class AafcQgisSoilTool:
         """
         
         # actions
-        #self.dlg.openFile.clicked.connect(self.get_dbf_file)
+        #cmpDbfPath = self.dlg.button_cmpDbfPath.clicked.connect(self.utils.getFilePathFromDialog(self.directoryToSearch))
+        #self.utils.communicateWithUserInQgis(cmpDbfPath)
         
-        # open dbf file
-        self.action_open_file = QAction(QIcon(":/plugins/aafcqgissoiltool/icon.png"),u"Open DBF File", self.iface.mainWindow())
+        # open configuration file for user editing
+        self.actionOpenConfig = QAction(QIcon(":/plugins/aafcqgissoiltool/icon.png"),u"Open configuration file", self.iface.mainWindow())
         # method to run when menu icon pressed
-        self.action_open_file.triggered.connect(functools.partial(self.utils.getFilePath,searchDirectory=self.directoryToSearch))
+        ##self.actionOpenConfig.triggered.connect(functools.partial(self.utils.getFilePath,searchDirectory=self.directoryToSearch))
+        self.actionOpenConfig.triggered.connect(self.utils.openConfigurationDialog)
         
-        # process dbf
-        self.action_process_dbf = QAction("Process DBF File", self.iface.mainWindow())
-        self.action_process_dbf.triggered.connect(self.utils.retrieveDbfInformation)
+        def displayConfInfo():
+            dbSoilName = self.utils.dbSoilName
+            self.utils.communicateWithUserInQgis(dbSoilName)
+        
+        
+        # execute processing
+        self.action_process_dbf = QAction("Process Soil", self.iface.mainWindow())
+        self.action_process_dbf.triggered.connect(displayConfInfo)
         
         #self.dlg.getDbfHeaders.clicked.connect(self.utils.retrieveDbfInformation)
         
         # layer selection changed in qgis toc
-        self.iface.currentLayerChanged.connect(self.utils.currentLayerChanged)
+        #self.iface.currentLayerChanged.connect(self.utils.currentLayerChanged)
         
         
         # add menu items within qgis. user selection triggers action.
         # add plugin name to pre-existing qgis menu location. using plugin menu.
-        self.iface.addPluginToMenu(u"&AAFC Soil Tool", self.action_open_file)
+        self.iface.addPluginToMenu(u"&AAFC Soil Tool", self.actionOpenConfig)
         self.iface.addPluginToMenu("&AAFC Soil Tool", self.action_process_dbf)
         
 
