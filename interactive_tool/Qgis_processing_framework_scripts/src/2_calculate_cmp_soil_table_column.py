@@ -26,9 +26,9 @@ richardburcher@gmail.com
 # sets up gui in qgis processing framework
 ##[AAFC Soil Tools]=group
 ##cmp_soil_table=table
-##cmp_soil_column=field cmp_soil_table
+##cmp_soil_column_to_calculate=field cmp_soil_table
 ##slc_shapefile=vector
-##slc_shapefile_slc_id_column=field slc_shapefile
+##slc_shapefile_polygon_id_column=field slc_shapefile
 ##option_soil_cmp_table_slc_id_column=string sl
 ##option_soil_cmp_table_percent_column=string percent
 ##option_csv_load_file_into_qgis=boolean True
@@ -76,7 +76,7 @@ db = database.Db(inSoilDbPath, tempSystemDirectoryPath)
 
 #========== get spatial selection of polygon slc units to process
 # if no sub-selection, assume all polygons to be processed
-msg,slcIds,status = utils.getVectorLayerFieldValues(slc_shapefile, slc_shapefile_slc_id_column)
+msg,slcIds,status = utils.getVectorLayerFieldValues(slc_shapefile, slc_shapefile_polygon_id_column)
 if not status:
     # problem with getting values from vector layer for slc ids
     utils.communicateWithUserInQgis("No values for field in given vector layer for slc ids. Stopping.",level="CRITICAL", messageExistanceDuration=15)
@@ -87,7 +87,7 @@ if not status:
   
 #===== process soil field
 # column field must be qouted as '"field_to_calculate"'
-calculationColumnName = '"%s"' %(cmp_soil_column)
+calculationColumnName = '"%s"' %(cmp_soil_column_to_calculate)
 
 # convert full connection path of user selected table in qgis toc to actual table name
 tableName = utils.getQgisTableLayerFilePathInfo(cmp_soil_table, pathKey="table")
