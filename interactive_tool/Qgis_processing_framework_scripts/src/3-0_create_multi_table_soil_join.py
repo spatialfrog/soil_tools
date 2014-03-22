@@ -41,7 +41,7 @@ richardburcher@gmail.com
 ##slc_shapefile=vector
 ##slc_shapefile_polygon_id_column=field slc_shapefile
 ##user_preference_snf_table_land_use=string A
-##user_preference_slf_table_layer_number=numeric 4
+##user_preference_slf_table_layer_number=number 4
 ##option_soil_tables_soil_key_column=string soilkey
 ##option_soil_cmp_table_slc_id_column=string sl
 ##option_soil_cmp_table_percent_column=string percent
@@ -96,7 +96,20 @@ if not status:
 
 #TODO: check if vector layer slc ids found in cmp table
 
-  
+
+#========== join soil tables together
+
+
+if userTableSelection == 1:
+    # join requested
+    # 2 table join -- cmp - snf tables
+    db.resultsTableJoiningCmpSnfBySoilkey(slcIds, dbSlcKey=dbSlcIdKey, dbCmpKey=dbCmpKey, dbSoilKey=dbSoilKey, cmpTableName="cmp", snfTableName="snf", landuse=userLandusePreference, writeTestCsv=False, writeTestCsvDirectory=None)
+    calculationTableName = db.joinTableName
+      
+elif userTableSelection == 2:
+    # 3 table join -- cmp - snf - slf
+    db.resultsTableJoiningCmpSnfSlfBySoilkey(slcIds, dbSlcKey=dbSlcIdKey, dbCmpKey=dbCmpKey, dbSoilKey=dbSoilKey, dbLayerNumberKey=dbLayerNumberKey, cmpTableName="cmp", snfTableName="snf", slfTableName="slf", landuse=userLandusePreference, layerNumber=userLayerNumber)
+    calculationTableName = db.joinTableName  
 
 
 #========== clean up
