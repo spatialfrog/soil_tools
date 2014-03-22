@@ -1,5 +1,19 @@
 """
+purpose:
 handles all file input/output and conversions
+
+notes:
+-creates spatialite db (sqlite with spatial extenions). 
+-the cmp dbf is converted to the spatialite via qgis api. subsequent dbf's are converted to csv via qgis api and loaded into db via python
+-output of soil column calculated csv's handled here
+
+license:
+gpl3
+
+developer:
+richard burcher
+richardburcher@gmail.com
+2014
 """
 
 import os
@@ -12,6 +26,7 @@ from qgis.utils import *
 
 class Io:
     """
+    purpose:
     handles all io
     """
     
@@ -25,11 +40,15 @@ class Io:
 
     def createNewDb(self, namesToPaths):
         """
-        create initial spatialite db using cmp db; this table is always used.
-
-        name of table determined from basename of dbf minus extension.
-
-        pass additional dbf's to be added.
+        purpose:
+        create spatialite soil db
+        
+        notes:
+        -create initial spatialite db using cmp db; this table is always used
+        -names of tables are generic, cmp/snf/slf are used
+        
+        returns:
+        boolean status of db creation and data load
         """
         
         # status of loading layers via qgis api 
@@ -213,7 +232,8 @@ class Io:
                     types[idx] = _type
         return types
 
-    # ===========
+
+    #////////////////////// csv writer
 
     def writeCsvFile(self, column, headers, data, path, csvFilePrefixName):
         """
