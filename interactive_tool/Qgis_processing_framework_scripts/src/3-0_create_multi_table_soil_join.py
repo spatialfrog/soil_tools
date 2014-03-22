@@ -82,8 +82,8 @@ tempSystemDirectoryPath = utils.determineSystemTempDirectory()
 # io instance
 io = inout.Io(tempSystemDirectoryPath=tempSystemDirectoryPath)
 
-# get db path from cmp layer in qgis
-inSoilDbPath = utils.getQgisTableLayerFilePathInfo(cmp_soil_table)
+# get db path from available soil table joins layer in qgis
+inSoilDbPath = utils.getQgisTableLayerFilePathInfo(available_soil_table_joins)
 # db instance
 db = database.Db(inSoilDbPath, tempSystemDirectoryPath)
 
