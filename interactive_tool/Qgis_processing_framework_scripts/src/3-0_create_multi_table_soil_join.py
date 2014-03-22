@@ -46,9 +46,6 @@ richardburcher@gmail.com
 ##option_soil_cmp_table_slc_id_column=string sl
 ##option_soil_cmp_table_percent_column=string percent
 ##option_soil_slf_table_layer_number_column=string layer_no
-##option_csv_load_file_into_qgis=boolean True
-##option_csv_output_directory=folder
-##option_csv_file_prefix=string calculation
 #===========
 
 from PyQt4.QtCore import *
