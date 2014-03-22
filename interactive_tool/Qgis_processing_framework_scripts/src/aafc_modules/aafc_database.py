@@ -185,13 +185,7 @@ class Db:
             sql = "insert into %s('cmp', 'cmp-snf') values(0, 1)" %(userOptionsTable)
             self.executeSql(sql)
             self.conn.commit()
-        elif tableOptions.get(0,None):
-            print "processing"
-            sql = "create table %s('cmp' INTEGER)" %(userOptionsTable)
-            self.executeSql(sql)
-            sql = "insert into %s('cmp') values(0)" %(userOptionsTable)
-            self.executeSql(sql)
-            self.conn.commit()
+        
           
     
     # ========== soil queries between tables
