@@ -1,5 +1,19 @@
 """
+purpose:
 handles all interactions with the sqlite db
+
+how:
+python sqlite3 module
+
+notes:
+
+license:
+gpl3
+
+developer:
+richard burcher
+richardburcher@gmail.com
+2014
 """
 
 from qgis.core import *
