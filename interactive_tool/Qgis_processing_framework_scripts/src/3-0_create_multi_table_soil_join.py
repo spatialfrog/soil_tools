@@ -110,6 +110,10 @@ elif soil_tables_to_join == "cmp-snf-slf":
     db.resultsTableJoiningCmpSnfSlfBySoilkey(slcIds, dbSlcKey=option_soil_cmp_table_slc_id_column, dbCmpKey=option_soil_cmp_table_cmp_column, dbSoilKey=option_soil_tables_soil_key_column, dbLayerNumberKey=dbLayerNumberKey, cmpTableName="cmp", snfTableName="snf", slfTableName="slf", landuse=user_preference_snf_table_land_use, layerNumber=user_preference_slf_table_layer_number)
     calculationTableName = db.joinTableName  
 
+# add created join table to qgis toc
+#TODO: remove existing join table if present
+utils.loadDbTableAsLayerIntoQgis(inSoilDbPath, db.joinTableName)
+
 # inform user processing finished
 msg = "Finished creating soil table joins for tables %s" %(soil_tables_to_join)
 utils.communicateWithUserInQgis(msg, messageExistanceDuration=10)
