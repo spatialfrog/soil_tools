@@ -44,6 +44,7 @@ richardburcher@gmail.com
 ##user_preference_slf_table_layer_number=number 4
 ##option_soil_tables_soil_key_column=string soilkey
 ##option_soil_cmp_table_slc_id_column=string sl
+##option_soil_cmp_table_cmp_column=string cmp
 ##option_soil_cmp_table_percent_column=string percent
 ##option_soil_slf_table_layer_number_column=string layer_no
 #===========
