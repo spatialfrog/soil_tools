@@ -74,6 +74,10 @@ inSoilDbPath = utils.getQgisTableLayerFilePathInfo(cmp_soil_table)
 # db instance
 db = database.Db(inSoilDbPath, tempSystemDirectoryPath)
 
+# db performance tuning
+db.sqliteLoadingPerformanceTuning(enable=True)
+
+
 #========== get spatial selection of polygon slc units to process
 # if no sub-selection, assume all polygons to be processed
 msg,slcIds,status = utils.getVectorLayerFieldValues(slc_shapefile, slc_shapefile_polygon_id_column)
