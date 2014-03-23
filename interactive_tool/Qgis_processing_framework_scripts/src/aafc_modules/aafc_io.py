@@ -179,7 +179,9 @@ class Io:
         # set synchronous to normal mode
         c.execute("pragma synchronous=NORMAL")
         # increase page size. default is 1024
-        c.execute("pragma page_size=4096")
+        c.execute("pragma page_size=8192")
+        # must vacuum for page_size to be used
+        c.execute("VACUUM")
         
         
         c.execute('CREATE table %s (%s)' % (table, _columns))
