@@ -309,7 +309,16 @@ class Db:
             messagesTestCsv = []
             messagesTestCsv.append(("///// land use preference is %s\n\n\n"%(landuse)))
             messagesTestCsv.append(("start time is %s" %(time.ctime(time.time()))))
-                    
+            
+            
+            # get all soil keys from snf table
+            sql = "select distinct(%s) from %s" %(dbSoilKey, snfTableName)
+            results = self.executeSql(sql)
+            snfSoilKeys = []
+            # clean up into simple list of strings
+            for e in results:
+                snfSoilKeys.append(e[0])
+             
             # process slc ids
             for slcId in slcIds:
                 # process each row within given sl.
@@ -335,31 +344,58 @@ class Db:
                     
                     # find soil key matches avaibale in snf table to user by stripping supplied soil key from cmp table row
                     # strip end landuse from provided key & append %. used for sql character matching
-                    strippedCmpSoilTableKey = (result[0][0])[:-1] + "%"
+                    ##strippedCmpSoilTableKey = (result[0][0])[:-1] + "%"
+                    strippedCmpSoilTableKey = (result[0][0])
                     
                     # get distinct matches of sl cmp soil keys in snf table
-                    sql = "select distinct(%s) from %s where %s like '%s'" %(dbSoilKey, snfTableName, dbSoilKey, strippedCmpSoilTableKey)
-                    results = self.executeSql(sql)
+                    ##sql = "select distinct(%s) from %s where %s like '%s'" %(dbSoilKey, snfTableName, dbSoilKey, strippedCmpSoilTableKey)
+                    ##results = self.executeSql(sql)
                     
-                    msg = "slf table distinct soilkeys are %s\n" %(results)
-                    messagesTestCsv.append(msg)
-                    messagesTestCsv.append(("time is %s" %(time.ctime(time.time()))))
+                    ##msg = "snf table distinct soilkeys are %s\n" %(results)
+                    ##messagesTestCsv.append(msg)
+                    ##messagesTestCsv.append(("time is %s" %(time.ctime(time.time()))))
                     
                     # is user landuse preference availabe
                     # check end character of string; if matches user then select key else use default of N
                     snfSoilKeyToUse = ""
                     
-                    for e in results:
-                        # convert to lowercase for checking
-                        eToLowerCase = e[0].lower()    
-                        if eToLowerCase.endswith(landuse.lower()):
-                            # user land preference can be accomindated
-                            snfSoilKeyToUse = e[0]
-                            break
-                        else:
-                            # only one soil key in snf. must use this
-                            snfSoilKeyToUse = e[0]
-                            messagesTestCsv.append(("* Can't accomindate land use preference"))
+                    ##////// only for output diagnostic csv
+                    # get list of snf soil keys present that match cmp soil key
+                    snfDistinctKeysMsg = []
+                    if strippedCmpSoilTableKey[:-1] + landuse in snfSoilKeys:
+                        # user landuse preference can be accomidated
+                        snfDistinctKeysMsg.append((strippedCmpSoilTableKey[:-1] + landuse))
+                        
+                    if strippedCmpSoilTableKey[:-1] + "N" in snfSoilKeys:
+                        # default landuse of N
+                        snfDistinctKeysMsg.append((strippedCmpSoilTableKey[:-1] + "N"))
+                    
+                    messagesTestCsv.append("snf soil keys: %s" %(snfDistinctKeysMsg))
+                    ## //////////
+                    
+                    # match cmp soil key to snf soil and respect user land use preference if possible 
+                    # strip off last character of cmp soil key. add user landuse and check if in snf soilkey list
+                    if strippedCmpSoilTableKey[:-1] + landuse in snfSoilKeys:
+                        # user landuse preference can be accomidated
+                        snfSoilKeyToUse = strippedCmpSoilTableKey[:-1] + landuse
+                        messagesTestCsv.append(("Can accomindate land use preference"))
+                    elif strippedCmpSoilTableKey[:-1] + "N" in snfSoilKeys:
+                        # default landuse of N
+                        snfSoilKeyToUse = strippedCmpSoilTableKey[:-1] + "N"
+                        messagesTestCsv.append(("* Can't accomindate land use preference"))
+                    
+                    
+#                     for e in results:
+#                         # convert to lowercase for checking
+#                         eToLowerCase = e[0].lower()    
+#                         if eToLowerCase.endswith(landuse.lower()):
+#                             # user land preference can be accomindated
+#                             snfSoilKeyToUse = e[0]
+#                             break
+#                         else:
+#                             # only one soil key in snf. must use this
+#                             snfSoilKeyToUse = e[0]
+#                             messagesTestCsv.append(("* Can't accomindate land use preference"))
                     
                     messagesTestCsv.append(("found soil key match: time is %s" %(time.ctime(time.time()))))
                     
