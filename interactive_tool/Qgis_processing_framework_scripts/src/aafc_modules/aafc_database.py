@@ -84,7 +84,7 @@ class Db:
             return self.curs.fetchall()
 
 
-    def sqliteLoadingPerformanceTuning(self, enable=True):
+    def sqliteLoadingPerformanceTuning(self, enable=True, closeDbConnection=False):
         """
         purpose:
         increase db performance when loading data
@@ -114,6 +114,11 @@ class Db:
             sql="pragma synchronous=NORMAL"
             self.executeSql(sql)
             self.conn.commit()
+        
+        # close db connection
+        if closeDbConnection:
+            self.conn.close()
+        
         
 
     def convertDbResults2SimpleList(self,data, columnIndex=0):
