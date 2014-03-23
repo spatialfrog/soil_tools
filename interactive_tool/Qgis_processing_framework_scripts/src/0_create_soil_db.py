@@ -121,6 +121,11 @@ tableOptionsForProcessing = utils.getTableProcessingOptions(soilTablesPresent)
 # table is used when user is determining how to set up joins if requested for processing
 db.createUserTableProcessingOptions(tableOptionsForProcessing)
 
+#========== index loaded soil data tables
+# for speed up on joins and queries
+#TODO: add hardcoded to gui
+db.createDbIndexesOnLoadedData(soilTablesPresent, "soilkey", "sl", "percent", "layer_no")
+
 # report db creation success
 msg = "Db successfully created. Find in directory %s" %(soil_database_folder)
 utils.communicateWithUserInQgis(msg, messageExistanceDuration=10)
