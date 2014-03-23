@@ -105,8 +105,10 @@ class Db:
             sql="pragma synchronous=OFF"
             self.executeSql(sql)
             # increase page size
-            sql="pragma page_size=4096"
+            sql="pragma page_size=8192"
             self.executeSql(sql)
+            # must vacuum for page_size to be used
+            self.executeSql("VACUUM")
         else:
             # turn back on
             # turn on journal mode
@@ -118,6 +120,8 @@ class Db:
             # set page size default
             sql="pragma page_size=1024"
             self.executeSql(sql)
+            # must vacuum for page_size to be used
+            self.executeSql("VACUUM")
         
         # close db connection
         if closeDbConnection:
