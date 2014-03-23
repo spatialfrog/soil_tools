@@ -33,6 +33,7 @@ from qgis.utils import *
 
 import os
 import sqlite3
+import time
 
 
 class Db:
@@ -307,6 +308,7 @@ class Db:
             # captures key results that will be added and written to csv only if writeTextCsv = True
             messagesTestCsv = []
             messagesTestCsv.append(("///// land use preference is %s\n\n\n"%(landuse)))
+            messagesTestCsv.append(("start time is %s" %(time.ctime(time.time()))))
                     
             # process slc ids
             for slcId in slcIds:
@@ -316,6 +318,7 @@ class Db:
                 results = self.executeSql(sql)
                 
                 messagesTestCsv.append(("===== slc %s being processed \n" %(slcId)))
+                messagesTestCsv.append(("time is %s" %(time.ctime(time.time()))))
                 
                 # iterate over every cmp number
                 for i in results:
@@ -328,6 +331,7 @@ class Db:
                     
                     msg = "cmp row %s from component table soilkey is %s\n" %(cmpId, result)
                     messagesTestCsv.append(msg)
+                    messagesTestCsv.append(("time is %s" %(time.ctime(time.time()))))
                     
                     # find soil key matches avaibale in snf table to user by stripping supplied soil key from cmp table row
                     # strip end landuse from provided key & append %. used for sql character matching
@@ -339,6 +343,7 @@ class Db:
                     
                     msg = "slf table distinct soilkeys are %s\n" %(results)
                     messagesTestCsv.append(msg)
+                    messagesTestCsv.append(("time is %s" %(time.ctime(time.time()))))
                     
                     # is user landuse preference availabe
                     # check end character of string; if matches user then select key else use default of N
@@ -355,6 +360,8 @@ class Db:
                             # only one soil key in snf. must use this
                             snfSoilKeyToUse = e[0]
                             messagesTestCsv.append(("* Can't accomindate land use preference"))
+                    
+                    messagesTestCsv.append(("found soil key match: time is %s" %(time.ctime(time.time()))))
                     
                     msg = "snf soilkey to us is %s\n" %(snfSoilKeyToUse)
                     messagesTestCsv.append(msg)
@@ -378,9 +385,15 @@ class Db:
                         # cmp32 cmp id constrains to create unique row id for cmp32.
                         sql = "insert into %s select * from %s join %s on %s.%s like '%s' and %s.%s = %s and %s.%s = %s" %(resultsTableName, cmpTableName, snfTableName, snfTableName, dbSoilKey, snfSoilKeyToUse, cmpTableName, dbSlcKey, slcId, cmpTableName, dbCmpKey, cmpId)
                         self.executeSql(sql)
+                    
+                    messagesTestCsv.append(("finished processing 1 cmp: time is %s" %(time.ctime(time.time()))))
+                
+                messagesTestCsv.append(("finished processing all cmps for 1 slc id: time is %s" %(time.ctime(time.time()))))
                      
                 # commit transaction
                 self.conn.commit()
+                
+            messagesTestCsv.append(("finished processing all slcs: time is %s" %(time.ctime(time.time()))))
         
             # return list of messages
             return messagesTestCsv
