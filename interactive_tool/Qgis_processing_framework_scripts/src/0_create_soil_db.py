@@ -78,7 +78,6 @@ tempSystemDirectoryPath = utils.determineSystemTempDirectory()
 # class instance of io
 io = inout.Io(inSoilDbPath=inSoilDbPath, tempSystemDirectoryPath=tempSystemDirectoryPath)
  
- 
 #========== create new db 
 # validate user input. returns (message, boolean)
 msg, status = utils.validateUserInput(cmp_dbf_path, snf_dbf_path, slf_dbf_path, soil_database_folder)
