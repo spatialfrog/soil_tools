@@ -100,12 +100,15 @@ if not status:
 
 #TODO: check if vector layer slc ids found in cmp table
 
+#writeTestCsvDirectory="/Users/drownedfrog/Projects/Contracts/AAFC/dec2013_mar2014_tool_dev/data/test"
+writeTestCsvDirectoryOut="D:\Tmp"
+
 #========== join soil tables together
 #TODO: should extract column number inplace of using text
 if soil_tables_to_join == "cmp-snf":
     # join requested
     # 2 table join -- cmp - snf tables
-    db.resultsTableJoiningCmpSnfBySoilkey(slcIds, dbSlcKey=option_soil_cmp_table_slc_id_column, dbCmpKey=option_soil_cmp_table_cmp_column, dbSoilKey=option_soil_tables_soil_key_column, cmpTableName="cmp", snfTableName="snf", landuse=user_preference_snf_table_land_use, writeTestCsv=True, writeTestCsvDirectory="/Users/drownedfrog/Projects/Contracts/AAFC/dec2013_mar2014_tool_dev/data/test")
+    db.resultsTableJoiningCmpSnfBySoilkey(slcIds, dbSlcKey=option_soil_cmp_table_slc_id_column, dbCmpKey=option_soil_cmp_table_cmp_column, dbSoilKey=option_soil_tables_soil_key_column, cmpTableName="cmp", snfTableName="snf", landuse=user_preference_snf_table_land_use, writeTestCsv=True, writeTestCsvDirectory=writeTestCsvDirectoryOut)
     calculationTableName = db.joinTableName
       
 elif soil_tables_to_join == "cmp-snf-slf":
