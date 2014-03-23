@@ -74,10 +74,10 @@ class Db:
         
         # multiple sql statements to process
         if multipleSqlString:
+            #TODO: split list into 2 maybe n lists and process separately to speed up inserts. would need additional db connections            
             for e in sqlString: 
                 # execute sql
                 self.curs.execute(e)
-                
                 #TODO: implement cleaned up return values
 #                 if fieldNames:
 #                     # extract first item from tuple
@@ -102,6 +102,52 @@ class Db:
                 return self.curs.fetchall()
 
 
+    def createDbIndexesOnLoadedData(self, tableNames, dbSoilKey, dbSlcId, dbPercentKey, dbLayerNumberKey):
+        """
+        purpose:
+        create sqlite indexes on the loaded dbf soil db columns
+        
+        how:
+        sql
+        
+        notes:
+        -tableNames must be iterable
+        -used to speed up joins
+        
+        returns:
+        nothing
+        """
+        
+        for tableName in tableNames:
+            if tableName == "cmp":
+                # add cmp specific indexes
+                # soilkey/soilmap
+                sql = "create index index_cmp_soilkey on cmp(%s)" % (dbSoilKey)
+                self.executeSql(sql)
+                # percent column
+                sql = "create index index_cmp_percent on cmp(%s)" % (dbPercentKey)
+                self.executeSql(sql)
+                # slc id 
+                sql = "create index index_cmp_slcid on cmp(%s)" % (dbSlcId)
+                self.executeSql(sql)
+            elif tableName == "snf":
+                # snf indexes
+                # soilkey/soilmap
+                sql = "create index index_snf_soilkey on snf(%s)" % (dbSoilKey)
+                self.executeSql(sql)
+            elif tableName == "slf":
+                # slf specific keys
+                # soilkey/soilmap
+                sql = "create index index_slf_soilkey on slf(%s)" % (dbSoilKey)
+                self.executeSql(sql)
+                # layer number
+                sql = "create index index_slf_layernumber on slf(%s)" % (dbLayerNumberKey)
+                self.executeSql(sql)
+        
+        # analyze db to generate stats for query planner
+        self.executeSql("ANALYZE")
+    
+    
     def sqliteLoadingPerformanceTuning(self, enable=True, closeDbConnection=False):
         """
         purpose:
@@ -304,6 +350,7 @@ class Db:
         notes:
         -join is based on slc ids supplied and soilkey
         -strip soilkey of last character. search snf table for all matches. if landuse character present in table soilkey; return soilkey; else return avaibale soilkey
+        -* all inserts done when slc ids processed. create sequence of slq insert strings that are processed at end
         
         returns:
         nothing
@@ -341,112 +388,69 @@ class Db:
             
             # process slc ids
             for slcId in slcIds:
-                # process each row within given sl.
-                # get cmp count. int id from 1 to n. cmp id will allow unique row id within sl
-                sql = "select %s from %s where %s = %s" %(dbCmpKey, cmpTableName, dbSlcKey, slcId)
-                results = self.executeSql(sql)
+                # process each row within given sl
                 
+                # create data structure from sql query once for each sl processed. list of tuples containing (sl, cmp, soilkey). access via index
+                # query db cmp table for sl, cmp, soilkey
+                sql = "select %s, %s, %s from %s where %s = %s" %(dbSlcKey, dbCmpKey, dbSoilKey, cmpTableName, dbSlcKey, slcId)
+                results = self.executeSql(sql) 
                 
-                
-                messagesTestCsv.append(("===== slc %s being processed \n" %(slcId)))
-                messagesTestCsv.append(("time is %s" %(time.ctime(time.time()))))
-                
-                # iterate over every cmp number
-                for i in results:
-                    # extract cmp id from tuple
-                    cmpId = i[0]
-                    
-                    # return soil key column for cmp + sl
-                    sql = "select %s from %s where %s = %s and %s = %s" %(dbSoilKey, cmpTableName, dbSlcKey, slcId, dbCmpKey, cmpId)
-                    result = self.executeSql(sql)
-                    
-                    msg = "cmp row %s from component table soilkey is %s\n" %(cmpId, result)
-                    messagesTestCsv.append(msg)
-                    messagesTestCsv.append(("time is %s" %(time.ctime(time.time()))))
-                    
-                    # find soil key matches avaibale in snf table to user by stripping supplied soil key from cmp table row
-                    # strip end landuse from provided key & append %. used for sql character matching
-                    ##strippedCmpSoilTableKey = (result[0][0])[:-1] + "%"
-                    strippedCmpSoilTableKey = (result[0][0])
-                    
-                    # get distinct matches of sl cmp soil keys in snf table
-                    ##sql = "select distinct(%s) from %s where %s like '%s'" %(dbSoilKey, snfTableName, dbSoilKey, strippedCmpSoilTableKey)
-                    ##results = self.executeSql(sql)
-                    
-                    ##msg = "snf table distinct soilkeys are %s\n" %(results)
-                    ##messagesTestCsv.append(msg)
-                    ##messagesTestCsv.append(("time is %s" %(time.ctime(time.time()))))
+                # process
+                for item in results:
+                    slcId = item[0]
+                    cmpId = item[1]
+                    soilKeyToUse = item[2]
                     
                     # is user landuse preference availabe
                     # check end character of string; if matches user then select key else use default of N
                     snfSoilKeyToUse = ""
                     
-                    ##////// only for output diagnostic csv
+                    #////// only for output diagnostic csv
                     # get list of snf soil keys present that match cmp soil key
                     snfDistinctKeysMsg = []
-                    if strippedCmpSoilTableKey[:-1] + landuse in snfSoilKeys:
+                    if soilKeyToUse[:-1] + landuse in snfSoilKeys:
                         # user landuse preference can be accomidated
-                        snfDistinctKeysMsg.append((strippedCmpSoilTableKey[:-1] + landuse))
+                        snfDistinctKeysMsg.append((soilKeyToUse[:-1] + landuse))
                         
-                    if strippedCmpSoilTableKey[:-1] + "N" in snfSoilKeys:
+                    if soilKeyToUse[:-1] + "N" in snfSoilKeys:
                         # default landuse of N
-                        snfDistinctKeysMsg.append((strippedCmpSoilTableKey[:-1] + "N"))
+                        snfDistinctKeysMsg.append((soilKeyToUse[:-1] + "N"))
                     
                     messagesTestCsv.append("snf soil keys: %s" %(snfDistinctKeysMsg))
-                    ## //////////
+                    # //////////
                     
                     # match cmp soil key to snf soil and respect user land use preference if possible 
                     # strip off last character of cmp soil key. add user landuse and check if in snf soilkey list
-                    if strippedCmpSoilTableKey[:-1] + landuse in snfSoilKeys:
+                    if soilKeyToUse[:-1] + landuse in snfSoilKeys:
                         # user landuse preference can be accomidated
-                        snfSoilKeyToUse = strippedCmpSoilTableKey[:-1] + landuse
+                        snfSoilKeyToUse = soilKeyToUse[:-1] + landuse
                         messagesTestCsv.append(("Can accomindate land use preference"))
-                    elif strippedCmpSoilTableKey[:-1] + "N" in snfSoilKeys:
+                    elif soilKeyToUse[:-1] + "N" in snfSoilKeys:
                         # default landuse of N
-                        snfSoilKeyToUse = strippedCmpSoilTableKey[:-1] + "N"
+                        snfSoilKeyToUse = soilKeyToUse[:-1] + "N"
                         messagesTestCsv.append(("* Can't accomindate land use preference"))
                     
                     
-#                     for e in results:
-#                         # convert to lowercase for checking
-#                         eToLowerCase = e[0].lower()    
-#                         if eToLowerCase.endswith(landuse.lower()):
-#                             # user land preference can be accomindated
-#                             snfSoilKeyToUse = e[0]
-#                             break
-#                         else:
-#                             # only one soil key in snf. must use this
-#                             snfSoilKeyToUse = e[0]
-#                             messagesTestCsv.append(("* Can't accomindate land use preference"))
-                    
-                    messagesTestCsv.append(("found soil key match: time is %s" %(time.ctime(time.time()))))
-                    
-                    msg = "snf soilkey to us is %s\n" %(snfSoilKeyToUse)
-                    messagesTestCsv.append(msg)
-                    msg = "----------\n\n"
-                    messagesTestCsv.append(msg)
-                    
                     if not resultsTableCreated:
                         # table does not exist
-                        # create table
-                        sql = "create table %s as select * from %s join %s on %s.%s like '%s' and %s.%s = %s and %s.%s = %s" %(resultsTableName, cmpTableName, snfTableName, snfTableName, dbSoilKey, snfSoilKeyToUse, cmpTableName, dbSlcKey, slcId, cmpTableName, dbCmpKey, cmpId)
+                        # create table                        
+                        ## example
+                        #select * from cmp, snf where cmp.sl = 242021 and cmp.cmp = 1 and snf.soilkey = 'ABBUFgl###N'
+                        sql = "create table %s as select * from %s, %s where %s.%s = %s and %s.%s = %s and %s.%s = '%s'" %(resultsTableName, cmpTableName, snfTableName, cmpTableName, dbSlcKey, slcId, cmpTableName, dbCmpKey, cmpId, snfTableName, dbSoilKey, snfSoilKeyToUse)
                         self.executeSql(sql)
                         
-                        # commit transaction
+                        # commit transaction to create table
                         self.conn.commit()
                         
                         # flag that table has been created
                         resultsTableCreated = True
                     else:
-                        #== insert data into table
-                        # join cmp32 sl row to snf row with soilkey match. return all columns from both tables.
-                        # cmp32 cmp id constrains to create unique row id for cmp32.
-                        sql = "insert into %s select * from %s join %s on %s.%s like '%s' and %s.%s = %s and %s.%s = %s" %(resultsTableName, cmpTableName, snfTableName, snfTableName, dbSoilKey, snfSoilKeyToUse, cmpTableName, dbSlcKey, slcId, cmpTableName, dbCmpKey, cmpId)
+                        # create sql insert strings
+                        sql = "insert into %s select * from %s, %s where %s.%s = %s and %s.%s = %s and %s.%s = '%s'" %(resultsTableName, cmpTableName, snfTableName, cmpTableName, dbSlcKey, slcId, cmpTableName, dbCmpKey, cmpId, snfTableName, dbSoilKey, snfSoilKeyToUse)
                         sqlInserts.append(sql)
-                        ##self.executeSql(sql, multipleSqlString=True)
                     
             messagesTestCsv.append(("start sql inserts: time is %s" %(time.ctime(time.time()))))
-            # process all sql insert statements for slc id
+            # process all sql insert statements for slc ids
             self.executeSql(sqlInserts, multipleSqlString=True)
             messagesTestCsv.append(("finished sql inserts: time is %s" %(time.ctime(time.time()))))
                      
