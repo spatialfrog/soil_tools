@@ -99,19 +99,19 @@ class Db:
         
         if enable:
             # turn off journal mode
-            sql="pragma journal_mode=OFF"
+            sql="pragma journal_mode='OFF'"
             self.executeSql(sql)
             # turn off synchronous mode
-            sql="pragma synchronous=OFF"
+            sql="pragma synchronous='OFF'"
             self.executeSql(sql)
             self.conn.commit() 
         else:
             # turn back on
             # turn on journal mode
-            sql="pragma journal_mode=MEMORY"
+            sql="pragma journal_mode='MEMORY'"
             self.executeSql(sql)
             # turn on synchronous mode
-            sql="pragma synchronous=NORMAL"
+            sql="pragma synchronous='NORMAL'"
             self.executeSql(sql)
             self.conn.commit()
         
