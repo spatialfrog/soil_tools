@@ -426,8 +426,8 @@ class Db:
                 
                 messagesTestCsv.append(("finished processing all cmps for 1 slc id: time is %s" %(time.ctime(time.time()))))
                      
-                # commit transaction
-                self.conn.commit()
+            # commit transaction
+            self.conn.commit()
                 
             messagesTestCsv.append(("finished processing all slcs: time is %s" %(time.ctime(time.time()))))
         
