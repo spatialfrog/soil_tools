@@ -84,6 +84,38 @@ class Db:
             return self.curs.fetchall()
 
 
+    def sqliteLoadingPerformanceTuning(self, enable=True):
+        """
+        purpose:
+        increase db performance when loading data
+        
+        notes:
+        turns off journal mode and synchronous modes
+        see http://www.sqlite.org/pragma.html
+        
+        returns:
+        nothing
+        """
+        
+        if enable:
+            # turn off journal mode
+            sql="pragma journal_mode=OFF"
+            self.executeSql(sql)
+            # turn off synchronous mode
+            sql="pragma synchronous=OFF"
+            self.executeSql(sql)
+            self.conn.commit() 
+        else:
+            # turn back on
+            # turn on journal mode
+            sql="pragma journal_mode=MEMORY"
+            self.executeSql(sql)
+            # turn on synchronous mode
+            sql="pragma synchronous=NORMAL"
+            self.executeSql(sql)
+            self.conn.commit()
+        
+
     def convertDbResults2SimpleList(self,data, columnIndex=0):
         """
         purpose:
