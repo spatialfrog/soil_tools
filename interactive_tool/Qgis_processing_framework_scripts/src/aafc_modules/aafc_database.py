@@ -336,12 +336,17 @@ class Db:
             for e in results:
                 snfSoilKeys.append(e[0])
              
+            # sql insert string. string holds all inserts per slc id & at end inserts into db
+            sqlInserts = []
+            
             # process slc ids
             for slcId in slcIds:
                 # process each row within given sl.
                 # get cmp count. int id from 1 to n. cmp id will allow unique row id within sl
                 sql = "select %s from %s where %s = %s" %(dbCmpKey, cmpTableName, dbSlcKey, slcId)
                 results = self.executeSql(sql)
+                
+                
                 
                 messagesTestCsv.append(("===== slc %s being processed \n" %(slcId)))
                 messagesTestCsv.append(("time is %s" %(time.ctime(time.time()))))
@@ -437,11 +442,13 @@ class Db:
                         # join cmp32 sl row to snf row with soilkey match. return all columns from both tables.
                         # cmp32 cmp id constrains to create unique row id for cmp32.
                         sql = "insert into %s select * from %s join %s on %s.%s like '%s' and %s.%s = %s and %s.%s = %s" %(resultsTableName, cmpTableName, snfTableName, snfTableName, dbSoilKey, snfSoilKeyToUse, cmpTableName, dbSlcKey, slcId, cmpTableName, dbCmpKey, cmpId)
-                        self.executeSql(sql)
+                        sqlInserts.append(sql)
+                        ##self.executeSql(sql, multipleSqlString=True)
                     
                     messagesTestCsv.append(("finished processing 1 cmp: time is %s" %(time.ctime(time.time()))))
-                
-                messagesTestCsv.append(("finished processing all cmps for 1 slc id: time is %s" %(time.ctime(time.time()))))
+            # process all sql insert statements for slc id
+            self.executeSql(sqlInserts, multipleSqlString=True)
+                ##messagesTestCsv.append(("finished processing all cmps for 1 slc id: time is %s" %(time.ctime(time.time()))))
                      
             # commit transaction
             self.conn.commit()
@@ -451,7 +458,7 @@ class Db:
             # return list of messages
             return messagesTestCsv
 
-        # drop results table
+        # drop join table
         sql = "drop table if exists %s" %(resultsTableName)
         self.executeSql(sql)
         
