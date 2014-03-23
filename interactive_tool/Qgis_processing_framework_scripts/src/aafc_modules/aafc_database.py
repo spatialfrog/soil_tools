@@ -99,21 +99,25 @@ class Db:
         
         if enable:
             # turn off journal mode
-            sql="pragma journal_mode='OFF'"
+            sql="pragma journal_mode=OFF"
             self.executeSql(sql)
             # turn off synchronous mode
-            sql="pragma synchronous='OFF'"
+            sql="pragma synchronous=OFF"
             self.executeSql(sql)
-            self.conn.commit() 
+            # increase page size
+            sql="pragma page_size=4096"
+            self.executeSql(sql)
         else:
             # turn back on
             # turn on journal mode
-            sql="pragma journal_mode='MEMORY'"
+            sql="pragma journal_mode=MEMORY"
             self.executeSql(sql)
             # turn on synchronous mode
-            sql="pragma synchronous='NORMAL'"
+            sql="pragma synchronous=NORMAL"
             self.executeSql(sql)
-            self.conn.commit()
+            # set page size default
+            sql="pragma page_size=1024"
+            self.executeSql(sql)
         
         # close db connection
         if closeDbConnection:
