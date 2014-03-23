@@ -172,6 +172,16 @@ class Io:
 
         conn = sqlite3.connect(dbpath)
         c = conn.cursor()
+        
+        #===== modification to orginial code
+        # turn off journaling to speed up csv loading
+        c.execute("pragma journal_mode=OFF")
+        # set synchronous to normal mode
+        c.execute("pragma synchronous=NORMAL")
+        # increase page size. default is 1024
+        c.execute("pragma page_size=4096")
+        
+        
         c.execute('CREATE table %s (%s)' % (table, _columns))
 
         _insert_tmpl = 'insert into %s values (%s)' % (table,
