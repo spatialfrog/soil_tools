@@ -60,7 +60,7 @@ class Db:
         self.joinTableName = "joinedSoilTables"
         
     
-    def executeSql(self,sqlString, fieldNames=False):
+    def executeSql(self,sqlString, fieldNames=False, multipleSqlString=False):
         """
         purpose:
         main point of sql interaction with db
@@ -72,17 +72,34 @@ class Db:
         messageBar = iface.messageBar()
         messageBar.pushMessage(str(sqlString))
         
-        # execute sql
-        self.curs.execute(sqlString)
-        
-        if fieldNames:
-            # extract first item from tuple
-            names = list(map(lambda x: x[0], self.curs.description))
-            
-            return names, self.curs.fetchall()
+        # multiple sql statements to process
+        if multipleSqlString:
+            for e in sqlString: 
+                # execute sql
+                self.curs.execute(e)
+                
+                #TODO: implement cleaned up return values
+#                 if fieldNames:
+#                     # extract first item from tuple
+#                     names = list(map(lambda x: x[0], self.curs.description))
+#                     
+#                     return names, self.curs.fetchall()
+#                 else:
+#                     # only return data
+#                     return self.curs.fetchall()
         else:
-            # only return data
-            return self.curs.fetchall()
+            #===== single sql string to process
+            # execute sql
+            self.curs.execute(sqlString)
+            
+            if fieldNames:
+                # extract first item from tuple
+                names = list(map(lambda x: x[0], self.curs.description))
+                
+                return names, self.curs.fetchall()
+            else:
+                # only return data
+                return self.curs.fetchall()
 
 
     def sqliteLoadingPerformanceTuning(self, enable=True, closeDbConnection=False):
