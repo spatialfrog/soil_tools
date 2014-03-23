@@ -445,15 +445,15 @@ class Db:
                         sqlInserts.append(sql)
                         ##self.executeSql(sql, multipleSqlString=True)
                     
-                    messagesTestCsv.append(("finished processing 1 cmp: time is %s" %(time.ctime(time.time()))))
+            messagesTestCsv.append(("start sql inserts: time is %s" %(time.ctime(time.time()))))
             # process all sql insert statements for slc id
             self.executeSql(sqlInserts, multipleSqlString=True)
-                ##messagesTestCsv.append(("finished processing all cmps for 1 slc id: time is %s" %(time.ctime(time.time()))))
+            messagesTestCsv.append(("finished sql inserts: time is %s" %(time.ctime(time.time()))))
                      
             # commit transaction
             self.conn.commit()
                 
-            messagesTestCsv.append(("finished processing all slcs: time is %s" %(time.ctime(time.time()))))
+            messagesTestCsv.append(("all finished -- db commit finished: time is %s" %(time.ctime(time.time()))))
         
             # return list of messages
             return messagesTestCsv
