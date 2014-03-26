@@ -521,7 +521,13 @@ class Db:
             snfSoilKeys = []
             # clean up into simple list of strings
             for e in results:
-                snfSoilKeys.append(e[0])
+                tmp = e[0]
+                if tmp.startswith("#"):
+                    # do not add. keys must not start with #
+                    pass
+                else:
+                    # add key to list
+                    snfSoilKeys.append(tmp)
              
             # sql insert string. string holds all inserts per slc id & at end inserts into db
             sqlInserts = []
@@ -534,7 +540,7 @@ class Db:
                 # query db cmp table for sl, cmp, soilkey
                 sql = "select %s, %s, %s from %s where %s = %s" %(dbSlcKey, dbCmpKey, dbSoilKey, cmpTableName, dbSlcKey, slcId)
                 results = self.executeSql(sql) 
-                
+                    
                 # process
                 for item in results:
                     slcId = item[0]
@@ -578,18 +584,15 @@ class Db:
                     snlLayerNumberFound = False
                     
                     # get distinct layer numbers in slf table based on snf soilkey to be used
-                    sql = "select distinct(%s) from %s where %s like '%s'" %(dbLayerNumberKey, slfTableName, dbSoilKey, snfSoilKeyToUse)
+                    sql = "select %s from %s where %s like '%s'" %(dbLayerNumberKey, slfTableName, dbSoilKey, snfSoilKeyToUse)
                     results = self.executeSql(sql)
                     
                     msg = "distinct snl layer numbers are %s\n" %(results)
                     messagesTestCsv.append(msg)
                     
-                    #= is user requested slf layer number available
-                    # convert returned results to simple list
-                    cleanedResults = self.convertDbResults2SimpleList(results, columnIndex=0)
-                    
+                    #= is user requested slf layer number available                    
                     # check if user requested layer number is in layer number
-                    if layerNumber in cleanedResults:
+                    if layerNumber in results[0]:
                         # match
                         snlLayerNumberToUse = layerNumber
                         snlLayerNumberFound = True
