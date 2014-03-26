@@ -59,9 +59,7 @@ utils = utilities.Utils(iface)
 # get path to temp directory
 tempSystemDirectoryPath = utils.determineSystemTempDirectory()
 
-# user options table name
-#TODO: should be global parameter
-userOptionsTable = "availableSoilTableJoins"
+
 
 #========= validate user input
 # returns (message, boolean)
@@ -100,16 +98,9 @@ if not status:
     utils.communicateWithUserInQgis("Problem loading cmp soil table. Issue with either: paths or type of data passed in. Stopping.",level="CRITICAL", messageExistanceDuration=15)
     raise Exception(msg)
 
-# user supplied path
-    msg, status = utils.loadDbTableAsLayerIntoQgis(soil_database, userOptionsTable)
-    if not status:
-        # problem loading table
-        utils.communicateWithUserInQgis("Problem with either: paths or type of data passed in. Stopping.",level="CRITICAL", messageExistanceDuration=15)
-        raise Exception(msg)
-
 #== join related tables if present in db
 # load join options table. only present if user supplied snf/slf when building soil db
-msg, status = utils.loadDbTableAsLayerIntoQgis(soil_database, userOptionsTable)
+msg, status = utils.loadDbTableAsLayerIntoQgis(soil_database, db.userJoinOptionsTable)
 if not status:
     # table not present. this is okay
     pass
