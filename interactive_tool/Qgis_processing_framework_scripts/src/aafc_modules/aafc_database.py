@@ -538,6 +538,8 @@ class Db:
             # sql insert string. string holds all inserts per slc id & at end inserts into db
             sqlInserts = []
             
+            output = []
+            
             # process slc ids
             for slcId in slcIds:
                 # process each row within given sl
@@ -557,6 +559,8 @@ class Db:
                 slcId2Use = [x[0] for x in resultsDataStruct]
                 cmpId2Use = [x[1] for x in resultsDataStruct]
                 soilKey2Use = [x[2] for x in resultsDataStruct]
+                
+                out=""
                 
                 def process(data):
                 #def process(slcId, cmpId, soilKeyToUse)
@@ -645,7 +649,8 @@ class Db:
                         # cmp cmp id constrains to create unique row id for cmp
                         sql = "insert into %s select * from %s join %s on %s.%s like '%s' and %s.%s = %s and %s.%s = %s join %s on %s.%s like %s.%s and %s.%s = %s" %(resultsTableName, cmpTableName, snfTableName, snfTableName, dbSoilKey, snfSoilKeyToUse, cmpTableName, dbSlcKey, slcId, cmpTableName, dbCmpKey, cmpId, slfTableName, cmpTableName, dbSoilKey, slfTableName, dbSoilKey, slfTableName, dbLayerNumberKey, snlLayerNumberToUse)
                         ##self.executeSql(sql)
-                        sqlInserts.append(sql)
+                        #sqlInserts.append(sql)
+                        return sql
                     else:
                         pass
                     
@@ -653,9 +658,11 @@ class Db:
                 if __name__ == "main":
                     # call method to process
                     pool = Pool()
-                    pool.map(process, resultsDataStruct)
+                    out = pool.map(process, resultsDataStruct)
                     pool.close()
                     pool.join()
+                    output.append(out)
+                
                 
                     
             messagesTestCsv.append(("finish slc id:finish time is %s" %(time.ctime(time.time()))))
@@ -663,11 +670,14 @@ class Db:
             
             messagesTestCsv.append(("start sql inserts: time is %s" %(time.ctime(time.time()))))
             # process all sql insert statements for slc ids
-            #self.executeSql(sqlInserts, multipleSqlString=True)
+            self.executeSql(sqlInserts, multipleSqlString=True)
             messagesTestCsv.append(("finished sql inserts: time is %s" %(time.ctime(time.time()))))
+            
+            messagesTestCsv.append("the sql insert states below")
+            messagesTestCsv.append(output)
                     
             # commit transaction
-            #self.conn.commit()
+            self.conn.commit()
 
             messagesTestCsv.append(("all finished -- db commit finished: time is %s" %(time.ctime(time.time()))))
 
