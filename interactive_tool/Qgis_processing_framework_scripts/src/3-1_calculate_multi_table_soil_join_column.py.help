@@ -1,7 +1,7 @@
 (dp0
 S'ALG_DESC'
 p1
-VAllows any single column calculation on user created soil join table 'joinedSoilTables'.\u000a\u000aWrites single csv per column containing either weighted average per SLC if numeric column data or dominate/sub-dominate category per SLC if categorical data.\u000a\u000aOutput CSV filename contains prefix_columnCalculated.csv\u000a\u000aOnly for use with joined soil table.\u000a\u000aNotes:\u000a-** If you created join table within current QGIS session it will be added as 'joinedSoilTables', else you must connect to soil database using '0 connect soil db' script to load joined table.
+VAllows any single column calculation on user created soil join table 'joinedSoilTables'.\u000a\u000aWrites single csv per column containing either weighted average per SLC if numeric column data or dominate/sub-dominate category per SLC if categorical data.\u000a\u000aOutput CSV filename contains prefix_columnCalculated.csv\u000a\u000aOnly for use with joined soil table.\u000a\u000aNotes:\u000a-** If you created join table within current QGIS session it will be added as 'joinedSoilTables', else you must connect to soil database using '0 connect soil db' script to load joined table.\u000a-Spatial selection of polygon is respected. If nothing selected than all SLC ids in polygon are processed.
 p2
 sS'joined_soil_table'
 p3

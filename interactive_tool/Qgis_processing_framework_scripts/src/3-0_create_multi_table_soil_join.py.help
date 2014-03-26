@@ -9,7 +9,7 @@ VColumn defining linkage between shapefile polygons and cmp table.\u000a\u000aPr
 p4
 sS'ALG_DESC'
 p5
-VAllows the creation of a multi-soil table.\u000a\u000aUser specifies join criteria and spatial selection if desired to create single join table either between cmp-snf or cmp-snf-slf soil tables.\u000a\u000aCreated join table is automatically added to QGIS.\u000a\u000a** Created join table is named 'joinedSoilTables'\u000a\u000aNotes:\u000a-Creates join table containing 1 row per unique slc id + cmp id.\u000a-Can only create join if snf and/or slf soil tables imported when soil database created. If not, then create new soil database.\u000a-When script '1 connect soil db' execute it will load table named 'possibleJoinsToCreate'. This provides the soil table joins allowed.
+VAllows the creation of a multi-soil table.\u000a\u000aUser specifies join criteria and spatial selection if desired to create single join table either between cmp-snf or cmp-snf-slf soil tables.\u000a\u000aCreated join table is automatically added to QGIS.\u000a\u000a** Created join table is named 'joinedSoilTables'\u000a\u000aNotes:\u000a-Creates join table containing 1 row per unique slc id + cmp id.\u000a-Can only create join if snf and/or slf soil tables imported when soil\u000a database created. If not, then create new soil database.\u000a-When script '1 connect soil db' execute it will load table named 'possibleJoinsToCreate'. This provides the soil table joins allowed.\u000a-Spatial selection of polygon is respected. If nothing selected than all SLC ids in polygon are processed in join.
 p6
 sS'soil_tables_to_join'
 p7
