@@ -37,6 +37,11 @@ richardburcher@gmail.com
 ##cmp_dbf_path=file
 ##snf_dbf_path=file
 ##slf_dbf_path=file
+##option_soil_tables_soil_key_column=string soilkey
+##option_soil_cmp_table_slc_id_column=string sl
+##option_soil_cmp_table_cmp_column=string cmp
+##option_soil_cmp_table_percent_column=string percent
+##option_soil_slf_table_layer_number_column=string layer_no
 #===========
 
 from PyQt4.QtCore import *
@@ -124,7 +129,7 @@ db.createUserTableProcessingOptions(tableOptionsForProcessing)
 #========== index loaded soil data tables
 # for speed up on joins and queries
 #TODO: add hardcoded to gui
-db.createDbIndexesOnLoadedData(soilTablesPresent, "soilkey", "sl", "percent", "layer_no")
+db.createDbIndexesOnLoadedData(soilTablesPresent, option_soil_tables_soil_key_column, option_soil_cmp_table_slc_id_column, option_soil_cmp_table_cmp_column, option_soil_cmp_table_percent_column, option_soil_slf_table_layer_number_column)
 
 # report db creation success
 msg = "Db successfully created. Find in directory %s" %(soil_database_folder)
