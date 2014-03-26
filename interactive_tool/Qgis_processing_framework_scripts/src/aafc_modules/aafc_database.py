@@ -514,7 +514,7 @@ class Db:
             messagesTestCsv.append(("///// land use preference is %s\n\n\n"%(landuse)))
             messagesTestCsv.append(("start time is %s" %(time.ctime(time.time()))))
             
-            
+            messagesTestCsv.append(("get all soil keys snf:start time is %s" %(time.ctime(time.time()))))
             # get all soil keys from snf table
             sql = "select distinct(%s) from %s" %(dbSoilKey, snfTableName)
             results = self.executeSql(sql)
@@ -528,24 +528,33 @@ class Db:
                 else:
                     # add key to list
                     snfSoilKeys.append(tmp)
-             
+            messagesTestCsv.append(("get all soil keys snf:end time is %s" %(time.ctime(time.time()))))
+            
             # sql insert string. string holds all inserts per slc id & at end inserts into db
             sqlInserts = []
             
             # process slc ids
             for slcId in slcIds:
                 # process each row within given sl
+                messagesTestCsv.append(("start slc id:start time is %s" %(time.ctime(time.time()))))
                 
+                messagesTestCsv.append(("build sl,cmp,soilkey struct:start time is %s" %(time.ctime(time.time()))))
                 # create data structure from sql query once for each sl processed. list of tuples containing (sl, cmp, soilkey). access via index
                 # query db cmp table for sl, cmp, soilkey
                 sql = "select %s, %s, %s from %s where %s = %s" %(dbSlcKey, dbCmpKey, dbSoilKey, cmpTableName, dbSlcKey, slcId)
-                results = self.executeSql(sql) 
-                    
+                results = self.executeSql(sql)
+                messagesTestCsv.append(("build sl,cmp, soilkey:finish time is %s" %(time.ctime(time.time()))))
+                
+                msg = "slcId is %s and db query for data struct is %s" %(slcId, results)
+                messagesTestCsv.append(msg)
+                 
                 # process
                 for item in results:
                     slcId = item[0]
                     cmpId = item[1]
                     soilKeyToUse = item[2]
+                    
+                    messagesTestCsv.append(("process cmp id:start time is %s" %(time.ctime(time.time())))) 
                     
                     # is user landuse preference availabe
                     # check end character of string; if matches user then select key else use default of N
@@ -623,15 +632,19 @@ class Db:
                         sqlInserts.append(sql)
                     else:
                         pass
+                    
+                    messagesTestCsv.append(("done cmp id:finish time is %s" %(time.ctime(time.time()))))
+                    
+            messagesTestCsv.append(("finish slc id:finish time is %s" %(time.ctime(time.time()))))
             
             
             messagesTestCsv.append(("start sql inserts: time is %s" %(time.ctime(time.time()))))
             # process all sql insert statements for slc ids
-            self.executeSql(sqlInserts, multipleSqlString=True)
+            #self.executeSql(sqlInserts, multipleSqlString=True)
             messagesTestCsv.append(("finished sql inserts: time is %s" %(time.ctime(time.time()))))
                     
             # commit transaction
-            self.conn.commit()
+            #self.conn.commit()
 
             messagesTestCsv.append(("all finished -- db commit finished: time is %s" %(time.ctime(time.time()))))
 
