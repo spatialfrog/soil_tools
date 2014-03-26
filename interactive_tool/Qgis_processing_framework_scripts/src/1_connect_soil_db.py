@@ -28,7 +28,6 @@ richardburcher@gmail.com
 ##[AAFC Soil Tools]=group
 ##soil_database=file
 ##slc_shapefile=vector
-##soil_calculation_only_from_cmp_table=boolean True
 #===========
 
 from PyQt4.QtCore import *
@@ -94,12 +93,11 @@ if not slc_shapefile =="":
         raise Exception(msg)
 
 # load cmp table
-if soil_calculation_only_from_cmp_table:
-    msg, status = utils.loadDbTableAsLayerIntoQgis(soil_database, "cmp")
-    if not status:
-        # problem loading table
-        utils.communicateWithUserInQgis("Problem with either: paths or type of data passed in. Stopping.",level="CRITICAL", messageExistanceDuration=15)
-        raise Exception(msg)
+msg, status = utils.loadDbTableAsLayerIntoQgis(soil_database, "cmp")
+if not status:
+    # problem loading table
+    utils.communicateWithUserInQgis("Problem with either: paths or type of data passed in. Stopping.",level="CRITICAL", messageExistanceDuration=15)
+    raise Exception(msg)
 
 #========== clean up
 # remove added aafc soil module from python path
