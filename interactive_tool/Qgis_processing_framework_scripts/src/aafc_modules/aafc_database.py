@@ -105,7 +105,7 @@ class Db:
                 return self.curs.fetchall()
 
 
-    def createDbIndexesOnLoadedData(self, tableNames, dbSoilKey, dbSlcId, dbPercentKey, dbLayerNumberKey):
+    def createDbIndexesOnLoadedData(self, tableNames, dbSoilKey, dbSlcId, dbCmpKey, dbPercentKey, dbLayerNumberKey):
         """
         purpose:
         create sqlite indexes on the loaded dbf soil db columns
@@ -132,6 +132,9 @@ class Db:
                 self.executeSql(sql)
                 # slc id 
                 sql = "create index index_cmp_slcid on cmp(%s)" % (dbSlcId)
+                self.executeSql(sql)
+                # cmp id
+                sql = "create index index_cmp_cmpid on cmp(%s)" % (dbCmpKey)
                 self.executeSql(sql)
             elif tableName == "snf":
                 # snf indexes
