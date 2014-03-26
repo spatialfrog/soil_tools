@@ -59,6 +59,9 @@ class Db:
         # join table name. generic as you can only have 1 join table at a time
         self.joinTableName = "joinedSoilTables"
         
+        # user options table name for possible joins allowed
+        self.userJoinOptionsTable = "availableSoilTableJoins"
+        
     
     def executeSql(self,sqlString, fieldNames=False, multipleSqlString=False):
         """
@@ -315,27 +318,24 @@ class Db:
         returns:
         nothing
         """
-
-        # user options table name
-        userOptionsTable = "availableSoilTableJoins"
         
         # drop table if present
-        sql = "drop table if exists %s" %(userOptionsTable)
+        sql = "drop table if exists %s" %(self.userJoinOptionsTable)
         self.executeSql(sql)
         
         # check for highest key order to create table and insert statement
         if tableOptions.get(2,None):
             print "processing"
-            sql = "create table %s('cmp-snf' INTEGER, 'cmp-snf-slf' INTEGER)" %(userOptionsTable)
+            sql = "create table %s('cmp-snf' INTEGER, 'cmp-snf-slf' INTEGER)" %(self.userJoinOptionsTable)
             self.executeSql(sql)
-            sql = "insert into %s('cmp-snf', 'cmp-snf-slf') values(1, 2)" %(userOptionsTable)
+            sql = "insert into %s('cmp-snf', 'cmp-snf-slf') values(1, 2)" %(self.userJoinOptionsTable)
             self.executeSql(sql)
             self.conn.commit()
         elif tableOptions.get(1,None):
             print "processing"
-            sql = "create table %s('cmp-snf' INTEGER)" %(userOptionsTable)
+            sql = "create table %s('cmp-snf' INTEGER)" %(self.userJoinOptionsTable)
             self.executeSql(sql)
-            sql = "insert into %s('cmp-snf') values(1)" %(userOptionsTable)
+            sql = "insert into %s('cmp-snf') values(1)" %(self.userJoinOptionsTable)
             self.executeSql(sql)
             self.conn.commit()
     
