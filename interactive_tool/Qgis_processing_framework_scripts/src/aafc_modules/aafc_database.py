@@ -34,6 +34,7 @@ from qgis.utils import *
 import os
 import sqlite3
 import time
+from multiprocessing import Pool
 
 
 class Db:
@@ -61,6 +62,9 @@ class Db:
         
         # user options table name for possible joins allowed
         self.userJoinOptionsTable = "possibleJoinsToCreate"
+        
+        # has join table been created
+        self.resultsTableCreated = False
         
     
     def executeSql(self,sqlString, fieldNames=False, multipleSqlString=False):
@@ -507,7 +511,8 @@ class Db:
             returns list of messages used for testing
             """
             
-            resultsTableCreated = False
+            ##resultsTableCreated = False
+            ##global resultsTableCreated
             
             # captures key results that will be added and written to csv only if writeTextCsv = True
             messagesTestCsv = []
@@ -542,17 +547,28 @@ class Db:
                 # create data structure from sql query once for each sl processed. list of tuples containing (sl, cmp, soilkey). access via index
                 # query db cmp table for sl, cmp, soilkey
                 sql = "select %s, %s, %s from %s where %s = %s" %(dbSlcKey, dbCmpKey, dbSoilKey, cmpTableName, dbSlcKey, slcId)
-                results = self.executeSql(sql)
+                resultsDataStruct = self.executeSql(sql)
                 messagesTestCsv.append(("build sl,cmp, soilkey:finish time is %s" %(time.ctime(time.time()))))
                 
-                msg = "slcId is %s and db query for data struct is %s" %(slcId, results)
+                msg = "slcId is %s and db query for data struct is %s" %(slcId, resultsDataStruct)
                 messagesTestCsv.append(msg)
-                 
-                # process
-                for item in results:
-                    slcId = item[0]
-                    cmpId = item[1]
-                    soilKeyToUse = item[2]
+                
+                # convert tuple structure into sep iteratable
+                slcId2Use = [x[0] for x in resultsDataStruct]
+                cmpId2Use = [x[1] for x in resultsDataStruct]
+                soilKey2Use = [x[2] for x in resultsDataStruct]
+                
+                def process(data):
+                #def process(slcId, cmpId, soilKeyToUse)
+#                 # process
+#                 for item in results:
+#                     slcId = item[0]
+#                     cmpId = item[1]
+#                     soilKeyToUse = item[2]
+                    
+                    slcId = data[0]
+                    cmpId = data[1]
+                    soilKeyToUse = data[2]
                     
                     messagesTestCsv.append(("process cmp id:start time is %s" %(time.ctime(time.time())))) 
                     
@@ -612,7 +628,7 @@ class Db:
                         messagesTestCsv.append(msg)
                     
                     # process join only if matching slf row found
-                    if not resultsTableCreated and snlLayerNumberFound:
+                    if not self.resultsTableCreated and snlLayerNumberFound:
                         # table does not exist
                         # create table
                         sql = "create table %s as select * from %s join %s on %s.%s like '%s' and %s.%s = %s and %s.%s = %s join %s on %s.%s like %s.%s and %s.%s = %s" %(resultsTableName, cmpTableName, snfTableName, snfTableName, dbSoilKey, snfSoilKeyToUse, cmpTableName, dbSlcKey, slcId, cmpTableName, dbCmpKey, cmpId, slfTableName, cmpTableName, dbSoilKey, slfTableName, dbSoilKey, slfTableName, dbLayerNumberKey, snlLayerNumberToUse)
@@ -622,8 +638,8 @@ class Db:
                         self.conn.commit()
                         
                         # flag that table has been created
-                        resultsTableCreated = True
-                    elif resultsTableCreated and snlLayerNumberFound:
+                        self.resultsTableCreated = True
+                    elif self.resultsTableCreated and snlLayerNumberFound:
                         # table has been created and snl layer found for use
                         # join cmp sl row to snf row and slf row with soilkey and layer number match. return all columns from tables
                         # cmp cmp id constrains to create unique row id for cmp
@@ -634,6 +650,13 @@ class Db:
                         pass
                     
                     messagesTestCsv.append(("done cmp id:finish time is %s" %(time.ctime(time.time()))))
+                if __name__ == "main":
+                    # call method to process
+                    pool = Pool()
+                    pool.map(process, resultsDataStruct)
+                    pool.close()
+                    pool.join()
+                
                     
             messagesTestCsv.append(("finish slc id:finish time is %s" %(time.ctime(time.time()))))
             
