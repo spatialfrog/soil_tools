@@ -555,21 +555,9 @@ class Db:
                 msg = "slcId is %s and db query for data struct is %s" %(slcId, resultsDataStruct)
                 messagesTestCsv.append(msg)
                 
-                # convert tuple structure into sep iteratable
-                slcId2Use = [x[0] for x in resultsDataStruct]
-                cmpId2Use = [x[1] for x in resultsDataStruct]
-                soilKey2Use = [x[2] for x in resultsDataStruct]
-                
                 out=""
                 
                 def process(data):
-                #def process(slcId, cmpId, soilKeyToUse)
-#                 # process
-#                 for item in results:
-#                     slcId = item[0]
-#                     cmpId = item[1]
-#                     soilKeyToUse = item[2]
-                    
                     slcId = data[0]
                     cmpId = data[1]
                     soilKeyToUse = data[2]
