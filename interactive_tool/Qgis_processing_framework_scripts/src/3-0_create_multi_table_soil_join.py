@@ -100,8 +100,8 @@ if not status:
 
 #TODO: check if vector layer slc ids found in cmp table
 
-##writeTestCsvDirectory="/Users/drownedfrog/Projects/Contracts/AAFC/dec2013_mar2014_tool_dev/data/test"
-##writeTestCsvDirectoryOut="D:\Tmp"
+#writeTestCsvDirectory="/Users/drownedfrog/Projects/Contracts/AAFC/dec2013_mar2014_tool_dev/data/test"
+#writeTestCsvDirectoryOut="D:\Tmp"
 
 #========== join soil tables together
 #TODO: should extract column number inplace of using text
