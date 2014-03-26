@@ -60,7 +60,7 @@ class Db:
         self.joinTableName = "joinedSoilTables"
         
         # user options table name for possible joins allowed
-        self.userJoinOptionsTable = "availableSoilTableJoins"
+        self.userJoinOptionsTable = "possibleJoinsToCreate"
         
     
     def executeSql(self,sqlString, fieldNames=False, multipleSqlString=False):
