@@ -79,13 +79,6 @@ if soil_database == "":
     # user must supply this!
     utils.communicateWithUserInQgis("Must supply soil datbase path. Stopping.",level="CRITICAL", messageExistanceDuration=15)
     raise Exception("Must supply soil datbase path. Stopping.")
-else:
-    # user supplied path
-    msg, status = utils.loadDbTableAsLayerIntoQgis(soil_database, userOptionsTable)
-    if not status:
-        # problem loading table
-        utils.communicateWithUserInQgis("Problem with either: paths or type of data passed in. Stopping.",level="CRITICAL", messageExistanceDuration=15)
-        raise Exception(msg)
 
 # load slc shapefile
 if not slc_shapefile =="":
@@ -100,12 +93,26 @@ if not slc_shapefile =="":
 # db must exist before sqlite connection can exit
 db = database.Db(soil_database, tempSystemDirectoryPath)
 
-# load cmp table
+#== load cmp table
 msg, status = utils.loadDbTableAsLayerIntoQgis(soil_database, "cmp")
 if not status:
     # problem loading table
     utils.communicateWithUserInQgis("Problem loading cmp soil table. Issue with either: paths or type of data passed in. Stopping.",level="CRITICAL", messageExistanceDuration=15)
     raise Exception(msg)
+
+# user supplied path
+    msg, status = utils.loadDbTableAsLayerIntoQgis(soil_database, userOptionsTable)
+    if not status:
+        # problem loading table
+        utils.communicateWithUserInQgis("Problem with either: paths or type of data passed in. Stopping.",level="CRITICAL", messageExistanceDuration=15)
+        raise Exception(msg)
+
+#== join related tables if present in db
+# load join options table. only present if user supplied snf/slf when building soil db
+msg, status = utils.loadDbTableAsLayerIntoQgis(soil_database, userOptionsTable)
+if not status:
+    # table not present. this is okay
+    pass
 
 # load joinedSoilTables or similar named soil joined tables
 msg, status = utils.loadDbTableAsLayerIntoQgis(soil_database, db.joinTableName)
