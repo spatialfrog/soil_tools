@@ -584,23 +584,23 @@ class Db:
                     msg = "distinct snl layer numbers are %s\n" %(results)
                     messagesTestCsv.append(msg)
                     
-                    # is user requested slf layer number available
-                    for e in results:
-                        if e[0] == layerNumber:
-                            # match
-                            snlLayerNumberToUse = e[0]
-                            snlLayerNumberFound = True
-                            messagesTestCsv.append((">>> user requested soil layer in slf table found\n\n----------\n"))
-                            break
+                    #= is user requested slf layer number available
+                    # convert returned results to simple list
+                    cleanedResults = self.convertDbResults2SimpleList(results, columnIndex=0)
                     
-                    # user layer number missing. drop this slc id + cmp row. process next slc id + cmp row
-                    if snlLayerNumberFound == False:    
+                    # check if user requested layer number is in layer number
+                    if layerNumber in cleanedResults:
+                        # match
+                        snlLayerNumberToUse = layerNumber
+                        snlLayerNumberFound = True
+                        messagesTestCsv.append((">>> user requested soil layer in slf table found\n\n----------\n"))
+                    else:
+                        # user layer number missing. drop this slc id + cmp row. process next slc id + cmp row  
                         msg = "* slf layer number not found. skipping current slc id + cmp row. will try next row.\n\n----------\n"
                         messagesTestCsv.append(msg)
-                        break    
                     
-                    # process join
-                    if not resultsTableCreated:
+                    # process join only if matching slf row found
+                    if not resultsTableCreated and not snlLayerNumberFound:
                         # table does not exist
                         # create table
                         sql = "create table %s as select * from %s join %s on %s.%s like '%s' and %s.%s = %s and %s.%s = %s join %s on %s.%s like %s.%s and %s.%s = %s" %(resultsTableName, cmpTableName, snfTableName, snfTableName, dbSoilKey, snfSoilKeyToUse, cmpTableName, dbSlcKey, slcId, cmpTableName, dbCmpKey, cmpId, slfTableName, cmpTableName, dbSoilKey, slfTableName, dbSoilKey, slfTableName, dbLayerNumberKey, snlLayerNumberToUse)
@@ -609,15 +609,17 @@ class Db:
                         # commit transaction
                         self.conn.commit()
                         
-                        # flaf that table has been created
+                        # flag that table has been created
                         resultsTableCreated = True
-                    else:
-                        #== insert data into table
+                    elif resultsTableCreated and snlLayerNumberFound:
+                        # table has been created and snl layer found for use
                         # join cmp sl row to snf row and slf row with soilkey and layer number match. return all columns from tables
                         # cmp cmp id constrains to create unique row id for cmp
                         sql = "insert into %s select * from %s join %s on %s.%s like '%s' and %s.%s = %s and %s.%s = %s join %s on %s.%s like %s.%s and %s.%s = %s" %(resultsTableName, cmpTableName, snfTableName, snfTableName, dbSoilKey, snfSoilKeyToUse, cmpTableName, dbSlcKey, slcId, cmpTableName, dbCmpKey, cmpId, slfTableName, cmpTableName, dbSoilKey, slfTableName, dbSoilKey, slfTableName, dbLayerNumberKey, snlLayerNumberToUse)
                         ##self.executeSql(sql)
                         sqlInserts.append(sql)
+                    else:
+                        pass
             
             
             messagesTestCsv.append(("start sql inserts: time is %s" %(time.ctime(time.time()))))
