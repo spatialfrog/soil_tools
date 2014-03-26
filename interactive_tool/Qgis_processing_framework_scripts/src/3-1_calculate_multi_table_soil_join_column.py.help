@@ -1,0 +1,50 @@
+(dp0
+S'ALG_DESC'
+p1
+VAllows any single column calculation on user created soil join table 'joinedSoilTables'.\u000a\u000aWrites single csv per column containing either weighted average per SLC if numeric column data or dominate/sub-dominate category per SLC if categorical data.\u000a\u000aOutput CSV filename contains prefix_columnCalculated.csv\u000a\u000aOnly for use with joined soil table.\u000a\u000aNotes:\u000a-** If you created join table within current QGIS session it will be added as 'joinedSoilTables', else you must connect to soil database using '0 connect soil db' script to load joined table.
+p2
+sS'joined_soil_table'
+p3
+VName of joined soil table 'joinedSoilTables'.
+p4
+sS'option_csv_file_prefix'
+p5
+VUser defined prefix for CSV file.\u000a\u000aDefault is 'calculate'.
+p6
+sS'ALG_CREATOR'
+p7
+VRichard Burcher\u000a2014
+p8
+sS'option_soil_join_table_percent_column'
+p9
+VColumn defining percent.\u000a\u000aDefault is 'percent'.
+p10
+sS'slc_shapefile_polygon_id_column'
+p11
+VShapefile column containing the unique SLC identifier.
+p12
+sS'slc_shapefile'
+p13
+VName of shapefile in drop down that matches QGIS layer.
+p14
+sS'join_table_soil_column_to_calculate'
+p15
+VColumn to calculate on.
+p16
+sS'ALG_HELP_CREATOR'
+p17
+VRichard Burcher\u000a2014
+p18
+sS'option_soil_join_table_slc_id_column'
+p19
+VColumn defining the SLC id.\u000a\u000aDefault is 'sl'.
+p20
+sS'option_csv_output_directory'
+p21
+VDirectory to write CSV to.
+p22
+sS'option_csv_load_file_into_qgis'
+p23
+VLoad created CSV into QGIS after calculating.\u000a\u000aDefault is yes.
+p24
+s.

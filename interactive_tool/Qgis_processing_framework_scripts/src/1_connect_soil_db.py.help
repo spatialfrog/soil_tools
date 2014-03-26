@@ -1,0 +1,22 @@
+(dp0
+S'ALG_CREATOR'
+p1
+VRichard Burcher\u000a2014
+p2
+sS'slc_shapefile'
+p3
+VFull path to the user selected polygon shapefile.
+p4
+sS'ALG_DESC'
+p5
+VConnect to created sqlite soil database.\u000a\u000aLoads all necessary soil database tables into QGIS that user will need to interact with.\u000a\u000aLoads user selected shapefile defining the SLC polygons that user wishes to process.
+p6
+sS'soil_database'
+p7
+VFull path to the soil database.
+p8
+sS'ALG_HELP_CREATOR'
+p9
+VRichard Burcher\u000a2014
+p10
+s.
