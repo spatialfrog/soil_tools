@@ -497,71 +497,81 @@ class Db:
         ##-- sql example -- join all three tables
         ##-- join cmp & snf first to get soilkey to be used, join cmp row selected against slf table constrained by layer number
         ##select cmp32.sl, cmp32.soilkey as cmp32_soilkey, snf32.drainage, slf32.* from cmp32 join snf32 on snf32.soilkey like 'ABBUFgl###N' and cmp32.sl = 242021 and cmp32.cmp = 1 join slf32 on cmp32.soilkey like slf32.soilkey and slf32.layer_no = 2
-        
+                
         resultsTableName = self.joinTableName
             
         def processSlcRows(slcIds, dbSlcKey, dbCmpKey, dbSoilKey, dbLayerNumberKey, cmpTableName, snfTableName, slfTableName, landuse, layerNumber):
             """
             process slc ids and insert data into flat results table
+            
+            returns list of messages used for testing
             """
             
             resultsTableCreated = False
+            
             # captures key results that will be added and written to csv only if writeTextCsv = True
             messagesTestCsv = []
-            messagesTestCsv.append(("///// land use preference is %s\n\n"%(landuse)))
-            messagesTestCsv.append("/////  layer number is %s\n\n"%(layerNumber))
-                        
+            messagesTestCsv.append(("///// land use preference is %s\n\n\n"%(landuse)))
+            messagesTestCsv.append(("start time is %s" %(time.ctime(time.time()))))
+            
+            
+            # get all soil keys from snf table
+            sql = "select distinct(%s) from %s" %(dbSoilKey, snfTableName)
+            results = self.executeSql(sql)
+            snfSoilKeys = []
+            # clean up into simple list of strings
+            for e in results:
+                snfSoilKeys.append(e[0])
+             
+            # sql insert string. string holds all inserts per slc id & at end inserts into db
+            sqlInserts = []
+            
             # process slc ids
             for slcId in slcIds:
-                # process each row within given sl.
-                # get cmp count. int id from 1 to n. cmp id will allow unique row id within sl
-                sql = "select %s from %s where %s = %s" %(dbCmpKey, cmpTableName, dbSlcKey, slcId)
-                results = self.executeSql(sql)
+                # process each row within given sl
                 
-                messagesTestCsv.append(("===== slc %s being processed \n" %(slcId)))
+                # create data structure from sql query once for each sl processed. list of tuples containing (sl, cmp, soilkey). access via index
+                # query db cmp table for sl, cmp, soilkey
+                sql = "select %s, %s, %s from %s where %s = %s" %(dbSlcKey, dbCmpKey, dbSoilKey, cmpTableName, dbSlcKey, slcId)
+                results = self.executeSql(sql) 
                 
-                # iterate over every cmp number
-                for i in results:
-                    # extract cmp id from tuple
-                    cmpId = i[0]
-                    
-                    # return soil key column for cmp + sl
-                    sql = "select %s from %s where %s = %s and %s = %s" %(dbSoilKey, cmpTableName, dbSlcKey, slcId, dbCmpKey, cmpId)
-                    result = self.executeSql(sql)
-                    
-                    msg = "cmp row %s from component table soilkey is %s\n" %(cmpId, result)
-                    messagesTestCsv.append(msg)
-                    
-                    # find soil key matches avaibale in snf table to user by stripping supplied soil key from cmp table row
-                    # strip end landuse from provided key & append %. used for sql character matching
-                    strippedCmpSoilTableKey = (result[0][0])[:-1] + "%"
-                    
-                    # get distinct matches of sl cmp soil keys in snf table
-                    sql = "select distinct(%s) from %s where %s like '%s'" %(dbSoilKey, snfTableName, dbSoilKey, strippedCmpSoilTableKey)
-                    results = self.executeSql(sql)
-                    
-                    msg = "slf table distinct soilkeys are %s\n" %(results)
-                    messagesTestCsv.append(msg)
+                # process
+                for item in results:
+                    slcId = item[0]
+                    cmpId = item[1]
+                    soilKeyToUse = item[2]
                     
                     # is user landuse preference availabe
                     # check end character of string; if matches user then select key else use default of N
                     snfSoilKeyToUse = ""
                     
-                    for e in results:
-                        # convert to lowercase for checking
-                        eToLowerCase = e[0].lower()    
-                        if eToLowerCase.endswith(landuse.lower()):
-                            # user land preference can be accomindated
-                            snfSoilKeyToUse = e[0]
-                            break
-                        else:
-                            # only one soil key in snf. must use this.
-                            snfSoilKeyToUse = e[0]
-                            messagesTestCsv.append(("* Can't accomindate land use preference"))
+                    #////// only for output diagnostic csv
+                    # get list of snf soil keys present that match cmp soil key
+                    snfDistinctKeysMsg = []
+                    if soilKeyToUse[:-1] + landuse in snfSoilKeys:
+                        # user landuse preference can be accomidated
+                        snfDistinctKeysMsg.append((soilKeyToUse[:-1] + landuse))
+                        
+                    if soilKeyToUse[:-1] + "N" in snfSoilKeys:
+                        # default landuse of N
+                        snfDistinctKeysMsg.append((soilKeyToUse[:-1] + "N"))
                     
-                    msg = "snf soilkey to us is %s\n" %(snfSoilKeyToUse)
-                    messagesTestCsv.append(msg)
+                    messagesTestCsv.append("snf soil keys: %s" %(snfDistinctKeysMsg))
+                    # //////////
                     
+                    # match cmp soil key to snf soil and respect user land use preference if possible 
+                    # strip off last character of cmp soil key. add user landuse and check if in snf soilkey list
+                    if soilKeyToUse[:-1] + landuse in snfSoilKeys:
+                        # user landuse preference can be accomidated
+                        snfSoilKeyToUse = soilKeyToUse[:-1] + landuse
+                        messagesTestCsv.append(("Can accomindate land use preference"))
+                    elif soilKeyToUse[:-1] + "N" in snfSoilKeys:
+                        # default landuse of N
+                        snfSoilKeyToUse = soilKeyToUse[:-1] + "N"
+                        messagesTestCsv.append(("* Can't accomindate land use preference"))
+                    
+                    
+                    #//////
                     # join slf table based on soil key and layer number
                     # check if user requested snl layer number is avaiable. if not, disgard slc id and process next one
                     snlLayerNumberToUse = ""
@@ -606,14 +616,31 @@ class Db:
                         # join cmp sl row to snf row and slf row with soilkey and layer number match. return all columns from tables
                         # cmp cmp id constrains to create unique row id for cmp
                         sql = "insert into %s select * from %s join %s on %s.%s like '%s' and %s.%s = %s and %s.%s = %s join %s on %s.%s like %s.%s and %s.%s = %s" %(resultsTableName, cmpTableName, snfTableName, snfTableName, dbSoilKey, snfSoilKeyToUse, cmpTableName, dbSlcKey, slcId, cmpTableName, dbCmpKey, cmpId, slfTableName, cmpTableName, dbSoilKey, slfTableName, dbSoilKey, slfTableName, dbLayerNumberKey, snlLayerNumberToUse)
-                        self.executeSql(sql)
-                     
-                # commit transaction
-                self.conn.commit()
+                        ##self.executeSql(sql)
+                        sqlInserts.append(sql)
+            
+            
+            messagesTestCsv.append(("start sql inserts: time is %s" %(time.ctime(time.time()))))
+            # process all sql insert statements for slc ids
+            self.executeSql(sqlInserts, multipleSqlString=True)
+            messagesTestCsv.append(("finished sql inserts: time is %s" %(time.ctime(time.time()))))
+                    
+            # commit transaction
+            self.conn.commit()
+
+            messagesTestCsv.append(("all finished -- db commit finished: time is %s" %(time.ctime(time.time()))))
 
             return messagesTestCsv
-
-        # drop results table
+        #//////////                        
+#         ## example
+#         #select * from cmp, snf where cmp.sl = 242021 and cmp.cmp = 1 and snf.soilkey = 'ABBUFgl###N'
+#         sql = "create table %s as select * from %s, %s where %s.%s = %s and %s.%s = %s and %s.%s = '%s'" %(resultsTableName, cmpTableName, snfTableName, cmpTableName, dbSlcKey, slcId, cmpTableName, dbCmpKey, cmpId, snfTableName, dbSoilKey, snfSoilKeyToUse)
+# 
+#         # create sql insert strings
+#         sql = "insert into %s select * from %s, %s where %s.%s = %s and %s.%s = %s and %s.%s = '%s'" %(resultsTableName, cmpTableName, snfTableName, cmpTableName, dbSlcKey, slcId, cmpTableName, dbCmpKey, cmpId, snfTableName, dbSoilKey, snfSoilKeyToUse)
+#         sqlInserts.append(sql)
+        
+        
         sql = "drop table if exists %s" %(resultsTableName)
         self.executeSql(sql)
         
