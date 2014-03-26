@@ -600,7 +600,7 @@ class Db:
                         messagesTestCsv.append(msg)
                     
                     # process join only if matching slf row found
-                    if not resultsTableCreated and not snlLayerNumberFound:
+                    if not resultsTableCreated and snlLayerNumberFound:
                         # table does not exist
                         # create table
                         sql = "create table %s as select * from %s join %s on %s.%s like '%s' and %s.%s = %s and %s.%s = %s join %s on %s.%s like %s.%s and %s.%s = %s" %(resultsTableName, cmpTableName, snfTableName, snfTableName, dbSoilKey, snfSoilKeyToUse, cmpTableName, dbSlcKey, slcId, cmpTableName, dbCmpKey, cmpId, slfTableName, cmpTableName, dbSoilKey, slfTableName, dbSoilKey, slfTableName, dbLayerNumberKey, snlLayerNumberToUse)
