@@ -51,9 +51,13 @@ sys.path.append(scriptDirectory)
 
 # import aafc_modules
 import aafc_utilities as utilities
+import aafc_database as database
 
 # create utility class instance. pass qgis supplied iface
 utils = utilities.Utils(iface)
+
+# get path to temp directory
+tempSystemDirectoryPath = utils.determineSystemTempDirectory()
 
 # user options table name
 #TODO: should be global parameter
@@ -92,12 +96,22 @@ if not slc_shapefile =="":
         utils.communicateWithUserInQgis("Problem with vector layer provided. Stopping.",level="CRITICAL", messageExistanceDuration=15)
         raise Exception(msg)
 
+# create database class instance
+# db must exist before sqlite connection can exit
+db = database.Db(soil_database, tempSystemDirectoryPath)
+
 # load cmp table
 msg, status = utils.loadDbTableAsLayerIntoQgis(soil_database, "cmp")
 if not status:
     # problem loading table
-    utils.communicateWithUserInQgis("Problem with either: paths or type of data passed in. Stopping.",level="CRITICAL", messageExistanceDuration=15)
+    utils.communicateWithUserInQgis("Problem loading cmp soil table. Issue with either: paths or type of data passed in. Stopping.",level="CRITICAL", messageExistanceDuration=15)
     raise Exception(msg)
+
+# load joinedSoilTables or similar named soil joined tables
+msg, status = utils.loadDbTableAsLayerIntoQgis(soil_database, db.joinTableName)
+if not status:
+    # table does not exist. this is okay, perhaps user did not load snf/slf and/or create a joined table before connecting
+    pass
 
 #========== clean up
 # remove added aafc soil module from python path
