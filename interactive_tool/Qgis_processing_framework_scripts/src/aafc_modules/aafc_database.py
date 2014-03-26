@@ -577,7 +577,7 @@ class Db:
                     snlLayerNumberToUse = ""
                     snlLayerNumberFound = False
                     
-                    # get distinct layer numbers in snl table based on snf soilkey to be used
+                    # get distinct layer numbers in slf table based on snf soilkey to be used
                     sql = "select distinct(%s) from %s where %s like '%s'" %(dbLayerNumberKey, slfTableName, dbSoilKey, snfSoilKeyToUse)
                     results = self.executeSql(sql)
                     
