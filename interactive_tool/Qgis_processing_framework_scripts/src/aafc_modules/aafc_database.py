@@ -67,7 +67,7 @@ class Db:
         self.resultsTableCreated = False
         
         # log file
-        self.self.messagesTestCsv = []
+        self.messagesTestCsv = []
         
     
     def executeSql(self,sqlString, fieldNames=False, multipleSqlString=False):
@@ -514,57 +514,39 @@ class Db:
             returns list of messages used for testing
             """
             
-            ##resultsTableCreated = False
-            ##global resultsTableCreated
+            resultsTableCreated = False
             
             # captures key results that will be added and written to csv only if writeTextCsv = True
-            self.messagesTestCsv.append(("///// land use preference is %s\n\n\n"%(landuse)))
-            self.messagesTestCsv.append(("start time is %s" %(time.ctime(time.time()))))
+            messagesTestCsv = []
+            messagesTestCsv.append(("///// land use preference is %s\n\n\n"%(landuse)))
+            messagesTestCsv.append(("start time is %s" %(time.ctime(time.time()))))
             
-            self.messagesTestCsv.append(("get all soil keys snf:start time is %s" %(time.ctime(time.time()))))
+            
             # get all soil keys from snf table
             sql = "select distinct(%s) from %s" %(dbSoilKey, snfTableName)
             results = self.executeSql(sql)
             snfSoilKeys = []
             # clean up into simple list of strings
             for e in results:
-                tmp = e[0]
-                if tmp.startswith("#"):
-                    # do not add. keys must not start with #
-                    pass
-                else:
-                    # add key to list
-                    snfSoilKeys.append(tmp)
-            self.messagesTestCsv.append(("get all soil keys snf:end time is %s" %(time.ctime(time.time()))))
-            
+                snfSoilKeys.append(e[0])
+             
             # sql insert string. string holds all inserts per slc id & at end inserts into db
             sqlInserts = []
-            
-            output = []
             
             # process slc ids
             for slcId in slcIds:
                 # process each row within given sl
-                self.messagesTestCsv.append(("start slc id:start time is %s" %(time.ctime(time.time()))))
                 
-                self.messagesTestCsv.append(("build sl,cmp,soilkey struct:start time is %s" %(time.ctime(time.time()))))
                 # create data structure from sql query once for each sl processed. list of tuples containing (sl, cmp, soilkey). access via index
                 # query db cmp table for sl, cmp, soilkey
                 sql = "select %s, %s, %s from %s where %s = %s" %(dbSlcKey, dbCmpKey, dbSoilKey, cmpTableName, dbSlcKey, slcId)
-                resultsDataStruct = self.executeSql(sql)
-                self.messagesTestCsv.append(("build sl,cmp, soilkey:finish time is %s" %(time.ctime(time.time()))))
+                results = self.executeSql(sql) 
                 
-                msg = "slcId is %s and db query for data struct is %s" %(slcId, resultsDataStruct)
-                self.messagesTestCsv.append(msg)
-                
-                out=""
-                
-                def process(data):
-                    slcId = data[0]
-                    cmpId = data[1]
-                    soilKeyToUse = data[2]
-                    
-                    self.messagesTestCsv.append(("process cmp id:start time is %s" %(time.ctime(time.time())))) 
+                # process
+                for item in results:
+                    slcId = item[0]
+                    cmpId = item[1]
+                    soilKeyToUse = item[2]
                     
                     # is user landuse preference availabe
                     # check end character of string; if matches user then select key else use default of N
@@ -581,7 +563,7 @@ class Db:
                         # default landuse of N
                         snfDistinctKeysMsg.append((soilKeyToUse[:-1] + "N"))
                     
-                    self.messagesTestCsv.append("snf soil keys: %s" %(snfDistinctKeysMsg))
+                    messagesTestCsv.append("snf soil keys: %s" %(snfDistinctKeysMsg))
                     # //////////
                     
                     # match cmp soil key to snf soil and respect user land use preference if possible 
@@ -589,11 +571,11 @@ class Db:
                     if soilKeyToUse[:-1] + landuse in snfSoilKeys:
                         # user landuse preference can be accomidated
                         snfSoilKeyToUse = soilKeyToUse[:-1] + landuse
-                        self.messagesTestCsv.append(("Can accomindate land use preference"))
+                        messagesTestCsv.append(("Can accomindate land use preference"))
                     elif soilKeyToUse[:-1] + "N" in snfSoilKeys:
                         # default landuse of N
                         snfSoilKeyToUse = soilKeyToUse[:-1] + "N"
-                        self.messagesTestCsv.append(("* Can't accomindate land use preference"))
+                        messagesTestCsv.append(("* Can't accomindate land use preference"))
                     
                     
                     #//////
@@ -602,27 +584,30 @@ class Db:
                     snlLayerNumberToUse = ""
                     snlLayerNumberFound = False
                     
-                    # get distinct layer numbers in slf table based on snf soilkey to be used
-                    sql = "select %s from %s where %s like '%s'" %(dbLayerNumberKey, slfTableName, dbSoilKey, snfSoilKeyToUse)
+                    # get distinct layer numbers in snl table based on snf soilkey to be used
+                    sql = "select distinct(%s) from %s where %s like '%s'" %(dbLayerNumberKey, slfTableName, dbSoilKey, snfSoilKeyToUse)
                     results = self.executeSql(sql)
                     
                     msg = "distinct snl layer numbers are %s\n" %(results)
-                    self.messagesTestCsv.append(msg)
+                    messagesTestCsv.append(msg)
                     
-                    #= is user requested slf layer number available                    
-                    # check if user requested layer number is in layer number
-                    if layerNumber in results[0]:
-                        # match
-                        snlLayerNumberToUse = layerNumber
-                        snlLayerNumberFound = True
-                        self.messagesTestCsv.append((">>> user requested soil layer in slf table found\n\n----------\n"))
-                    else:
-                        # user layer number missing. drop this slc id + cmp row. process next slc id + cmp row  
+                    # is user requested slf layer number available
+                    for e in results:
+                        if e[0] == layerNumber:
+                            # match
+                            snlLayerNumberToUse = e[0]
+                            snlLayerNumberFound = True
+                            messagesTestCsv.append((">>> user requested soil layer in slf table found\n\n----------\n"))
+                            break
+                    
+                    # user layer number missing. drop this slc id + cmp row. process next slc id + cmp row
+                    if snlLayerNumberFound == False:    
                         msg = "* slf layer number not found. skipping current slc id + cmp row. will try next row.\n\n----------\n"
-                        self.messagesTestCsv.append(msg)
+                        messagesTestCsv.append(msg)
+                        break    
                     
-                    # process join only if matching slf row found
-                    if not self.resultsTableCreated and snlLayerNumberFound:
+                    # process join
+                    if not resultsTableCreated:
                         # table does not exist
                         # create table
                         sql = "create table %s as select * from %s join %s on %s.%s like '%s' and %s.%s = %s and %s.%s = %s join %s on %s.%s like %s.%s and %s.%s = %s" %(resultsTableName, cmpTableName, snfTableName, snfTableName, dbSoilKey, snfSoilKeyToUse, cmpTableName, dbSlcKey, slcId, cmpTableName, dbCmpKey, cmpId, slfTableName, cmpTableName, dbSoilKey, slfTableName, dbSoilKey, slfTableName, dbLayerNumberKey, snlLayerNumberToUse)
@@ -631,47 +616,28 @@ class Db:
                         # commit transaction
                         self.conn.commit()
                         
-                        # flag that table has been created
-                        self.resultsTableCreated = True
-                    elif self.resultsTableCreated and snlLayerNumberFound:
-                        # table has been created and snl layer found for use
+                        # flaf that table has been created
+                        resultsTableCreated = True
+                    else:
+                        #== insert data into table
                         # join cmp sl row to snf row and slf row with soilkey and layer number match. return all columns from tables
                         # cmp cmp id constrains to create unique row id for cmp
                         sql = "insert into %s select * from %s join %s on %s.%s like '%s' and %s.%s = %s and %s.%s = %s join %s on %s.%s like %s.%s and %s.%s = %s" %(resultsTableName, cmpTableName, snfTableName, snfTableName, dbSoilKey, snfSoilKeyToUse, cmpTableName, dbSlcKey, slcId, cmpTableName, dbCmpKey, cmpId, slfTableName, cmpTableName, dbSoilKey, slfTableName, dbSoilKey, slfTableName, dbLayerNumberKey, snlLayerNumberToUse)
                         ##self.executeSql(sql)
-                        #sqlInserts.append(sql)
-                        return sql
-                    else:
-                        pass
-                    
-                    self.messagesTestCsv.append(("done cmp id:finish time is %s" %(time.ctime(time.time()))))
-                if __name__ == "main":
-                    # call method to process
-                    pool = Pool()
-                    out = pool.map(process, resultsDataStruct)
-                    pool.close()
-                    pool.join()
-                    output.append(out)
-                
-                
-                    
-            self.messagesTestCsv.append(("finish slc id:finish time is %s" %(time.ctime(time.time()))))
+                        sqlInserts.append(sql)
             
             
-            self.messagesTestCsv.append(("start sql inserts: time is %s" %(time.ctime(time.time()))))
+            messagesTestCsv.append(("start sql inserts: time is %s" %(time.ctime(time.time()))))
             # process all sql insert statements for slc ids
             self.executeSql(sqlInserts, multipleSqlString=True)
-            self.messagesTestCsv.append(("finished sql inserts: time is %s" %(time.ctime(time.time()))))
-            
-            self.messagesTestCsv.append("the sql insert states below")
-            self.messagesTestCsv.append(output)
+            messagesTestCsv.append(("finished sql inserts: time is %s" %(time.ctime(time.time()))))
                     
             # commit transaction
             self.conn.commit()
 
-            self.messagesTestCsv.append(("all finished -- db commit finished: time is %s" %(time.ctime(time.time()))))
+            messagesTestCsv.append(("all finished -- db commit finished: time is %s" %(time.ctime(time.time()))))
 
-            return self.messagesTestCsv
+            return messagesTestCsv
         #//////////                        
 #         ## example
 #         #select * from cmp, snf where cmp.sl = 242021 and cmp.cmp = 1 and snf.soilkey = 'ABBUFgl###N'
