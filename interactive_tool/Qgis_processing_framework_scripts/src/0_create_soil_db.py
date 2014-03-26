@@ -128,7 +128,6 @@ db.createUserTableProcessingOptions(tableOptionsForProcessing)
 
 #========== index loaded soil data tables
 # for speed up on joins and queries
-#TODO: add hardcoded to gui
 db.createDbIndexesOnLoadedData(soilTablesPresent, option_soil_tables_soil_key_column, option_soil_cmp_table_slc_id_column, option_soil_cmp_table_cmp_column, option_soil_cmp_table_percent_column, option_soil_slf_table_layer_number_column)
 
 # report db creation success
