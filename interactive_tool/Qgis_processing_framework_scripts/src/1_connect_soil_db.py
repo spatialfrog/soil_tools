@@ -77,7 +77,7 @@ userOptionsTable = "availableSoilTableJoins"
 #TODO: should check in input validation
 if soil_database == "":
     # user must supply this!
-    utils.communicateWithUserInQgis("Must supply soil datbase path. Stopping.",level="CRITICAL", messageExistanceDuration=15)
+    utils.communicateWithUserInQgis("Must supply soil database path. Stopping.",level="CRITICAL", messageExistanceDuration=15)
     raise Exception("Must supply soil datbase path. Stopping.")
 
 # load slc shapefile
