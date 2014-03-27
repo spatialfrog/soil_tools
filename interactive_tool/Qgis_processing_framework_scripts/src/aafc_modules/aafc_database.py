@@ -833,17 +833,11 @@ class Db:
             #== return headers and results
             # prefix header with column name
             headers = results[0][0]
-            messageBar = iface.messageBar()
-            messageBar.pushMessage(str(headers))
-            
             headerFormat = "%s_%s"
             # remove columnName quoting of '"name"'
             columnName = columnName.strip('"')
             headersPrefixed = [headerFormat%(columnName, x) for x in headers]
-            
-            messageBar = iface.messageBar()
-            messageBar.pushMessage(str(headersPrefixed))
-            
+
             return headersPrefixed, cleanedResults
 
 
@@ -899,10 +893,7 @@ class Db:
                     formattedNumber = [rawResults[0][0],"{:0.2f}".format(round(rawResults[0][1],2))]
                     # add to cleaned up data. remove None from data
                     cleanedResults.append(formattedNumber)
-            
-            messageBar = iface.messageBar()
-            messageBar.pushMessage(str(cleanedResults))
-            
+                        
             # return headers and results. headers will be last iteration.
             #return header, results
             # prefix header with column name
