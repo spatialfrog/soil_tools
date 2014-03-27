@@ -1,0 +1,42 @@
+(dp0
+S'option_soil_cmp_table_slc_id_column'
+p1
+VSoil table cmp column defining the SLC id.\u000a\u000aDefault is 'sl'.
+p2
+sS'ALG_DESC'
+p3
+VOutputs a unique CSV per column in user passed table.\u000a\u000aNotes:\u000a-does not load final CSV into QGIS as there may be quite a few.\u000a-processes all columns at moment.
+p4
+sS'option_csv_file_prefix'
+p5
+VUser defined prefix for CSV file.\u000a\u000aDefault is 'calculate'.
+p6
+sS'ALG_CREATOR'
+p7
+VRichard Burcher\u000a2014
+p8
+sS'slc_shapefile_polygon_id_column'
+p9
+VShapefile column containing the unique SLC identifier.
+p10
+sS'slc_shapefile'
+p11
+VName of shapefile in drop down that matches QGIS layer.
+p12
+sS'ALG_HELP_CREATOR'
+p13
+VRichard Burcher\u000a2014
+p14
+sS'option_csv_output_directory'
+p15
+VDirectory to write CSV to.
+p16
+sS'option_soil_cmp_table_percent_column'
+p17
+VSoil table cmp column defining percent.\u000a\u000aDefault is 'percent'.
+p18
+sS'soil_table'
+p19
+VSoil Table to process all columns on.
+p20
+s.
