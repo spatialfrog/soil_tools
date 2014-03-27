@@ -1,5 +1,0 @@
-<RCC>
-    <qresource prefix="/plugins/aafcqgissoiltool" >
-        <file>icon.png</file>
-    </qresource>
-</RCC>
