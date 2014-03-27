@@ -925,6 +925,31 @@ class Db:
             
             #execute sql
             results = self.executeSql(sqlStatements, fieldNames=True, multipleSqlString=True)
+            
+            #== clean up returned data
+            #example: "['sl', 'weighted_average']","[(242022, -3.3000000000000003)]"
+            
+            cleanedResults = []
+            
+            for e in results:
+                # get second item containing data
+                rawResults = e[1]
+                # check if value present
+                if len(rawResults) == 0:
+                    # no data
+                    pass
+                else:
+                    # format calculated value to 2 decimal places
+                    formattedNumber = [rawResults[0][0],"{:0.2f}".format(round(rawResults[0][1],2))]
+                    # add to cleaned up data. remove None from data
+                    cleanedResults.append(formattedNumber)
+            
+            messageBar = iface.messageBar()
+            messageBar.pushMessage(str(cleanedResults))
+            
+            # return headers and results. headers will be last iteration
+            return results[0][0], cleanedResults
+            
                 
             # return headers and results. headers will be last iteration.
             #return header, results
