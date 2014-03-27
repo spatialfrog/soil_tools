@@ -132,8 +132,10 @@ class Db:
         tableNames = self.getTableFieldNames(self.joinTableName)
         
         for tableName in tableNames:
+            # clean up table names that had :1 or :2 in them. results from duplicate tables
+            cleanedTableName = tableName.replace(":","_")
             # create sql for index
-            sql = "create index index_%s_%s on %s(%s)" % (self.joinTableName, tableName, self.joinTableName, tableName)
+            sql = "create index index_%s_%s on %s('%s')" % (self.joinTableName, cleanedTableName, self.joinTableName, tableName)
             self.executeSql(sql)
         
         # analyze db to generate stats for query planner
