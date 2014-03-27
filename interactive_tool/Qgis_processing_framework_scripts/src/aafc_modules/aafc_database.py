@@ -79,9 +79,6 @@ class Db:
         either data only list of tuples; default or a list of fieldnames and list of tuple results
         """
         
-        messageBar = iface.messageBar()
-        messageBar.pushMessage(str(sqlString))
-        
         # multiple sql statements to process
         if multipleSqlString:
             #TODO: split list into 2 maybe n lists and process separately to speed up inserts. would need additional db connections            
