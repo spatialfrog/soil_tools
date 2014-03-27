@@ -863,6 +863,8 @@ class Db:
             # hold calculated sum weighted value
             results = []
             
+            sqlStatements = []
+            
             for slcId in slcIds:
                 # process each sl id separatly
                 
@@ -871,24 +873,28 @@ class Db:
                 ## sql = """select distinct(sl) as sl, sum(%s * (percent/100.0)) as final from %s where sl = %s group by sl""" %(column,tableName,sl)
                 
                 sql ="select distinct(%s) as %s, sum(%s * (%s/100.0)) as weighted_average from %s where %s = %s group by %s" % (dbSlcKey, dbSlcKey, columnName, dbPercentKey, tableName, dbSlcKey,  slcId, dbSlcKey)
-                header, row = self.executeSql(sql,fieldNames=True)
+                ##header, row = self.executeSql(sql,fieldNames=True)
+                sqlStatements.append(sql)
                 
                 
-                if len(row) == 0:
-                    # no data returned
-                    continue
-                else:
-                    #== format numeric calc in db tuple before passing back
-                    # format calculated value to 2 decimal places
-                    formattedNumber = (row[0][0],"{:0.2f}".format(round(row[0][1],2)))
-                    
-                    # only single row returned per slc. remove outer list to ensure we return a list of tuples.
-                    results.append(formattedNumber)
-                    
+#                 if len(row) == 0:
+#                     # no data returned
+#                     continue
+#                 else:
+#                     #== format numeric calc in db tuple before passing back
+#                     # format calculated value to 2 decimal places
+#                     formattedNumber = (row[0][0],"{:0.2f}".format(round(row[0][1],2)))
+#                     
+#                     # only single row returned per slc. remove outer list to ensure we return a list of tuples.
+#                     results.append(formattedNumber)
             
+            #execute sql
+            results = self.executeSql(sqlStatements, fieldNames=True, multipleSqlString=True)
+                
             # return headers and results. headers will be last iteration.
-            return header, results
-
+            #return header, results
+            return results[0][0], results
+        
         
         # determine column field data type
         columnDataTypeIs = determineFieldDataType(tableName, columnName)
