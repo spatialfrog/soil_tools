@@ -851,9 +851,14 @@ class Db:
             for e in results:
                 # get second item containing data
                 rawResults = e[1]
-                # extract tuple items from list
-                # add to cleaned up data
-                cleanedResults.append([e for l in rawResults for e in l])
+                # check if value present
+                if len(rawResults) == 0:
+                    # no data
+                    pass
+                else:
+                    # extract tuple items from list
+                    # add to cleaned up data
+                    cleanedResults.append([e for l in rawResults for e in l])
             
             messageBar = iface.messageBar()
             messageBar.pushMessage(str(cleanedResults))
