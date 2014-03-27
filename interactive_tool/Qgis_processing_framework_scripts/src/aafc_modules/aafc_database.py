@@ -112,6 +112,34 @@ class Db:
                 return self.curs.fetchall()
 
 
+    def createDbIndexesOnJoinedTable(self):
+        """
+        purpose:
+        create sqlite indexes on all columns in the joined table
+        
+        how:
+        sql
+        
+        notes:
+        -tableNames must be iterable
+        -used to speed up joins
+        
+        returns:
+        nothing
+        """
+        
+        # get table listing for joined table
+        tableNames = self.getTableFieldNames(self.joinTableName)
+        
+        for tableName in tableNames:
+            # create sql for index
+            sql = "create index index_%s_%s on %s(%s)" % (self.joinTableName, tableName, self.joinTableName, tableName)
+            self.executeSql(sql)
+        
+        # analyze db to generate stats for query planner
+        self.executeSql("ANALYZE")
+
+
     def createDbIndexesOnLoadedData(self, tableNames, dbSoilKey, dbSlcId, dbCmpKey, dbPercentKey, dbLayerNumberKey):
         """
         purpose:
