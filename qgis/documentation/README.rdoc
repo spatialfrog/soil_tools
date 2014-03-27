@@ -1,7 +1,0 @@
-tool help
-=========
-each script contains self describing documentation. run the script and click the "help" tab.
-
-
-
-
