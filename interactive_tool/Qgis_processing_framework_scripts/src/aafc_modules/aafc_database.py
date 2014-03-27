@@ -214,6 +214,9 @@ class Db:
             # increase page size
             sql="pragma page_size=8192"
             self.executeSql(sql)
+            # increase cache_size
+            sql = "pragma cache_size=100000"
+            self.executeSql(sql)
             # must vacuum for page_size to be used
             self.executeSql("VACUUM")
         else:
