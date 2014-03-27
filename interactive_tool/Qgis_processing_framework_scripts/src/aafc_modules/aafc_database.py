@@ -855,10 +855,23 @@ class Db:
                 if len(rawResults) == 0:
                     # no data
                     pass
+                elif len(rawResults) > 1:
+                    # have dominate and subdominate. remove sub-dominate slc id number
+                    # convert dominate/sub-dominate into sep lists
+                    tmpDominate = list(rawResults[0])
+                    tmpSubDominate = list(rawResults[1])
+                    # remove sub-dominate slc id
+                    tmpSubDominate.pop(0)
+                    # combine lists together
+                    tmpResults = tmpDominate + tmpSubDominate
+                    # remove None values
+                    # add to cleaned up data. remove None from data
+                    cleanedResults.append([a for a in tmpResults if a])
                 else:
+                    # only dominate present
                     # extract tuple items from list
-                    # add to cleaned up data
-                    cleanedResults.append([e for l in rawResults for e in l])
+                    # add to cleaned up data. remove None from data
+                    cleanedResults.append([a for l in rawResults for a in l if a])
             
             messageBar = iface.messageBar()
             messageBar.pushMessage(str(cleanedResults))
