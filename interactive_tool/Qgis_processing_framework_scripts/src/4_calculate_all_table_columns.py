@@ -69,7 +69,7 @@ tempSystemDirectoryPath = utils.determineSystemTempDirectory()
 io = inout.Io(tempSystemDirectoryPath=tempSystemDirectoryPath)
 
 # get db path from cmp layer in qgis
-inSoilDbPath = utils.getQgisTableLayerFilePathInfo(cmp_soil_table)
+inSoilDbPath = utils.getQgisTableLayerFilePathInfo(soil_table)
 # db instance
 db = database.Db(inSoilDbPath, tempSystemDirectoryPath)
 
@@ -91,13 +91,13 @@ utils.communicateWithUserInQgis(message,messageExistanceDuration=10)
 #===== process each column
 #TODO: should be able to exclude certain columns ie slc, percent, soilkey
 
-# get listing of fields in table
-columnsToProcess = db.getTableFieldNames(soil_table)
-
 # convert full connection path of user selected table in qgis toc to actual table name
-tableName = utils.getQgisTableLayerFilePathInfo(cmp_soil_table, pathKey="table")
+tableName = utils.getQgisTableLayerFilePathInfo(soil_table, pathKey="table")
 
-for column in columnsToProcess():
+# get listing of fields in table
+columnsToProcess = db.getTableFieldNames(tableName)
+
+for column in columnsToProcess:
     # process each column
     # column field must be qouted as '"field_to_calculate"'
     calculationColumnName = '"%s"' %(column)
