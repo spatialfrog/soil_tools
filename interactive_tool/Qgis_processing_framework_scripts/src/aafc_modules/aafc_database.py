@@ -777,6 +777,8 @@ class Db:
             # hold select dominate/sub-dominate data
             results = []
             
+            sqlStatements = []
+            
             for slcId in slcIds:
                 # process each sl id separatly
             
@@ -788,57 +790,59 @@ class Db:
                 ##sql = """select distinct(%s),count(%s) as count, sum(percent) as dominance from %s where %s = %s group by %s order by count(%s) desc""" %(dbSlcKey,column,column,tableName,dbSlcKey,slcId,column,column)
                 
                 # return 2 rows, first = dominate; second if present if sub-dominate
-                sql = """select sl,dominate_category, dominate_weight, dominate_count, sub_dominate_category, sub_dominate_weight from
-                (select distinct(%s) as dominate_category, %s, sum(%s) as dominate_weight, count(%s) as dominate_count, NULL as sub_dominate_category, NULL as sub_dominate_weight
-                from %s where %s = %s group by %s order by count(%s) desc limit 2) as t """ %(columnName,dbSlcKey,dbPercentKey,columnName, tableName, dbSlcKey, slcId,columnName,columnName)
+                sql = "select sl,dominate_category, dominate_weight, dominate_count, sub_dominate_category, sub_dominate_weight from (select distinct(%s) as dominate_category, %s, sum(%s) as dominate_weight, count(%s) as dominate_count, NULL as sub_dominate_category, NULL as sub_dominate_weight from %s where %s = %s group by %s order by count(%s) desc limit 2) as t " %(columnName,dbSlcKey,dbPercentKey,columnName, tableName, dbSlcKey, slcId,columnName,columnName)
                 
-                header, row = self.executeSql(sql,fieldNames=True)
+                sqlStatements.append(sql)
+                ##header, row = self.executeSql(sql,fieldNames=True)
                 
-                # check if any rows returned
-                if len(row) == 0:
-                    # no data returned
-                    continue
-                # check if only dominate row returned
-                elif len(row) == 1:
-                    # only dominate present
-                    # dominate row. convert from tuple to list
-                    dominateRow = list(row[0])
-                    # remove NULL values in sub_dominate_caetgory/sub_dominate_weight
-                    dominateRow.pop()
-                    dominateRow.pop()
-                    # capture value for output
-                    results.append(dominateRow)
-                else:
-                    # dominate/sub-dominate returned
-                    # reformat two rows into single row
-                    # data returned as below
-                    ## sl    dominate_category    dominate_weight    dominate_count    sub_dominate_category    sub_dominate_weight
-                    ## 242025    A                    80                    None                    None                None                  
-                    ## 242025    C                    20                    None                    None                None                
-                    
-                    # dominate row. convert from tuple to list
-                    dominateRow = list(row[0])
-                    # remove NULL values in sub_dominate_caetgory/sub_dominate_weight/sub_dominate_count
-                    dominateRow.pop()
-                    dominateRow.pop()
-                    
-                    # move sub dominate category and weighht into first rows sub_dominate columns
-                    subDominateRow = list(row[1])
-                    # remove first value containing sl id
-                    subDominateRow.pop(0)
-                    # remove NULL values in sub_dominate_caetgory/sub_dominate_weight/sub_dominate_count
-                    subDominateRow.pop()
-                    subDominateRow.pop()
-                    subDominateRow.pop()
-                    
-                    # final data row
-                    dominateRow.extend(subDominateRow)
-                    
-                    results.append(dominateRow)
-            
+#                 # check if any rows returned
+#                 if len(row) == 0:
+#                     # no data returned
+#                     continue
+#                 # check if only dominate row returned
+#                 elif len(row) == 1:
+#                     # only dominate present
+#                     # dominate row. convert from tuple to list
+#                     dominateRow = list(row[0])
+#                     # remove NULL values in sub_dominate_caetgory/sub_dominate_weight
+#                     dominateRow.pop()
+#                     dominateRow.pop()
+#                     # capture value for output
+#                     results.append(dominateRow)
+#                 else:
+#                     # dominate/sub-dominate returned
+#                     # reformat two rows into single row
+#                     # data returned as below
+#                     ## sl    dominate_category    dominate_weight    dominate_count    sub_dominate_category    sub_dominate_weight
+#                     ## 242025    A                    80                    None                    None                None                  
+#                     ## 242025    C                    20                    None                    None                None                
+#                     
+#                     # dominate row. convert from tuple to list
+#                     dominateRow = list(row[0])
+#                     # remove NULL values in sub_dominate_caetgory/sub_dominate_weight/sub_dominate_count
+#                     dominateRow.pop()
+#                     dominateRow.pop()
+#                     
+#                     # move sub dominate category and weighht into first rows sub_dominate columns
+#                     subDominateRow = list(row[1])
+#                     # remove first value containing sl id
+#                     subDominateRow.pop(0)
+#                     # remove NULL values in sub_dominate_caetgory/sub_dominate_weight/sub_dominate_count
+#                     subDominateRow.pop()
+#                     subDominateRow.pop()
+#                     subDominateRow.pop()
+#                     
+#                     # final data row
+#                     dominateRow.extend(subDominateRow)
+#                     
+#                     results.append(dominateRow)
+                
+            #execute sql
+            results = self.executeSql(sqlStatements, fieldNames=True, multipleSqlString=True)
                 
             # return headers and results. headers will be last iteration.
-            return header, results
+            #return header, results
+            return results[0][0], results
 
 
         def numericCalculation(slcIds, dbSlcKey, tableName, columnName, dbPercentKey):
@@ -866,7 +870,7 @@ class Db:
                 ## select distinct(sl) as sl, sum(awhc_v * (percent/100.0)) as final from cmp32 where sl = 376002 group by sl
                 ## sql = """select distinct(sl) as sl, sum(%s * (percent/100.0)) as final from %s where sl = %s group by sl""" %(column,tableName,sl)
                 
-                sql ="""select distinct(%s) as %s, sum(%s * (%s/100.0)) as weighted_average from %s where %s = %s group by %s""" % (dbSlcKey, dbSlcKey, columnName, dbPercentKey, tableName, dbSlcKey,  slcId, dbSlcKey)
+                sql ="select distinct(%s) as %s, sum(%s * (%s/100.0)) as weighted_average from %s where %s = %s group by %s" % (dbSlcKey, dbSlcKey, columnName, dbPercentKey, tableName, dbSlcKey,  slcId, dbSlcKey)
                 header, row = self.executeSql(sql,fieldNames=True)
                 
                 
