@@ -85,18 +85,22 @@ class Db:
         # multiple sql statements to process
         if multipleSqlString:
             #TODO: split list into 2 maybe n lists and process separately to speed up inserts. would need additional db connections            
+            returnData = []
             for e in sqlString: 
                 # execute sql
                 self.curs.execute(e)
                 #TODO: implement cleaned up return values
-#                 if fieldNames:
-#                     # extract first item from tuple
-#                     names = list(map(lambda x: x[0], self.curs.description))
-#                     
-#                     return names, self.curs.fetchall()
-#                 else:
-#                     # only return data
-#                     return self.curs.fetchall()
+                if fieldNames:
+                    # extract first item from tuple
+                    names = list(map(lambda x: x[0], self.curs.description))
+                     
+                    returnData.append((names, self.curs.fetchall()))
+                else:
+                    # only return data
+                    returnData.append((self.curs.fetchall()))
+            # return data
+            return returnData
+            
         else:
             #===== single sql string to process
             # execute sql
