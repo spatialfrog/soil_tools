@@ -83,10 +83,6 @@ if not status:
     # problem with getting values from vector layer for slc ids
     utils.communicateWithUserInQgis("No values for field in given vector layer for slc ids. Stopping.",level="CRITICAL", messageExistanceDuration=15)
     raise Exception(msg)
-
-# warn user process may take several minutes
-message = "Calculating all columns for table %s may take several minutes" % (soil_table)
-utils.communicateWithUserInQgis(message,messageExistanceDuration=10)
  
 #===== process each column
 #TODO: should be able to exclude certain columns ie slc, percent, soilkey
@@ -96,6 +92,10 @@ tableName = utils.getQgisTableLayerFilePathInfo(soil_table, pathKey="table")
 
 # get listing of fields in table
 columnsToProcess = db.getTableFieldNames(tableName)
+
+# warn user process may take several minutes
+message = "Calculating all columns for table %s may take several minutes" % (soil_table)
+utils.communicateWithUserInQgis(message,messageExistanceDuration=10)
 
 for column in columnsToProcess:
     # process each column
@@ -107,7 +107,7 @@ for column in columnsToProcess:
     outCsvFilePath = io.writeCsvFile(calculationColumnName, headers, results, option_csv_output_directory, csvFilePrefixName=option_csv_file_prefix)
 
 # inform user processing finished
-msg = "Finished processing all columns for table %s. Find output CSV in directory %s" %(soil_table, option_csv_output_directory)
+msg = "Finished processing all columns for table %s. Find output CSV in directory %s" %(tableName, option_csv_output_directory)
 utils.communicateWithUserInQgis(msg, messageExistanceDuration=10)
 
 #========== clean up
