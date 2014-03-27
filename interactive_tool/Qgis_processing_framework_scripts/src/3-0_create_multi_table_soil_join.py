@@ -109,10 +109,18 @@ if soil_tables_to_join == "cmp-snf":
     calculationTableName = db.joinTableName
       
 elif soil_tables_to_join == "cmp-snf-slf":
+    #TODO: remove this
+    outTestTxt = "/Users/drownedfrog/Projects/Contracts/AAFC/dec2013_mar2014_tool_dev/data/test"
     # 3 table join -- cmp - snf - slf
-    db.resultsTableJoiningCmpSnfSlfBySoilkey(slcIds, dbSlcKey=option_soil_cmp_table_slc_id_column, dbCmpKey=option_soil_cmp_table_cmp_column, dbSoilKey=option_soil_tables_soil_key_column, dbLayerNumberKey=option_soil_slf_table_layer_number_column, cmpTableName="cmp", snfTableName="snf", slfTableName="slf", landuse=user_preference_snf_table_land_use, layerNumber=user_preference_slf_table_layer_number)
+    db.resultsTableJoiningCmpSnfSlfBySoilkey(slcIds, dbSlcKey=option_soil_cmp_table_slc_id_column, dbCmpKey=option_soil_cmp_table_cmp_column, dbSoilKey=option_soil_tables_soil_key_column, dbLayerNumberKey=option_soil_slf_table_layer_number_column, cmpTableName="cmp", snfTableName="snf", slfTableName="slf", landuse=user_preference_snf_table_land_use, layerNumber=user_preference_slf_table_layer_number, writeTestCsv=True, writeTestCsvDirectory=outTestTxt)
     calculationTableName = db.joinTableName  
 
+
+#========== create indexes on all columns in join table
+# speed up field calculations
+db.createDbIndexesOnJoinedTable()
+
+#========== add new join table to qgis
 # remove existing join table if present
 utils.removeLayerFromQgis(db.joinTableName)
 # add created join table to qgis toc
