@@ -54,4 +54,12 @@ on main application menu click Processing -- Toolbox
 <br />
 located under Scripts/[AAFC Soil Tools]
 <br />
-can skip "0 create soil db" by using precreated sqlite db found -----TO ADD
+can skip "0 create soil db" by using precreated sqlite db found in /Data directory url
+
+data
+====
+<br />
+data for qgis tool found here https://www.dropbox.com/sh/rmpkzw6c3n6vgz3/tRWNJ5a_3U
+<br />
+<br />
+precreated soil db found at data/slc_data/soil_database
