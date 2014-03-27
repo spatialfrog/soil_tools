@@ -90,14 +90,16 @@ class Db:
                 # execute sql
                 self.curs.execute(e)
                 #TODO: implement cleaned up return values
+                # clean up data to be simple list
+                cleanedData = list(self.curs.fetchall())
                 if fieldNames:
                     # extract first item from tuple
                     names = list(map(lambda x: x[0], self.curs.description))
                      
-                    returnData.append((names, self.curs.fetchall()))
+                    returnData.append([names, cleanedData])
                 else:
                     # only return data
-                    returnData.append((self.curs.fetchall()))
+                    returnData.append(cleanedData)
             # return data
             return returnData
             
@@ -839,10 +841,25 @@ class Db:
                 
             #execute sql
             results = self.executeSql(sqlStatements, fieldNames=True, multipleSqlString=True)
-                
-            # return headers and results. headers will be last iteration.
-            #return header, results
-            return results[0][0], results
+            
+            
+            #== clean up returned data
+            #example: [['sl', 'dominate_category', 'dominate_weight', 'dominate_count', 'sub_dominate_category', 'sub_dominate_weight'], [(251011, u'A', 50, 2, None, None), (251011, u'B', 50, 1, None, None)]]
+            
+            cleanedResults = []
+            
+            for e in results:
+                # get second item containing data
+                rawResults = e[1]
+                # extract tuple items from list
+                # add to cleaned up data
+                cleanedResults.append([e for l in rawResults for e in l])
+            
+            messageBar = iface.messageBar()
+            messageBar.pushMessage(str(cleanedResults))
+            
+            # return headers and results. headers will be last iteration
+            return results[0][0], cleanedResults
 
 
         def numericCalculation(slcIds, dbSlcKey, tableName, columnName, dbPercentKey):
