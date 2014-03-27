@@ -795,49 +795,6 @@ class Db:
                 sql = "select sl,dominate_category, dominate_weight, dominate_count, sub_dominate_category, sub_dominate_weight from (select distinct(%s) as dominate_category, %s, sum(%s) as dominate_weight, count(%s) as dominate_count, NULL as sub_dominate_category, NULL as sub_dominate_weight from %s where %s = %s group by %s order by count(%s) desc limit 2) as t " %(columnName,dbSlcKey,dbPercentKey,columnName, tableName, dbSlcKey, slcId,columnName,columnName)
                 
                 sqlStatements.append(sql)
-                ##header, row = self.executeSql(sql,fieldNames=True)
-                
-#                 # check if any rows returned
-#                 if len(row) == 0:
-#                     # no data returned
-#                     continue
-#                 # check if only dominate row returned
-#                 elif len(row) == 1:
-#                     # only dominate present
-#                     # dominate row. convert from tuple to list
-#                     dominateRow = list(row[0])
-#                     # remove NULL values in sub_dominate_caetgory/sub_dominate_weight
-#                     dominateRow.pop()
-#                     dominateRow.pop()
-#                     # capture value for output
-#                     results.append(dominateRow)
-#                 else:
-#                     # dominate/sub-dominate returned
-#                     # reformat two rows into single row
-#                     # data returned as below
-#                     ## sl    dominate_category    dominate_weight    dominate_count    sub_dominate_category    sub_dominate_weight
-#                     ## 242025    A                    80                    None                    None                None                  
-#                     ## 242025    C                    20                    None                    None                None                
-#                     
-#                     # dominate row. convert from tuple to list
-#                     dominateRow = list(row[0])
-#                     # remove NULL values in sub_dominate_caetgory/sub_dominate_weight/sub_dominate_count
-#                     dominateRow.pop()
-#                     dominateRow.pop()
-#                     
-#                     # move sub dominate category and weighht into first rows sub_dominate columns
-#                     subDominateRow = list(row[1])
-#                     # remove first value containing sl id
-#                     subDominateRow.pop(0)
-#                     # remove NULL values in sub_dominate_caetgory/sub_dominate_weight/sub_dominate_count
-#                     subDominateRow.pop()
-#                     subDominateRow.pop()
-#                     subDominateRow.pop()
-#                     
-#                     # final data row
-#                     dominateRow.extend(subDominateRow)
-#                     
-#                     results.append(dominateRow)
                 
             #execute sql
             results = self.executeSql(sqlStatements, fieldNames=True, multipleSqlString=True)
@@ -910,18 +867,7 @@ class Db:
                 sql ="select distinct(%s) as %s, sum(%s * (%s/100.0)) as weighted_average from %s where %s = %s group by %s" % (dbSlcKey, dbSlcKey, columnName, dbPercentKey, tableName, dbSlcKey,  slcId, dbSlcKey)
                 ##header, row = self.executeSql(sql,fieldNames=True)
                 sqlStatements.append(sql)
-                
-                
-#                 if len(row) == 0:
-#                     # no data returned
-#                     continue
-#                 else:
-#                     #== format numeric calc in db tuple before passing back
-#                     # format calculated value to 2 decimal places
-#                     formattedNumber = (row[0][0],"{:0.2f}".format(round(row[0][1],2)))
-#                     
-#                     # only single row returned per slc. remove outer list to ensure we return a list of tuples.
-#                     results.append(formattedNumber)
+            
             
             #execute sql
             results = self.executeSql(sqlStatements, fieldNames=True, multipleSqlString=True)
