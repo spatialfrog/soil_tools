@@ -830,11 +830,21 @@ class Db:
                     # add to cleaned up data. remove None from data
                     cleanedResults.append([a for l in rawResults for a in l if a])
             
+            #== return headers and results
+            # prefix header with column name
+            headers = results[0][0]
             messageBar = iface.messageBar()
-            messageBar.pushMessage(str(cleanedResults))
+            messageBar.pushMessage(str(headers))
             
-            # return headers and results. headers will be last iteration
-            return results[0][0], cleanedResults
+            headerFormat = "%s_%s"
+            # remove columnName quoting of '"name"'
+            columnName = columnName.strip('"')
+            headersPrefixed = [headerFormat%(columnName, x) for x in headers]
+            
+            messageBar = iface.messageBar()
+            messageBar.pushMessage(str(headersPrefixed))
+            
+            return headersPrefixed, cleanedResults
 
 
         def numericCalculation(slcIds, dbSlcKey, tableName, columnName, dbPercentKey):
@@ -893,13 +903,16 @@ class Db:
             messageBar = iface.messageBar()
             messageBar.pushMessage(str(cleanedResults))
             
-            # return headers and results. headers will be last iteration
-            return results[0][0], cleanedResults
-            
-                
             # return headers and results. headers will be last iteration.
             #return header, results
-            return results[0][0], results
+            # prefix header with column name
+            headers = results[0][0]
+            headerFormat = "%s_%s"
+            # remove columnName quoting of '"name"'
+            columnName = columnName.strip('"')
+            headersPrefixed = [headerFormat%(columnName, x) for x in headers]
+            
+            return headersPrefixed, cleanedResults
         
         
         # determine column field data type
