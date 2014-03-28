@@ -50,6 +50,7 @@ Scripts are numbered numerically to indicate the workflow progression that the u
 
 ### 0 create soil db
 Is only required if a new soil database needs to be created on the file system. Once a database is created it can be reused. Spatial selection is not taken into account when loading data.
+The loaded DBF's must contain the word cmp, slf or snf in the filename. The CMP DBF is mandatory to load, the other two DBF's are optional.
 
 ### 1 connect soil db 
 Is mandatory for any new QGIS session, as it loads all database table data, this includes the CMP soil table, any previous joined tables and if the SNF and/or SLF DBF's were loaded into the initial database a tabled called "possibleJoinsToCreate" for the user. It also loads the polygon SLC shapefile selected by the user.

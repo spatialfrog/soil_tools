@@ -5,15 +5,15 @@ VColumn defining linkage between shapefile polygons and cmp table.\u000a\u000aPr
 p2
 sS'ALG_DESC'
 p3
-VCreates a new sqlite soil database containing the loaded SLC soil dbf tables.\u000a
+VCreates a new sqlite soil database containing the loaded SLC soil dbf tables.\u000a\u000a** The CMP DBF is manditory to load. Other DBF's optional.\u000a\u000aNotes:\u000a-The loaded DBF's must contain the word cmp, slf or snf in the filename.\u000a
 p4
 sS'ALG_CREATOR'
 p5
 VRichard Burcher\u000a2014
 p6
-sS'option_soil_tables_soil_key_column'
+sS'snf_dbf_path'
 p7
-VColumn defining linkage between cmp-snf-slf.\u000a\u000aProvide string exactly as spelled in dbf file.\u000a\u000aDefault is 'soilkey'.
+VFull path the snf soil dbf.\u000a\u000aTable is optional.
 p8
 sS'soil_database_name'
 p9
@@ -39,9 +39,9 @@ sS'option_soil_cmp_table_percent_column'
 p19
 VColumn defining percent column in cmp table.\u000a\u000aProvide string exactly as spelled in dbf file.\u000a\u000aDefault is 'percent'.
 p20
-sS'snf_dbf_path'
+sS'option_soil_tables_soil_key_column'
 p21
-VFull path the snf soil dbf.\u000a\u000aTable is optional.
+VColumn defining linkage between cmp-snf-slf.\u000a\u000aProvide string exactly as spelled in dbf file.\u000a\u000aDefault is 'soilkey'.
 p22
 sS'cmp_dbf_path'
 p23
