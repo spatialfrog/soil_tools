@@ -80,8 +80,9 @@ Dominate is defined as the largest count of a single category within the SLC id 
 ### Numerical
 Weighted summed average for the rows involved per SLC id. A column defined as percent in the cmp table is used for the weighting. Row column value = 9 and row column percent = 20; calculation is (9 * 0.20) + other rows involved.    
 
-Scripts "2 calculate cmp soil table column", "3-1 calculate multi table soil join column" and "4 calculate all table columns" 
-
+#### Scripts involved
+"2 calculate cmp soil table column", "3-1 calculate multi table soil join column" and "4 calculate all table columns".
+ 
 Output
 ======
 
