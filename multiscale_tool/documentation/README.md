@@ -1,63 +1,48 @@
-***** PLEASE READ THIS FILE PRIOR TO COMMENCING WITH TOOL *****
+Overview
+========
 
+Designed to process elevation data through a variety of user defined spatial scales. at each scale a series of derivative layers are created for later analysis
 
-Please review the Documentation folder for futher guidance.
+Installing
+----------
 
+Copy to the grass scripts directory. Ensure the script permission set to +x
 
-Virtual Machine:
+### Requirements
 
--admin rights are required to install virtualbox on windows host.
--for security, the network access of virtual machine can be disabled.
--the amount of ram dedicated to the machine will affect performance. if host system has more than 3GB, please dedicate more ram to machine by shutting down virtual machine. in the virtualbox manager right click the virtual machine & select Settings. Click System & alter Base Memory. Press OK & start virtual machine.
--IMPORTANT --- virtual machine has the capacity to expand to 200GB. monitor host harddrive to ensure space is avaiable (200GB does not have to reserved).
+Designed for use within a Linux operating system. You will need to install the following:
 
+#### Software
 
+GRASS 6.4.3
 
-Shared Folders between Host & Virtual Machine:
+SAGA 2.1.1
 
--please refer to Documentation/Installing_Virtual_Machine_and_Shared_Folder.odt to setup a shared folder.
--IMPORTANT --- each login will require a reconnection between the host & virtual machine shared folders. open terminal & type: sudo mount -t vboxsf vboxshare /media/sf_vboxshare
+GDAL 1.10
 
+R 3.0.2. Need to install packages spgrass6/raster/xml/rgdal/rsaga/sp
 
+Running
+------- 
 
-Using the Tools:
+Invoke GRASS from the system terminal.
 
--IMPORTANT --- each site must have own GRASS Location. refer to Documentation/using_multi_scale_tools_tutorial.odt. 
--IMPORTANT --- allows check the region settings. ensure resolution & extent is correct. 
--please cd into the /home/xgeng/Gis directory. this will keep file system orginized. the GRASS database is located here.
--create a unique site directory & cd into prior to starting GRASS. each execution of the r.multiscale_aafc.sh tool creates a new folder (name is based on the input raster to tool) containing a series of outputs.
--to start GRASS, at terminal type "grass64".
--type r.preprocessing_aafc.sh or r.multiscale_aafc.sh to run tools.
--NOTE --- r.multiscale_aafc.sh will delete all rasters in mapset per execution. this ensures that results are not mixed from previous runs. please either copy data to another mapset or within tool under Options tab select the export to geotiff option. r.preprocessing_aafc.sh does not delete mapset.
--permanent mapset should only be used for base layers. do not conduct analysis within, change to alternative mapset.
+Type "r.multiscale_aafc.sh" to launch.
 
+Workflow
+========
 
+#### Important
+Unless a common coordinate system is used, different projections will require own GRASS Location.
+Always check the region settings. Ensure resolution and extent is correct. 
+The script r.multiscale_aafc.sh will delete all rasters in a mapset at beginning of execution. This ensures that results are not mixed from previous runs. Please either copy data to another mapset or within tool under Options tab select the export to geotiff option. .
+Permanent mapset should only be used to load in base layers for reference in other mapsets. Do not conduct analysis within, change to alternative mapset.
 
-Cruise/Quest:
+Create a unique site directory and cd into prior to starting GRASS. Each execution of the r.multiscale_aafc.sh tool creates a new folder (name is based on the input raster to tool) containing a series of outputs.
+Start GRASS at terminal by typing "grass64".
+Type r.multiscale_aafc.sh to launch tool.
 
--installed in /home/xgeng/Stats_Software
--refer to Documentation/starting_cruise_quest_software.odt
+Output
+======
 
-
-
-Be Aware Of:
-
--other software components are used for processing. SAGA is a key software. it has been tested with rasters up to 25 million cells. 
--processing time will be considerable depending on the number of cells & outputs requested.
--ensure that geotiffs imported have been cropped to site extents correctly. null cells are usually set transparent when viewed.
-
-
-
-Software Installed:
-
--Ubuntu 10.04 LTS
--GRASS 6.4.2snv july 2011
--R 2.13.2
--QGIS 1.7.1
--SAGA 2.0.7
-
--automatic updates have been turned off. please do not turn on. this ensures that the tools work correctly & not subject to system upgrade incompatibilities.
--Python 2.6.5
-
-
-
+GRASS rasters and vector datasets created per run of the script. User must select to export GRASS rasters to GEOTIF format in the Options tab to allow use of data in other data packages. 
