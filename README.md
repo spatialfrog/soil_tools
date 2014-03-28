@@ -1,9 +1,12 @@
 soil tools
 ==========
 
+tools for processing soil data
+
+
 multiscale tool
 ---------------
-designed to process elevation data through a varitey of user defined spatial scales. at each scale a series of derivative layers are created for later analysis.
+designed to process elevation data through a variety of user defined spatial scales. at each scale a series of derivative layers are created for later analysis.
 
 requirements:
 <br />
@@ -15,7 +18,7 @@ saga 2.1.1
 <br />
 gdal 1.10
 <br />
-R 3.0.2. need to install spatial packages spgrass6/raster/xml/rgdal/rsaga/sp
+R 3.0.2. need to install packages spgrass6/raster/xml/rgdal/rsaga/sp
 
 install:
 <br />
@@ -54,7 +57,7 @@ on main application menu click Processing -- Toolbox
 <br />
 located under Scripts/[AAFC Soil Tools]
 <br />
-can skip "0 create soil db" by using precreated sqlite db found in /Data directory url
+can skip "0 create soil db" by using pre-created sqlite database found in /Data directory url
 
 data
 ====
@@ -62,4 +65,4 @@ data
 data for qgis tool found here https://www.dropbox.com/sh/rmpkzw6c3n6vgz3/tRWNJ5a_3U
 <br />
 <br />
-precreated soil db found at data/slc_data/soil_database
+pre-created soil database found at data/slc_data/soil_database
