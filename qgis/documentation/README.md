@@ -88,3 +88,25 @@ Output
 CSV file per soil column
 
 All CSV's contain the SLC id used, allowing a join between the loaded CSV and SLC polygon shapefile. The CSV headers have the calculated column name prefixed. This avoids calculated column output name collisions if multiple CSV's where to be joined.
+
+### Sample CSV Output
+
+Categorical: Slope
+```
+ slope_sl,slope_dominate_category,slope_dominate_weight,slope_dominate_count,slope_sub_dominate_category,slope_sub_dominate_weight
+251012,A,100,4
+244050,A,100,3
+251009,A,50,2,B,50,1
+244060,A,100,2
+ ```
+ 
+Numeric: cfrag1_v
+```
+cfrag1_v_sl,cfrag1_v_weighted_average
+251012,1.20
+244050,0.00
+251009,5.50
+244060,3.00
+242022,-3.30
+```
+
