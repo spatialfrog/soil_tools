@@ -85,29 +85,26 @@ if not status:
     # problem with getting values from vector layer for slc ids
     utils.communicateWithUserInQgis("No values for field in given vector layer for slc ids. Stopping.",level="CRITICAL", messageExistanceDuration=15)
     raise Exception(msg)
-
-#TODO: check if vector layer slc ids found in cmp table
-
   
 #===== process soil field
 # column field must be qouted as '"field_to_calculate"'
 calculationColumnName = '"%s"' %(cmp_soil_column_to_calculate)
-
+ 
 # convert full connection path of user selected table in qgis toc to actual table name
 tableName = utils.getQgisTableLayerFilePathInfo(cmp_soil_table, pathKey="table")
-
+ 
 # warn user process may take several minutes
 message = "Calculating column %s may take several minutes" % (calculationColumnName)
 utils.communicateWithUserInQgis(message,messageExistanceDuration=10)
-   
+    
 headers, results = db.calculateField(slcIds, dbSlcKey=option_soil_cmp_table_slc_id_column, tableName=tableName, columnName=calculationColumnName, dbPercentKey=option_soil_cmp_table_percent_column)
 outCsvFilePath = io.writeCsvFile(calculationColumnName, headers, results, option_csv_output_directory, csvFilePrefixName=option_csv_file_prefix)
-
+ 
 # inform user processing finished
 msg = "Finished processing column %s. Find output CSV in directory %s" %(calculationColumnName, option_csv_output_directory)
 utils.communicateWithUserInQgis(msg, messageExistanceDuration=10)
-
-
+ 
+ 
 # ========== load calculated csv into qgis
 if option_csv_load_file_into_qgis:
     # load csv into qgis csv into toc as vector layer
