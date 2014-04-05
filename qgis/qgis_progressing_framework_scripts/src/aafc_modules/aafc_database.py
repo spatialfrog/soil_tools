@@ -79,6 +79,9 @@ class Db:
         either data only list of tuples; default or a list of fieldnames and list of tuple results
         """
         
+        messageBar = iface.messageBar()
+        messageBar.pushMessage(str(sqlString))
+        
         # multiple sql statements to process
         if multipleSqlString:
             #TODO: split list into 2 maybe n lists and process separately to speed up inserts. would need additional db connections            
@@ -754,7 +757,7 @@ class Db:
                 # text
                 columnDataType = "string"
                 return columnDataType
-            elif fieldDataType.lower().startswith("int") or fieldDataType.lower().startswith("rea"):
+            elif fieldDataType.lower().startswith("int") or fieldDataType.lower().startswith("rea") or fieldDataType.lower().startswith("flo"):
                 columnDataType = "numeric"
                 return columnDataType
             else:
@@ -778,6 +781,15 @@ class Db:
             
             sqlStatements = []
             
+            # default for slc id polygon data type is numeric
+            slcIdKeyNumeric = True
+            
+            # check if slc (polygon) id is alphanumeric ie ONAD405357
+            test_value = slcIds[0]
+            
+            if type(test_value) == str or type(test_value) == unicode:
+                slcIdKeyNumeric = False
+            
             for slcId in slcIds:
                 # process each sl id separatly
             
@@ -788,9 +800,15 @@ class Db:
                 ## select sl, dominate_category, dominate_weight from (select distinct(slope) as dominate_category,sl,sum(percent) as dominate_weight from cmp32 where sl = 254001 group by slope order by count(slope) desc limit 1) as  t
                 ##sql = """select distinct(%s),count(%s) as count, sum(percent) as dominance from %s where %s = %s group by %s order by count(%s) desc""" %(dbSlcKey,column,column,tableName,dbSlcKey,slcId,column,column)
                 
-                # return 2 rows, first = dominate; second if present if sub-dominate
-                sql = "select sl,dominate_category, dominate_weight, dominate_count, sub_dominate_category, sub_dominate_weight from (select distinct(%s) as dominate_category, %s, sum(%s) as dominate_weight, count(%s) as dominate_count, NULL as sub_dominate_category, NULL as sub_dominate_weight from %s where %s = %s group by %s order by count(%s) desc limit 2) as t " %(columnName,dbSlcKey,dbPercentKey,columnName, tableName, dbSlcKey, slcId,columnName,columnName)
+                if slcIdKeyNumeric:
+                    # key is numeric. no quoted slc id = value
+                    # return 2 rows, first = dominate; second if present if sub-dominate
+                    sql = "select %s, dominate_category, dominate_weight, dominate_count, sub_dominate_category, sub_dominate_weight from (select distinct(%s) as dominate_category, %s, sum(%s) as dominate_weight, count(%s) as dominate_count, NULL as sub_dominate_category, NULL as sub_dominate_weight from %s where %s = %s group by %s order by count(%s) desc limit 2) as t " %(dbSlcKey, columnName,dbSlcKey,dbPercentKey,columnName, tableName, dbSlcKey, slcId,columnName,columnName)
+                else:
+                    # key is alphanumeric. quote sld id = 'value'
+                    sql = "select %s, dominate_category, dominate_weight, dominate_count, sub_dominate_category, sub_dominate_weight from (select distinct(%s) as dominate_category, %s, sum(%s) as dominate_weight, count(%s) as dominate_count, NULL as sub_dominate_category, NULL as sub_dominate_weight from %s where %s = '%s' group by %s order by count(%s) desc limit 2) as t " %(dbSlcKey, columnName,dbSlcKey,dbPercentKey,columnName, tableName, dbSlcKey, slcId,columnName,columnName)
                 
+                # capture sql statement
                 sqlStatements.append(sql)
                 
             #execute sql
@@ -858,6 +876,15 @@ class Db:
             
             sqlStatements = []
             
+            # default for slc id polygon data type is numeric
+            slcIdKeyNumeric = True
+            
+            # check if slc (polygon) id is alphanumeric ie ONAD405357
+            test_value = slcIds[0]
+            
+            if type(test_value) == str or type(test_value) == unicode:
+                slcIdKeyNumeric = False
+            
             for slcId in slcIds:
                 # process each sl id separatly
                 
@@ -865,8 +892,14 @@ class Db:
                 ## select distinct(sl) as sl, sum(awhc_v * (percent/100.0)) as final from cmp32 where sl = 376002 group by sl
                 ## sql = """select distinct(sl) as sl, sum(%s * (percent/100.0)) as final from %s where sl = %s group by sl""" %(column,tableName,sl)
                 
-                sql ="select distinct(%s) as %s, sum(%s * (%s/100.0)) as weighted_average from %s where %s = %s group by %s" % (dbSlcKey, dbSlcKey, columnName, dbPercentKey, tableName, dbSlcKey,  slcId, dbSlcKey)
-                ##header, row = self.executeSql(sql,fieldNames=True)
+                if slcIdKeyNumeric:
+                    # key is numeric. no quoted slc id = value
+                    sql ="select distinct(%s) as %s, sum(%s * (%s/100.0)) as weighted_average from %s where %s = %s group by %s" % (dbSlcKey, dbSlcKey, columnName, dbPercentKey, tableName, dbSlcKey,  slcId, dbSlcKey)
+                else:
+                    # key is numeric. quoted slc id = 'value'
+                    sql ="select distinct(%s) as %s, sum(%s * (%s/100.0)) as weighted_average from %s where %s = '%s' group by %s" % (dbSlcKey, dbSlcKey, columnName, dbPercentKey, tableName, dbSlcKey,  slcId, dbSlcKey)
+
+                # add sql statement
                 sqlStatements.append(sql)
             
             
