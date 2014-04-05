@@ -392,11 +392,18 @@ class Utils:
         # convert attribute name to qgis object using processing convience method
         inputLayer = processing.getObject(vectorLayer)
         
-        # get field values
-        fieldValues = processing.values(inputLayer, fieldName)
+        # convert attribute name to qgis object using processing convience method
+        values = []
         
-        # convert from dict to list
-        values = fieldValues[fieldName]
+        # get index of polygon id
+        idx = inputLayer.fieldNameIndex(fieldName)
+        
+        # get list of features. takes into account spatial selection
+        iter = processing.features(inputLayer)
+        
+        # iterate over each feature and get attribute value wanted
+        for feature in iter:
+            values.append(feature.attributes()[idx])
         
         # check values present
         if len(values) == 0:
