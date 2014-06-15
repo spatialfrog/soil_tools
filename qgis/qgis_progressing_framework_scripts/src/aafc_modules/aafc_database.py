@@ -800,10 +800,10 @@ class Db:
                 if slcIdKeyNumeric:
                     # key is numeric. no quoted slc id = value
                     # return 2 rows, first = dominate; second if present if sub-dominate
-                    sql = "select %s, dominate_category, dominate_weight, dominate_count, sub_dominate_category, sub_dominate_weight from (select distinct(%s) as dominate_category, %s, sum(%s) as dominate_weight, count(%s) as dominate_count, NULL as sub_dominate_category, NULL as sub_dominate_weight from %s where %s = %s group by %s order by count(%s) desc limit 2) as t " %(dbSlcKey, columnName,dbSlcKey,dbPercentKey,columnName, tableName, dbSlcKey, slcId,columnName,columnName)
+                    sql = "select %s, dominate_category, dominate_weight, dominate_count, sub_dominate_category, sub_dominate_weight from (select distinct(%s) as dominate_category, %s, sum(%s) as dominate_weight, count(%s) as dominate_count, NULL as sub_dominate_category, NULL as sub_dominate_weight from %s where %s = %s group by %s order by sum(%s) desc limit 2) as t " %(dbSlcKey, columnName,dbSlcKey,dbPercentKey,columnName, tableName, dbSlcKey, slcId,columnName,dbPercentKey)
                 else:
                     # key is alphanumeric. quote sld id = 'value'
-                    sql = "select %s, dominate_category, dominate_weight, dominate_count, sub_dominate_category, sub_dominate_weight from (select distinct(%s) as dominate_category, %s, sum(%s) as dominate_weight, count(%s) as dominate_count, NULL as sub_dominate_category, NULL as sub_dominate_weight from %s where %s = '%s' group by %s order by count(%s) desc limit 2) as t " %(dbSlcKey, columnName,dbSlcKey,dbPercentKey,columnName, tableName, dbSlcKey, slcId,columnName,columnName)
+                    sql = "select %s, dominate_category, dominate_weight, dominate_count, sub_dominate_category, sub_dominate_weight from (select distinct(%s) as dominate_category, %s, sum(%s) as dominate_weight, count(%s) as dominate_count, NULL as sub_dominate_category, NULL as sub_dominate_weight from %s where %s = '%s' group by %s order by sum(%s) desc limit 2) as t " %(dbSlcKey, columnName,dbSlcKey,dbPercentKey,columnName, tableName, dbSlcKey, slcId,columnName,dbPercentKey)
                 
                 # capture sql statement
                 sqlStatements.append(sql)
