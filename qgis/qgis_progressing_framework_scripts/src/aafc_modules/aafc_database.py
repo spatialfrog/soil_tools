@@ -764,8 +764,8 @@ class Db:
                 
         def categoricalCalculation(slcIds, dbSlcKey, tableName, columnName, dbPercentKey):
             """
-            - only show sub-dominate if dominate % < 60
-            - % has no wieght on sub-dominate. take first one.
+            - dominate based on higest sum percent value for unique values. count is not
+            a factor in determining.
             - * check if result class = ""; replace with "NULL"
     
             calculates dominate/sub-dominate results for single string db field
